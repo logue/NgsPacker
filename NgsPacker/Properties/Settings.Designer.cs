@@ -46,5 +46,31 @@ namespace NgsPacker.Properties {
                 this["NotifyComplete"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute(".acb\r\n.bti\r\n.cml\r\n.cmp\r\n.crbp\r\n.crc\r\n.dds\r\n.emi\r\n.evt\r\n.fcl\r\n.fig\r\n.flte\r\n.ikn\r\n." +
+            "ini\r\n.lat\r\n.light\r\n.lua\r\n.lve\r\n.mus\r\n.pgd\r\n.pha\r\n.phi\r\n.prm\r\n.rgn\r\n.sib\r\n.skit\r\n" +
+            ".snd\r\n.trm\r\n.trn\r\n.txl\r\n.wdsn\r\n.wtr\r\noxyresource.crc")]
+        public string WhiteList {
+            get {
+                return ((string)(this["WhiteList"]));
+            }
+            set {
+                this["WhiteList"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool ThemeDark {
+            get {
+                return ((bool)(this["ThemeDark"]));
+            }
+            set {
+                this["ThemeDark"] = value;
+            }
+        }
     }
 }

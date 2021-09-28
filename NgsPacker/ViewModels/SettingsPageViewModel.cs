@@ -5,6 +5,7 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using ModernWpf;
 using NgsPacker.Interfaces;
 using Prism.Mvvm;
 using System.Collections.Generic;
@@ -20,6 +21,11 @@ namespace NgsPacker.ViewModels
         private readonly ILocalizerService localizerService;
 
         /// <summary>
+        /// ホワイトリスト
+        /// </summary>
+        public static string WhiteList { get => Properties.Settings.Default.WhiteList; set => Properties.Settings.Default.WhiteList = value; }
+
+        /// <summary>
         /// 対応言語.
         /// </summary>
         public IList<CultureInfo> SupportedLanguages => localizerService.SupportedLanguages;
@@ -30,7 +36,20 @@ namespace NgsPacker.ViewModels
         public static bool ToggleNotifyComplete { get => Properties.Settings.Default.NotifyComplete; set => Properties.Settings.Default.NotifyComplete = value; }
 
         /// <summary>
-        /// 選択されている言語..
+        /// ダークモード
+        /// </summary>
+        public static bool ToggleDarkTheme
+        {
+            get => Properties.Settings.Default.ThemeDark;
+            set
+            {
+                ThemeManager.Current.ApplicationTheme = value ? ApplicationTheme.Dark : ApplicationTheme.Light;
+                Properties.Settings.Default.ThemeDark = value;
+            }
+        }
+
+        /// <summary>
+        /// 選択されている言語.
         /// </summary>
         public CultureInfo SelectedLanguage
         {

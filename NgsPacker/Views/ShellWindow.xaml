@@ -23,8 +23,7 @@
     lex:ResxLocalizationProvider.DefaultDictionary="Resources"
     prism:ViewModelLocator.AutoWireViewModel="True"
     ui:WindowHelper.UseModernWindowStyle="True"
-    Background="#99FFFFFF"
-    ExtendViewIntoTitleBar="True"
+    Background="#70FFFFFF"
     mc:Ignorable="d">
     <ui:NavigationView
         x:Name="NavView"
@@ -47,17 +46,14 @@
         <ui:NavigationView.MenuItems>
             <ui:NavigationViewItem
                 Name="Home"
-                Content="ホーム"
+                Content="{lex:Loc HomeText}"
                 Icon="Home" />
 
         </ui:NavigationView.MenuItems>
         <ui:NavigationView.FooterMenuItems>
-            <ui:NavigationViewItem
-                Name="About"
-                Content="情報"
-                Icon="Message" />
+            <ui:NavigationViewItem Name="About" Icon="Message" />
         </ui:NavigationView.FooterMenuItems>
-        <ScrollViewer Margin="0,0,0,12">
+        <ScrollViewer Padding="12" Background="#70FFFFFF">
             <ui:Frame prism:RegionManager.RegionName="ContentRegion" />
         </ScrollViewer>
     </ui:NavigationView>

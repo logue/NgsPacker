@@ -6,7 +6,10 @@
     xmlns:lex="http://wpflocalizeextension.codeplex.com"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:prism="http://prismlibrary.com/"
+    xmlns:ui="http://schemas.modernwpf.com/2019"
+    xmlns:viewmodels="clr-namespace:NgsPacker.ViewModels"
     d:Background="White"
+    d:DataContext="{d:DesignInstance Type=viewmodels:SettingsPageViewModel}"
     d:DesignHeight="384"
     d:DesignWidth="512"
     lex:LocalizeDictionary.DesignCulture="en"
@@ -14,18 +17,38 @@
     lex:ResxLocalizationProvider.DefaultDictionary="Resources"
     prism:ViewModelLocator.AutoWireViewModel="True"
     mc:Ignorable="d">
-    <Grid>
-        <StackPanel Orientation="Horizontal">
-            <TextBlock VerticalAlignment="Center" Text="{lex:Loc LanguageText}" />
+    <StackPanel>
+        <StackPanel>
+            <TextBlock Text="{lex:Loc ToggleDarkModeText}" />
+            <ui:ToggleSwitch
+                Margin="10,0,0,5"
+                IsOn="{Binding ToggleDarkMode}"
+                ToolTip="{lex:Loc ToggleDarkModeTooltip}" />
+        </StackPanel>
+        <StackPanel>
+            <TextBlock Text="{lex:Loc LanguageText}" />
             <ComboBox
-                Margin="5,0,0,0"
+                Margin="10,0,0,5"
                 DisplayMemberPath="DisplayName"
                 ItemsSource="{Binding Path=SupportedLanguages, UpdateSourceTrigger=PropertyChanged}"
                 SelectedItem="{Binding Path=SelectedLanguage, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
         </StackPanel>
-        <ToggleButton
-            Content="{lex:Loc NotifyCompleteText}"
-            IsChecked="{Binding ToggleNotifyComplete}"
-            ToolTip="{lex:Loc NotifyCompleteTooltip}" />
-    </Grid>
+        <StackPanel>
+            <TextBlock Text="{lex:Loc NotifyCompleteText}" />
+            <ui:ToggleSwitch
+                Margin="10,0,0,5"
+                IsOn="{Binding ToggleNotifyComplete}"
+                ToolTip="{lex:Loc NotifyCompleteTooltip}" />
+        </StackPanel>
+        <StackPanel>
+            <TextBlock Text="{lex:Loc WhiteList}" />
+            <TextBox
+                MaxHeight="240"
+                Margin="10,0,0,5"
+                AcceptsReturn="True"
+                AutomationProperties.Name="multi-line TextBox"
+                Text="{Binding WhiteList}"
+                TextWrapping="Wrap" />
+        </StackPanel>
+    </StackPanel>
 </UserControl>

@@ -8,5 +8,43 @@
     <Setting Name="NotifyComplete" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
+    <Setting Name="WhiteList" Type="System.String" Scope="User">
+      <Value Profile="(Default)">.acb
+.bti
+.cml
+.cmp
+.crbp
+.crc
+.dds
+.emi
+.evt
+.fcl
+.fig
+.flte
+.ikn
+.ini
+.lat
+.light
+.lua
+.lve
+.mus
+.pgd
+.pha
+.phi
+.prm
+.rgn
+.sib
+.skit
+.snd
+.trm
+.trn
+.txl
+.wdsn
+.wtr
+oxyresource.crc</Value>
+    </Setting>
+    <Setting Name="ThemeDark" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
