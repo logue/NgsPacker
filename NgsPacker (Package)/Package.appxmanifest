@@ -9,7 +9,7 @@
   <Identity
     Name="191d3797-c540-45a7-9961-b4ce0a68cf1d"
     Publisher="CN=logue"
-    Version="1.0.0.0" />
+    Version="0.0.0.0" />
 
   <Properties>
     <DisplayName>NgsPacker (Package)</DisplayName>
