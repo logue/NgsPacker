@@ -7,6 +7,7 @@
 
 using ModernWpf;
 using NgsPacker.Interfaces;
+using Prism.Commands;
 using Prism.Mvvm;
 using System.Collections.Generic;
 using System.Globalization;
@@ -19,6 +20,11 @@ namespace NgsPacker.ViewModels
         /// 多言語化サービス.
         /// </summary>
         private readonly ILocalizerService localizerService;
+
+        /// <summary>
+        /// 設定を保存
+        /// </summary>
+        public DelegateCommand SaveCommand { get; private set; }
 
         /// <summary>
         /// ホワイトリスト
@@ -70,8 +76,21 @@ namespace NgsPacker.ViewModels
         /// <param name="localizerService">多言語化サービス.</param>
         public SettingsPageViewModel(ILocalizerService localizerService)
         {
+            // 設定保存のイベント割当
+            SaveCommand = new DelegateCommand(ExecuteSaveCommand);
             // 多言語化サービスのインジェクション
             this.localizerService = localizerService;
+
+
+        }
+
+        /// <summary>
+        /// 設定保存.
+        /// </summary>
+        private void ExecuteSaveCommand()
+        {
+            // 設定を保存
+            Properties.Settings.Default.Save();
         }
     }
 }

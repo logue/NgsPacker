@@ -22,38 +22,50 @@
             <ColumnDefinition />
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition Height="auto" />
+        </Grid.RowDefinitions>
 
         <StackPanel Grid.Column="0">
             <StackPanel>
                 <TextBlock Text="{lex:Loc ToggleThemeText}" />
                 <ui:ToggleSwitch
-                Margin="10,0,0,5"
-                IsOn="{Binding ToggleDarkTheme}"
-                ToolTip="{lex:Loc ToggleDarkThemeTooltip}" />
+                    Margin="10,0,0,5"
+                    IsOn="{Binding ToggleDarkTheme}"
+                    ToolTip="{lex:Loc ToggleDarkThemeTooltip}" />
             </StackPanel>
             <StackPanel>
                 <TextBlock Text="{lex:Loc LanguageText}" />
                 <ComboBox
-                Margin="10,0,0,5"
-                DisplayMemberPath="DisplayName"
-                ItemsSource="{Binding Path=SupportedLanguages, UpdateSourceTrigger=PropertyChanged}"
-                SelectedItem="{Binding Path=SelectedLanguage, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+                    Margin="10,0,0,5"
+                    DisplayMemberPath="DisplayName"
+                    ItemsSource="{Binding Path=SupportedLanguages, UpdateSourceTrigger=PropertyChanged}"
+                    SelectedItem="{Binding Path=SelectedLanguage, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
             </StackPanel>
             <StackPanel>
                 <TextBlock Text="{lex:Loc NotifyCompleteText}" />
                 <ui:ToggleSwitch
-                Margin="10,0,0,5"
-                IsOn="{Binding ToggleNotifyComplete}"
-                ToolTip="{lex:Loc NotifyCompleteTooltip}" />
+                    Margin="10,0,0,5"
+                    IsOn="{Binding ToggleNotifyComplete}"
+                    ToolTip="{lex:Loc NotifyCompleteTooltip}" />
             </StackPanel>
         </StackPanel>
         <StackPanel Grid.Column="1">
             <TextBlock Text="{lex:Loc WhiteListText}" />
             <TextBox
-                Margin="10,0,0,5"
+                MaxHeight="300"
+                Margin="10,0,5,5"
                 AcceptsReturn="True"
                 AutomationProperties.Name="multi-line TextBox"
                 Text="{Binding WhiteList}" />
         </StackPanel>
+        <Button
+            Grid.Row="2"
+            Grid.Column="2"
+            HorizontalAlignment="Right"
+            Command="{Binding SaveCommand}"
+            Content="{lex:Loc SaveText}"
+            Style="{StaticResource ButtonRevealStyle}" />
     </Grid>
 </UserControl>

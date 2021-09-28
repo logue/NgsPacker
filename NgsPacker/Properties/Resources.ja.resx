@@ -141,10 +141,43 @@
   <data name="WhiteListText" xml:space="preserve">
     <value>グループ1に分類するファイル名（後方一致・改行区切り）</value>
   </data>
-  <data name="UnpackButton" xml:space="preserve">
+  <data name="UnpackText" xml:space="preserve">
     <value>アンパック</value>
   </data>
-  <data name="PackButton" xml:space="preserve">
+  <data name="PackText" xml:space="preserve">
     <value>パック</value>
+  </data>
+  <data name="PackDialogText" xml:space="preserve">
+    <value>パックしたいファイルを含むディレクトリを選択してください。</value>
+  </data>
+  <data name="UnpackDialogText" xml:space="preserve">
+    <value>アンパックしたい*.iceファイルを選択してください。</value>
+  </data>
+  <data name="SaveAsDialogText" xml:space="preserve">
+    <value>保存先を指定してください。</value>
+  </data>
+  <data name="PackingText" xml:space="preserve">
+    <value>パックしています...</value>
+  </data>
+  <data name="UnpackingText" xml:space="preserve">
+    <value>アンパックしています...</value>
+  </data>
+  <data name="ErrorTitleText" xml:space="preserve">
+    <value>エラー</value>
+  </data>
+  <data name="IceFileFilterText" xml:space="preserve">
+    <value>PSO2のデータファイル (*.ice)|*.ice</value>
+  </data>
+  <data name="CompleteText" xml:space="preserve">
+    <value>処理が完了しました。</value>
+  </data>
+  <data name="ModdingNoticeText" xml:space="preserve">
+    <value>Modを有効にする場合は、単に対象ファイルを上書きするだけはなく、Arks-LayerのPSO2 Tweakerのようなサードパーティー製ランチャーが必要になるほか、CRCファイルが必要になります。
+
+過去の裁判の判例から、著作権法の定める同一性保持権の侵害にはなりませんが、潜在的にバンされる可能性があることについてご留意ください。
+使用は自己責任でお願いします。</value>
+  </data>
+  <data name="SaveText" xml:space="preserve">
+    <value>保存</value>
   </data>
 </root>

@@ -4,7 +4,7 @@
     <RootNamespace>NgsPacker</RootNamespace>
     <AssemblyName>NgsPacker</AssemblyName>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net5.0-windows10.0.20348.0</TargetFramework>
+    <TargetFramework>net5.0-windows10.0.19041.0</TargetFramework>
     <UseWPF>true</UseWPF>
     <StartupObject>NgsPacker.App</StartupObject>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
@@ -25,6 +25,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="FluentWPF" Version="0.10.1" />
+    <PackageReference Include="Microsoft.Toolkit.Uwp.Notifications" Version="7.1.0" />
     <PackageReference Include="ModernWpfUI" Version="0.9.4" />
     <PackageReference Include="Prism.DryIoc" Version="8.1.97" />
     <PackageReference Include="ReactiveProperty" Version="7.12.0" />

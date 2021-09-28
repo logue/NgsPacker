@@ -22,8 +22,9 @@ namespace NgsPacker.Interfaces
         /// <summary>
         /// 指定されたファイルをアンパックする
         /// </summary>
-        /// <param name="inputPath">入力ファイルへのパス</param>
-        /// <returns>解凍したファイルのバイナリ</returns>
-        public byte[] Unpack(string inputPath);
+        /// <param name="inputPath">入力ファイルのパス</param>
+        /// <param name="outputPath">出力先のパス</param>
+        /// <returns>成否？</returns>
+        public void Unpack(string inputPath, string outputPath);
     }
 }

@@ -103,7 +103,10 @@ namespace NgsPacker
         {
             // 多言語化
             _ = containerRegistry.RegisterInstance<ILocalizerService>(Container.Resolve<LocalizerService>());
+            // Zamboni
+            _ = containerRegistry.RegisterInstance<IZamboniService>(Container.Resolve<ZamboniService>());
 
+            // ページの登録
             containerRegistry.RegisterForNavigation<HomePage>();
             containerRegistry.RegisterForNavigation<AboutPage>();
             containerRegistry.RegisterForNavigation<SettingsPage>();

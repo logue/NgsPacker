@@ -7,6 +7,7 @@
 
 using ModernWpf;
 using ModernWpf.Controls;
+using NgsPacker.Interfaces;
 using NgsPacker.Models;
 using NgsPacker.Views;
 using Prism.Commands;
@@ -33,9 +34,9 @@ namespace NgsPacker.ViewModels
         private readonly IRegionManager RegionManager;
 
         /// <summary>
-        /// ローディングリング
+        /// 多言語化サービス
         /// </summary>
-        public Visibility ProgressRing { get; set; } = Visibility.Hidden;
+        private readonly ILocalizerService LocalizerService;
 
         /// <summary>
         /// ナビゲーション変更
@@ -55,7 +56,7 @@ namespace NgsPacker.ViewModels
         /// コンストラクタ
         /// </summary>
         /// <param name="regionManager">インジェクションするIRegionManager。.</param>
-        public ShellWindowViewModel(IRegionManager regionManager)
+        public ShellWindowViewModel(IRegionManager regionManager, ILocalizerService localizerService)
         {
             // アプリ名はアセンブリ名
             Title = AppAssemblyModel.Title;
@@ -71,6 +72,8 @@ namespace NgsPacker.ViewModels
 
             // リージョンマネージャーをインジェクション
             RegionManager = regionManager;
+            // 多言語サービスをインジェクション
+            LocalizerService = localizerService;
         }
 
         /// <summary>
@@ -87,7 +90,7 @@ namespace NgsPacker.ViewModels
             }
             catch (Exception ex)
             {
-                AcrylicMessageBox.Show(System.Windows.Application.Current.MainWindow, ex.Message);
+                _ = AcrylicMessageBox.Show(Application.Current.MainWindow, ex.Message, LocalizerService.GetLocalizedString("ErrorTitleText"));
             }
         }
 
@@ -96,7 +99,7 @@ namespace NgsPacker.ViewModels
         /// </summary>
         public static void ExecuteExitCommand()
         {
-            System.Windows.Application.Current.Shutdown();
+            Application.Current.Shutdown();
         }
 
         /// <summary>

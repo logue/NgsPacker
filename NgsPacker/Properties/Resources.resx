@@ -136,12 +136,46 @@
     <value>A desktop notification is issued when the process is completed.</value>
   </data>
   <data name="WhiteListText" xml:space="preserve">
-    <value>File name to classify into group 1 (last match, Line break delimiter)</value>
+    <value>File name to classify into group 1
+(last match, Line break delimiter)</value>
   </data>
-  <data name="UnpackButton" xml:space="preserve">
+  <data name="UnpackText" xml:space="preserve">
     <value>Unpack</value>
   </data>
-  <data name="PackButton" xml:space="preserve">
+  <data name="PackText" xml:space="preserve">
     <value>Pack</value>
+  </data>
+  <data name="PackDialogText" xml:space="preserve">
+    <value>Select the directory that contains the files you want to pack.</value>
+  </data>
+  <data name="UnpackDialogText" xml:space="preserve">
+    <value>Select the * .ice file you want to unpack.</value>
+  </data>
+  <data name="SaveAsDialogText" xml:space="preserve">
+    <value>Please specify the save destination.</value>
+  </data>
+  <data name="PackingText" xml:space="preserve">
+    <value>Packing...</value>
+  </data>
+  <data name="UnpackingText" xml:space="preserve">
+    <value>Unpacking...</value>
+  </data>
+  <data name="ErrorTitleText" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="IceFileFilterText" xml:space="preserve">
+    <value>PSO2 Data File (*.ice)|*.ice</value>
+  </data>
+  <data name="CompleteText" xml:space="preserve">
+    <value>The process is complete.</value>
+  </data>
+  <data name="ModdingNoticeText" xml:space="preserve">
+    <value>To enable mods, you'll need a third-party launcher like Arcs-Layer's PSO2 Tweaker, as well as a CRC file, rather than just overwriting the target file.
+
+Please note that past court precedents do not infringe the copyright law's right to maintain identity, but they may potentially be banned.
+USE AT YOUR OWN RISK.</value>
+  </data>
+  <data name="SaveText" xml:space="preserve">
+    <value>Save</value>
   </data>
 </root>

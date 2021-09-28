@@ -7,6 +7,7 @@
     xmlns:lex="http://wpflocalizeextension.codeplex.com"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:prism="http://prismlibrary.com/"
+    xmlns:ui="http://schemas.modernwpf.com/2019"
     d:Background="White"
     d:DesignHeight="384"
     d:DesignWidth="512"
@@ -23,11 +24,10 @@
                 Command="{Binding VisitCommand}"
                 Style="{StaticResource ButtonRevealStyle}">
                 <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-                    <TextBlock
+                    <ui:FontIcon
                         Margin="0,0,5,0"
-                        VerticalAlignment="Center"
-                        FontFamily="Segoe MDL2 Assets"
-                        Text="&#xE774;" />
+                        FontFamily="{StaticResource SymbolThemeFontFamily}"
+                        Glyph="&#xE774;" />
                     <TextBlock VerticalAlignment="Center" Text="{lex:Loc VisitText}" />
                 </StackPanel>
             </Button>
@@ -44,6 +44,7 @@
                 <TextBlock Text="{Binding Assembly.Version}" />
                 <TextBlock Margin="0,0,0,10" Text="{Binding Assembly.Copyright}" />
             </StackPanel>
+            <TextBlock Text="{lex:Loc ModdingNoticeText}" TextWrapping="Wrap" />
         </WrapPanel>
     </DockPanel>
 </UserControl>

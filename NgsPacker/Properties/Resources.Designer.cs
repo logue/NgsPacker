@@ -61,6 +61,24 @@ namespace NgsPacker.Properties {
         }
         
         /// <summary>
+        ///   The process is complete. に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string CompleteText {
+            get {
+                return ResourceManager.GetString("CompleteText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Error に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string ErrorTitleText {
+            get {
+                return ResourceManager.GetString("ErrorTitleText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Home に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string HomeText {
@@ -70,11 +88,32 @@ namespace NgsPacker.Properties {
         }
         
         /// <summary>
+        ///   PSO2 Data File (*.ice)|*.ice に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string IceFileFilterText {
+            get {
+                return ResourceManager.GetString("IceFileFilterText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Language に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string LanguageText {
             get {
                 return ResourceManager.GetString("LanguageText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   To enable mods, you&apos;ll need a third-party launcher like Arcs-Layer&apos;s PSO2 Tweaker, as well as a CRC file, rather than just overwriting the target file.
+        ///
+        ///Please note that past court precedents do not infringe the copyright law&apos;s right to maintain identity, but they may potentially be banned.
+        ///USE AT YOUR OWN RISK. に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string ModdingNoticeText {
+            get {
+                return ResourceManager.GetString("ModdingNoticeText", resourceCulture);
             }
         }
         
@@ -97,11 +136,47 @@ namespace NgsPacker.Properties {
         }
         
         /// <summary>
+        ///   Select the directory that contains the files you want to pack. に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string PackDialogText {
+            get {
+                return ResourceManager.GetString("PackDialogText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Packing... に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string PackingText {
+            get {
+                return ResourceManager.GetString("PackingText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Pack に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        public static string PackButton {
+        public static string PackText {
             get {
-                return ResourceManager.GetString("PackButton", resourceCulture);
+                return ResourceManager.GetString("PackText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Please specify the save destination. に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string SaveAsDialogText {
+            get {
+                return ResourceManager.GetString("SaveAsDialogText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Save に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string SaveText {
+            get {
+                return ResourceManager.GetString("SaveText", resourceCulture);
             }
         }
         
@@ -124,11 +199,29 @@ namespace NgsPacker.Properties {
         }
         
         /// <summary>
+        ///   Select the * .ice file you want to unpack. に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string UnpackDialogText {
+            get {
+                return ResourceManager.GetString("UnpackDialogText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Unpacking... に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string UnpackingText {
+            get {
+                return ResourceManager.GetString("UnpackingText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Unpack に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        public static string UnpackButton {
+        public static string UnpackText {
             get {
-                return ResourceManager.GetString("UnpackButton", resourceCulture);
+                return ResourceManager.GetString("UnpackText", resourceCulture);
             }
         }
         
@@ -142,7 +235,8 @@ namespace NgsPacker.Properties {
         }
         
         /// <summary>
-        ///   File name to classify into group 1 (last match, Line break delimiter) に類似しているローカライズされた文字列を検索します。
+        ///   File name to classify into group 1
+        ///(last match, Line break delimiter) に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string WhiteListText {
             get {
