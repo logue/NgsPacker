@@ -22,8 +22,10 @@
     lex:ResxLocalizationProvider.DefaultAssembly="NgsPacker"
     lex:ResxLocalizationProvider.DefaultDictionary="Resources"
     prism:ViewModelLocator.AutoWireViewModel="True"
+    ui:ThemeManager.IsThemeAware="True"
     ui:WindowHelper.UseModernWindowStyle="True"
-    Background="#70FFFFFF"
+    Background="{DynamicResource SystemAltLowColorBrush}"
+    ExtendViewIntoTitleBar="True"
     mc:Ignorable="d">
     <ui:NavigationView
         x:Name="NavView"
@@ -53,8 +55,14 @@
         <ui:NavigationView.FooterMenuItems>
             <ui:NavigationViewItem Name="About" Icon="Message" />
         </ui:NavigationView.FooterMenuItems>
-        <ScrollViewer Padding="12" Background="#70FFFFFF">
-            <ui:Frame prism:RegionManager.RegionName="ContentRegion" />
-        </ScrollViewer>
+        <Border
+            Margin="12"
+            Background="{DynamicResource SystemAltMediumColorBrush}"
+            CornerRadius="{DynamicResource ControlCornerRadius}">
+            <ScrollViewer Padding="12">
+                <ui:Frame prism:RegionManager.RegionName="ContentRegion" />
+            </ScrollViewer>
+        </Border>
+
     </ui:NavigationView>
 </fw:AcrylicWindow>
