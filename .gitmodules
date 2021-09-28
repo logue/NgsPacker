@@ -1,0 +1,4 @@
+[submodule "ZamboniLib"]
+	url = https://github.com/Shadowth117/ZamboniLib
+	path = ZamboniLib
+
