@@ -19,7 +19,7 @@ namespace NgsPacker.Properties {
     // または Visual Studio のようなツールを使用して自動生成されました。
     // メンバーを追加または削除するには、.ResX ファイルを編集して、/str オプションと共に
     // ResGen を実行し直すか、または VS プロジェクトをビルドし直します。
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
@@ -57,6 +57,15 @@ namespace NgsPacker.Properties {
             }
             set {
                 resourceCulture = value;
+            }
+        }
+        
+        /// <summary>
+        ///   About に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string AboutText {
+            get {
+                return ResourceManager.GetString("AboutText", resourceCulture);
             }
         }
         
@@ -106,14 +115,14 @@ namespace NgsPacker.Properties {
         }
         
         /// <summary>
-        ///   To enable mods, you&apos;ll need a third-party launcher like Arcs-Layer&apos;s PSO2 Tweaker, as well as a CRC file, rather than just overwriting the target file.
+        ///   The act of modifying game data does not infringe the patent law and the right to retain identity from the precedents of past trials, and is in the category of the right to freedom of expression, but it may damage the game environment.
+        ///Keep in mind that it can potentially cause a banned.
         ///
-        ///Please note that past court precedents do not infringe the copyright law&apos;s right to maintain identity, but they may potentially be banned.
         ///USE AT YOUR OWN RISK. に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        public static string ModdingNoticeText {
+        public static string ModdingWarningText {
             get {
-                return ResourceManager.GetString("ModdingNoticeText", resourceCulture);
+                return ResourceManager.GetString("ModdingWarningText", resourceCulture);
             }
         }
         
@@ -141,6 +150,16 @@ namespace NgsPacker.Properties {
         public static string PackDialogText {
             get {
                 return ResourceManager.GetString("PackDialogText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   If you want to create a PSO2 mod, click &quot;Pack&quot; and select a directory. You can create a mod by creating modified data with the same contents as an existing file.
+        ///* A separate third-party launcher and checksum file (d5480a26b3dea3dda37abd1b61fb47cd) are required to activate the mod. に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string PackInformationText {
+            get {
+                return ResourceManager.GetString("PackInformationText", resourceCulture);
             }
         }
         
@@ -181,6 +200,16 @@ namespace NgsPacker.Properties {
         }
         
         /// <summary>
+        ///   All rights to the copyrighted works (images, data, audios, texts, etc.) used in &quot;PSO2: NGS&quot; are owned by SEGA Corporation or its licensors.
+        /// Please note that any failure to comply with these guidelines or the Terms of Use may constitute a violation of the Terms of Use or copyright. に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string SegaCopyrightNotice {
+            get {
+                return ResourceManager.GetString("SegaCopyrightNotice", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Toggle dark theme に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string ToggleDarkThemeTooltip {
@@ -204,6 +233,15 @@ namespace NgsPacker.Properties {
         public static string UnpackDialogText {
             get {
                 return ResourceManager.GetString("UnpackDialogText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   If you want to unzip the PSO2 data file, click the &quot;Unpack&quot; button and select the data file. に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string UnpackInformationText {
+            get {
+                return ResourceManager.GetString("UnpackInformationText", resourceCulture);
             }
         }
         

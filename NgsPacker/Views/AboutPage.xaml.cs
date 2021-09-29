@@ -12,7 +12,7 @@ namespace NgsPacker.Views
     /// <summary>
     /// Interaction logic for PrismUserControl1
     /// </summary>
-    public partial class AboutPage : UserControl
+    public partial class AboutPage : Page
     {
         public AboutPage()
         {

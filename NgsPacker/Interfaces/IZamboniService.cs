@@ -24,7 +24,8 @@ namespace NgsPacker.Interfaces
         /// </summary>
         /// <param name="inputPath">入力ファイルのパス</param>
         /// <param name="outputPath">出力先のパス</param>
-        /// <returns>成否？</returns>
-        public void Unpack(string inputPath, string outputPath);
+        /// <param name="separateByGroup">グループ別に出力ディレクトリを分ける</param>
+        /// <returns>解凍したファイルのバイナリ</returns>
+        public void Unpack(string inputPath, string outputPath, bool separateByGroup = false);
     }
 }

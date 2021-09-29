@@ -24,7 +24,7 @@
     prism:ViewModelLocator.AutoWireViewModel="True"
     ui:ThemeManager.IsThemeAware="True"
     ui:WindowHelper.UseModernWindowStyle="True"
-    Background="{DynamicResource SystemAltLowColorBrush}"
+    Background="{DynamicResource SystemAltMediumLowColorBrush}"
     ExtendViewIntoTitleBar="True"
     mc:Ignorable="d">
     <ui:NavigationView
@@ -32,11 +32,10 @@
         IsBackButtonVisible="Visible"
         IsBackEnabled="False"
         IsPaneOpen="True"
-        PaneDisplayMode="Top"
-        PaneTitle="{Binding PaneTitle}">
+        PaneDisplayMode="Top">
         <ui:NavigationView.Resources>
             <SolidColorBrush x:Key="NavigationViewTopPaneBackground" Color="Transparent" />
-            <SolidColorBrush x:Key="NavigationViewDefaultPaneBackground" Color="Transparent" />
+            <SolidColorBrush x:Key="NavigationViewDefaultPaneBackground" Color="{DynamicResource SystemListLowColor}" />
             <SolidColorBrush x:Key="NavigationViewExpandedPaneBackground" Color="Transparent" />
         </ui:NavigationView.Resources>
         <i:Interaction.Triggers>
@@ -53,11 +52,11 @@
 
         </ui:NavigationView.MenuItems>
         <ui:NavigationView.FooterMenuItems>
-            <ui:NavigationViewItem Name="About" Icon="Message" />
+            <ui:NavigationViewItem Name="About" Icon="Message" Content="{lex:Loc AboutText}" />
         </ui:NavigationView.FooterMenuItems>
         <Border
-            Margin="12"
-            Background="{DynamicResource SystemAltMediumColorBrush}"
+            Margin="6"
+            Background="{DynamicResource SystemAltMediumLowColorBrush}"
             CornerRadius="{DynamicResource ControlCornerRadius}">
             <ScrollViewer Padding="12">
                 <ui:Frame prism:RegionManager.RegionName="ContentRegion" />

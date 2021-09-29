@@ -12,7 +12,7 @@ namespace NgsPacker.Views
     /// <summary>
     /// Interaction logic for SettingsPage
     /// </summary>
-    public partial class SettingsPage : UserControl
+    public partial class SettingsPage : Page
     {
         public SettingsPage()
         {

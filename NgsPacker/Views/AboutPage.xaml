@@ -1,4 +1,4 @@
-<UserControl
+<Page
     x:Class="NgsPacker.Views.AboutPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -33,18 +33,22 @@
             </Button>
         </WrapPanel>
         <WrapPanel Orientation="Horizontal">
-            <Image
+            <!--Image
                 Width="96"
                 Height="96"
                 Margin="10,0,10,0"
-                Source="{Binding Logo}" />
+                Source="{Binding Logo}" /-->
+            <ui:FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" FontSize="96" Margin="10,0,10,0" Glyph="&#xecaa;"/>
             <StackPanel Orientation="Vertical">
                 <TextBlock FontSize="24" Text="{Binding Assembly.Title}" />
                 <TextBlock Text="{Binding Assembly.Description}" />
                 <TextBlock Text="{Binding Assembly.Version}" />
                 <TextBlock Margin="0,0,0,10" Text="{Binding Assembly.Copyright}" />
             </StackPanel>
-            <TextBlock Text="{lex:Loc ModdingNoticeText}" TextWrapping="Wrap" />
+            <StackPanel>
+                <Separator />
+                <TextBlock Text="{lex:Loc SegaCopyrightNotice}" Margin="10" TextWrapping="Wrap" />
+            </StackPanel>
         </WrapPanel>
     </DockPanel>
-</UserControl>
+</Page>

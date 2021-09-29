@@ -171,13 +171,27 @@
   <data name="CompleteText" xml:space="preserve">
     <value>処理が完了しました。</value>
   </data>
-  <data name="ModdingNoticeText" xml:space="preserve">
-    <value>Modを有効にする場合は、単に対象ファイルを上書きするだけはなく、Arks-LayerのPSO2 Tweakerのようなサードパーティー製ランチャーが必要になるほか、CRCファイルが必要になります。
+  <data name="ModdingWarningText" xml:space="preserve">
+    <value>※ゲームデータを改変する行為は、過去の裁判の判例から特許法並びに同一性保持権の侵害にはあたらず、表現の自由の範疇にありますが、ゲーム環境に損害を与える場合があります。
+それは、潜在的にバンされる可能性があるという事についてご留意ください。
 
-過去の裁判の判例から、著作権法の定める同一性保持権の侵害にはなりませんが、潜在的にバンされる可能性があることについてご留意ください。
 使用は自己責任でお願いします。</value>
   </data>
   <data name="SaveText" xml:space="preserve">
     <value>保存</value>
+  </data>
+  <data name="PackInformationText" xml:space="preserve">
+    <value>PSO2のModを作成したい場合は「パック」をクリックしてディレクトリを選択してください。既存のファイルと同じ内容で改変したデータを作成することでModを作成できます。
+※Modの有効化には、別途サードパーティー製ランチャーおよび、チェックサムファイル（d5480a26b3dea3dda37abd1b61fb47cd）が必要です。</value>
+  </data>
+  <data name="UnpackInformationText" xml:space="preserve">
+    <value>PSO2のデータファイルを解凍したい場合は、「アンパック」ボタンをクリックしてデータファイルを選択してください。</value>
+  </data>
+  <data name="AboutText" xml:space="preserve">
+    <value>バージョン情報</value>
+  </data>
+  <data name="SegaCopyrightNotice" xml:space="preserve">
+    <value>『PSO2』で使用している著作物（画像、データ、音声、テキスト等）の一切の権利は、株式会社セガまたはそのライセンサーが保有しております。
+本ガイドラインや利用規約を守っていただけない場合、利用規約違反、または著作権違反となることがございますので、あらかじめご注意ください。</value>
   </data>
 </root>

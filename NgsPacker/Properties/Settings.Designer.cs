@@ -12,7 +12,7 @@ namespace NgsPacker.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.10.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.0.3.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -70,6 +70,31 @@ namespace NgsPacker.Properties {
             }
             set {
                 this["ThemeDark"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://download.pso2.jp/patch_prod/patches/data/win32/")]
+        public string PatchServerUri {
+            get {
+                return ((string)(this["PatchServerUri"]));
+            }
+            set {
+                this["PatchServerUri"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://sub-download.pso2.jp/patch_prod/head_rc_4161_masterbase/patches/data/win32" +
+            "/")]
+        public string FallbackPatchServerUri {
+            get {
+                return ((string)(this["FallbackPatchServerUri"]));
+            }
+            set {
+                this["FallbackPatchServerUri"] = value;
             }
         }
     }

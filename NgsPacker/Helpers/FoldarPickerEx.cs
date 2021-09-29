@@ -6,13 +6,14 @@
 // -----------------------------------------------------------------------
 using System;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 
 namespace NgsPacker.Helpers
 {
     /// <summary>
-    /// Defines the <see cref="FolderPickerEx" />.
+    /// UWP用のフォルダ選択ダイアログを無理やりWPFで使うクラス.
     /// </summary>
     public class FolderPickerEx
     {
@@ -29,7 +30,7 @@ namespace NgsPacker.Helpers
             mfolderPicker = new FolderPicker()
             {
                 ViewMode = PickerViewMode.Thumbnail,
-                SuggestedStartLocation = PickerLocationId.PicturesLibrary,
+                SuggestedStartLocation = PickerLocationId.Desktop,
             };
             mfolderPicker.FileTypeFilter.Add("*");
             IntPtr hwnd = GetActiveWindow();
@@ -43,6 +44,15 @@ namespace NgsPacker.Helpers
         public StorageFolder PickSingleFolder()
         {
             return mfolderPicker.PickSingleFolderAsync().GetAwaiter().GetResult();
+        }
+
+        /// <summary>
+        /// The PickSingleFolder.
+        /// </summary>
+        /// <returns>The <see cref="StorageFolder"/>.</returns>
+        public async Task<StorageFolder> PickSingleFolderAsync()
+        {
+            return await mfolderPicker.PickSingleFolderAsync();
         }
 
         /// <summary>

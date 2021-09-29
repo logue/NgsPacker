@@ -12,9 +12,8 @@ using Prism.Commands;
 using Prism.Mvvm;
 using SourceChord.FluentWPF;
 using System;
-using System.Diagnostics;
 using System.IO;
-using System.Windows;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace NgsPacker.ViewModels
@@ -34,7 +33,7 @@ namespace NgsPacker.ViewModels
         /// <summary>
         /// 進捗ダイアログ表示
         /// </summary>
-        public Visibility ProgressDialog { get; private set; } = Visibility.Collapsed;
+        public bool ProgressDialog { get; private set; } = true;
 
         /// <summary>
         /// 進捗ダイアログのテキスト
@@ -82,6 +81,8 @@ namespace NgsPacker.ViewModels
                 return;
             }
 
+            // Windows.Storage.AccessCache.StorageApplicationPermissions.FutureAccessList.AddOrReplace("PickedFolderToken", folder);
+
             // ファイル保存ダイアログ
             using SaveFileDialog saveFileDialog = new()
             {
@@ -99,23 +100,25 @@ namespace NgsPacker.ViewModels
             }
 
             // TODO:プログレスバーを表示
-
-            ProgressDialog = Visibility.Visible;
+            ProgressDialog = true;
             ProgressText = LocalizerService.GetLocalizedString("PackingText");
 
-            // Iceで圧縮（結構重い）
-            byte[] iceStream;
-            try
+            Task task = Task.Run(async () =>
             {
-                iceStream = ZamboniService.Pack(folder.Path, true, false);
-                await File.WriteAllBytesAsync(saveFileDialog.FileName, iceStream);
-            }
-            catch (Exception ex)
-            {
-                _ = AcrylicMessageBox.Show(System.Windows.Application.Current.MainWindow, ex.Message, LocalizerService.GetLocalizedString("ErrorTitleText"));
-            }
+                // Iceで圧縮（結構重い）
+                byte[] iceStream;
+                try
+                {
+                    iceStream = ZamboniService.Pack(folder.Path, true, false);
+                    await File.WriteAllBytesAsync(saveFileDialog.FileName, iceStream);
+                }
+                catch (Exception ex)
+                {
+                    _ = AcrylicMessageBox.Show(System.Windows.Application.Current.MainWindow, ex.Message, LocalizerService.GetLocalizedString("ErrorTitleText"));
+                }
+            });
 
-            ProgressDialog = Visibility.Collapsed;
+            ProgressDialog = false;
 
             // 完了通知
             if (Properties.Settings.Default.NotifyComplete)
@@ -138,28 +141,62 @@ namespace NgsPacker.ViewModels
         /// </summary>
         private void ExecuteUnpackCommand()
         {
-            Debug.WriteLine("アンパック");
-            using OpenFileDialog fileOpenDialog = new();
+            // ファイルを開くダイアログ
+            using OpenFileDialog openFileDialog = new()
+            {
+                Title = LocalizerService.GetLocalizedString("UnpackDialogText"),
+            };
 
-            // ファイル選択ダイアログを表示
-            DialogResult dialogResult = fileOpenDialog.ShowDialog();
-            if (dialogResult == DialogResult.Cancel)
+            // ダイアログを表示
+            DialogResult dialogResult = openFileDialog.ShowDialog();
+            if (dialogResult != DialogResult.OK)
             {
                 // キャンセルされたので終了
                 return;
             }
+
             // フォルダ選択ダイアログ
             FolderPickerEx picker = new();
 
-            // ファイルダイアログを表示
+            // 出力先ファイルダイアログを表示
             Windows.Storage.StorageFolder folder = picker.PickSingleFolder();
 
             if (folder == null)
             {
                 return;
             }
+            // TODO:プログレスバーを表示
+            ProgressDialog = true;
+            ProgressText = LocalizerService.GetLocalizedString("UnpackingText");
 
-            // TODO:
+            Task task = Task.Run(async () =>
+            {
+                try
+                {
+                    ZamboniService.Unpack(openFileDialog.FileName, folder.Path);
+                }
+                catch (Exception ex)
+                {
+                    _ = AcrylicMessageBox.Show(System.Windows.Application.Current.MainWindow, ex.Message, LocalizerService.GetLocalizedString("ErrorTitleText"));
+                }
+            });
+
+            ProgressDialog = false;
+
+            // 完了通知
+            if (Properties.Settings.Default.NotifyComplete)
+            {
+                // トースト通知
+                new ToastContentBuilder()
+             .AddText(LocalizerService.GetLocalizedString("UnpackText"))
+             .AddText(LocalizerService.GetLocalizedString("CompleteText"))
+             .Show();
+            }
+            else
+            {
+                _ = AcrylicMessageBox.Show(System.Windows.Application.Current.MainWindow,
+                    LocalizerService.GetLocalizedString("UnpackText"), LocalizerService.GetLocalizedString("CompleteText"));
+            }
         }
 
     }

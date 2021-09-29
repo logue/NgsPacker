@@ -46,5 +46,11 @@ oxyresource.crc</Value>
     <Setting Name="ThemeDark" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
+    <Setting Name="PatchServerUri" Type="System.String" Scope="User">
+      <Value Profile="(Default)">http://download.pso2.jp/patch_prod/patches/data/win32/</Value>
+    </Setting>
+    <Setting Name="FallbackPatchServerUri" Type="System.String" Scope="User">
+      <Value Profile="(Default)">http://sub-download.pso2.jp/patch_prod/head_rc_4161_masterbase/patches/data/win32/</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

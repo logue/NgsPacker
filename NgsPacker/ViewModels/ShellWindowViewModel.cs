@@ -16,7 +16,6 @@ using Prism.Regions;
 using SourceChord.FluentWPF;
 using System;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
 using System.Windows;
 
 namespace NgsPacker.ViewModels
@@ -101,12 +100,5 @@ namespace NgsPacker.ViewModels
         {
             Application.Current.Shutdown();
         }
-
-        /// <summary>
-        /// アクティブなウィンドウのハンドルを取得.
-        /// </summary>
-        /// <returns>.</returns>
-        [DllImport("user32.dll", ExactSpelling = true, CharSet = CharSet.Auto, PreserveSig = true, SetLastError = false)]
-        private static extern IntPtr GetActiveWindow();
     }
 }

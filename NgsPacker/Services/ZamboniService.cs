@@ -5,11 +5,13 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using NgsPacker.Exeptions;
 using NgsPacker.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using zamboni;
 using static zamboni.IceHeaderStructures;
 
@@ -40,10 +42,10 @@ namespace NgsPacker.Services
         /// </summary>
         /// <param name="inputPath">パックしたいファイルのディレクトリ</param>
         /// <param name="recursive">サブディレクトリを再帰的に含めるか</param>
-        /// <param name="compress">圧縮するか</param>
-        /// <param name="forceUnencrypted">暗号化しない</param>
+        /// <param name="compress">圧縮する（非推奨）</param>
+        /// <param name="forceUnencrypted">暗号化する（非推奨）</param>
         /// <returns>パックしたファイルのバイナリ</returns>
-        public byte[] Pack(string inputPath, bool recursive, bool compress, bool forceUnencrypted = false)
+        public byte[] Pack(string inputPath, bool recursive = true, bool compress = false, bool forceUnencrypted = false)
         {
             // ディレクトリの存在チェック
             if (!Directory.Exists(inputPath))
@@ -86,10 +88,18 @@ namespace NgsPacker.Services
                     group1Binaries.Add(file.ToArray());
                 }
             }
+            // ヘッダ
             IceArchiveHeader header = new();
-            // Iceファイルとして書き出す
-            IceV4File ice = new(header.GetBytes(), group1Binaries.ToArray(), group2Binaries.ToArray());
-            return ice.getRawData(compress, forceUnencrypted);
+            try
+            {
+                // Iceファイルとして書き出す
+                IceV4File ice = new(header.GetBytes(), group1Binaries.ToArray(), group2Binaries.ToArray());
+                return ice.getRawData(compress, forceUnencrypted);
+            }
+            catch (Exception e)
+            {
+                throw new ZamboniException("An error occurred while generating the Ice file.", e);
+            }
         }
 
         /// <summary>
@@ -97,8 +107,9 @@ namespace NgsPacker.Services
         /// </summary>
         /// <param name="inputPath">入力ファイルのパス</param>
         /// <param name="outputPath">出力先のパス</param>
+        /// <param name="separateByGroup">グループ別に出力ディレクトリを分ける</param>
         /// <returns>解凍したファイルのバイナリ</returns>
-        public void Unpack(string inputPath, string outputPath)
+        public void Unpack(string inputPath, string outputPath, bool separateByGroup = false)
         {
             // Iceファイルをバイトとして読み込む
             byte[] buffer = File.ReadAllBytes(inputPath);
@@ -106,17 +117,17 @@ namespace NgsPacker.Services
             // IceFile.LoadIceFile(fs).header;
 
             // Iceファイルのヘッダチェック
-            if (buffer.Length <= 127 || buffer[0] != 73 || (buffer[1] != 67 || buffer[2] != 69) || buffer[3] != 0)
+            if (buffer.Length <= 127 || buffer[0] != 73 || buffer[1] != 67 || buffer[2] != 69 || buffer[3] != 0)
             {
-                buffer = null;
-                throw new Exception("ZamboniService: Not ice file.");
+                throw new ZamboniException("Not ice file.");
             }
             using MemoryStream ms = new(buffer);
-            IceFile iceFile = IceFile.LoadIceFile(ms);
 
+            // Iceファイルを読み込む
+            IceFile iceFile = IceFile.LoadIceFile(ms);
             if (iceFile == null)
             {
-                throw new Exception("ZamboniService: Could not parse ice file.");
+                throw new ZamboniException("Could not parse ice file.");
             }
 
             // 入力ファイルのファイル名を取得
@@ -127,28 +138,65 @@ namespace NgsPacker.Services
             // 出力先のディレクトリ作成処理（repacker_ice.exeと同じ仕様）
             string directory = !directoryName.Equals(outputPath) ? Path.GetFileName(directoryName) + "_" : "";
             // ファイル名+_extというディレクトリに出力
-            string destination = Path.Combine(outputPath, directory + Path.GetFileName(inputPath) + "_ext");
+            string exportPath = Path.Combine(outputPath, directory + Path.GetFileName(inputPath) + "_ext");
             // ディレクトリが存在しない場合作成する
-            if (!Directory.Exists(destination))
+            if (!Directory.Exists(exportPath))
             {
                 _ = Directory.CreateDirectory(directory);
             }
 
-            /*
+            // グループ1のエクスポート
+            bool ret1 = ExportByGroup(iceFile.groupOneFiles,
+                separateByGroup ? Path.Combine(outputPath, Path.Combine(directory, "group1")) : exportPath);
+            // グループ2のエクスポート
+            bool ret2 = ExportByGroup(iceFile.groupTwoFiles,
+                separateByGroup ? Path.Combine(outputPath, Path.Combine(directory, "group2")) : exportPath);
 
-            for (int index = 0; index < groupToWrite.Length; ++index)
+            // 出力できるファイルがない場合
+            if (!ret1 && !ret2)
             {
-                int int32 = BitConverter.ToInt32(groupToWrite[index], 16);
-                string str = Encoding.ASCII.GetString(groupToWrite[index], 64, int32).TrimEnd(new char[1]);
-                int iceHeaderSize = BitConverter.ToInt32(groupToWrite[index], 0xC);
-                int newLength = groupToWrite[index].Length - iceHeaderSize;
-                byte[] file = new byte[newLength];
-                Array.ConstrainedCopy(groupToWrite[index], iceHeaderSize, file, 0, newLength);
-                WriteAllBytes(directory + "\\" + str, file);
-                file = null;
-                groupToWrite[index] = null;
+                throw new ZamboniException($"Neither group1 nor group2 was dumped from {Path.GetFileName(inputPath)}.");
             }
-            */
+        }
+
+        /// <summary>
+        /// Iceファイルの解凍処理
+        /// </summary>
+        /// <param name="data">グループ別に仕分けされたデータ</param>
+        /// <param name="outputPath">出力先のパス</param>
+        /// <returns></returns>
+        private static bool ExportByGroup(byte[][] data, string outputPath)
+        {
+            if (!Directory.Exists(outputPath) && data != null && (uint)data.Length > 0U)
+                Directory.CreateDirectory(outputPath);
+
+            for (int index = 0; index < data.Length; ++index)
+            {
+                int int32 = BitConverter.ToInt32(data[index], 16);
+
+                // ファイル名を取得
+                string fileName = Encoding.ASCII.GetString(data[index], 64, int32).TrimEnd(new char[1]);
+
+                // ヘッダーを取得
+                int iceHeaderSize = BitConverter.ToInt32(data[index], 0xC);
+                int newLength = data[index].Length - iceHeaderSize;
+
+                // データを取得
+                byte[] content = new byte[newLength];
+                Array.ConstrainedCopy(data[index], iceHeaderSize, content, 0, newLength);
+
+                // ファイルの中身バイト列に書き込む
+                /*
+                using BinaryWriter bw = new(new FileStream(fileName, FileMode.Create));
+                bw.Write(content);
+                */
+                File.WriteAllBytes(outputPath + "\\" + fileName, content);
+
+                data[index] = null;
+            }
+
+            return !(data == null || (uint)data.Length == 0);
         }
     }
+
 }

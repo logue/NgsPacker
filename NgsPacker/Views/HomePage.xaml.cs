@@ -12,7 +12,7 @@ namespace NgsPacker.Views
     /// <summary>
     /// Interaction logic for HomePage
     /// </summary>
-    public partial class HomePage : UserControl
+    public partial class HomePage : Page
     {
         public HomePage()
         {

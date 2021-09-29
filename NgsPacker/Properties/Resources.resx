@@ -169,13 +169,27 @@
   <data name="CompleteText" xml:space="preserve">
     <value>The process is complete.</value>
   </data>
-  <data name="ModdingNoticeText" xml:space="preserve">
-    <value>To enable mods, you'll need a third-party launcher like Arcs-Layer's PSO2 Tweaker, as well as a CRC file, rather than just overwriting the target file.
+  <data name="ModdingWarningText" xml:space="preserve">
+    <value>* The act of modifying game data does not infringe the patent law and the right to retain identity based on the precedents of past trials, and is within the scope of freedom of expression, but it may damage the game environment.
+Please note that it can potentially be banned.
 
-Please note that past court precedents do not infringe the copyright law's right to maintain identity, but they may potentially be banned.
 USE AT YOUR OWN RISK.</value>
   </data>
   <data name="SaveText" xml:space="preserve">
     <value>Save</value>
+  </data>
+  <data name="PackInformationText" xml:space="preserve">
+    <value>If you want to create a PSO2 mod, click "Pack" and select a directory. You can create a mod by creating modified data with the same contents as an existing file.
+* A separate third-party launcher and checksum file (d5480a26b3dea3dda37abd1b61fb47cd) are required to activate the mod.</value>
+  </data>
+  <data name="UnpackInformationText" xml:space="preserve">
+    <value>If you want to unzip the PSO2 data file, click the "Unpack" button and select the data file.</value>
+  </data>
+  <data name="AboutText" xml:space="preserve">
+    <value>About</value>
+  </data>
+  <data name="SegaCopyrightNotice" xml:space="preserve">
+    <value>All rights to the copyrighted works (images, data, audios, texts, etc.) used in "PSO2: NGS" are owned by SEGA Corporation or its licensors.
+ Please note that any failure to comply with these guidelines or the Terms of Use may constitute a violation of the Terms of Use or copyright.</value>
   </data>
 </root>

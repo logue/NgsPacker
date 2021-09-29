@@ -7,7 +7,6 @@
     <TargetFramework>net5.0-windows10.0.19041.0</TargetFramework>
     <UseWPF>true</UseWPF>
     <StartupObject>NgsPacker.App</StartupObject>
-    <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <Authors>Masashi Yoshikawa</Authors>
     <Company>Logue</Company>
     <Copyright>(c) 2021 Logue</Copyright>
@@ -15,13 +14,18 @@
     <PackageProjectUrl>https://logue.dev/NgsPacker</PackageProjectUrl>
     <RepositoryUrl>git@github.com:logue/NgsPacker.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <AssemblyVersion>0.0.0.0</AssemblyVersion>
-    <FileVersion>0.0.0.0</FileVersion>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <FileVersion>1.0.0.0</FileVersion>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <Version>0.0.0</Version>
+    <Version>1.0.0</Version>
     <SupportedOSPlatformVersion>10.0.19041.0</SupportedOSPlatformVersion>
     <PackageReadmeFile>Readme.md</PackageReadmeFile>
     <PackageTags>PSO2;Phantasy Star Online2;Phantasy Star Online New Genesis;PSO2NGS;Packer;Unpacker</PackageTags>
+    <GenerateDocumentationFile>False</GenerateDocumentationFile>
+    <ProduceReferenceAssembly>False</ProduceReferenceAssembly>
+    <SignAssembly>False</SignAssembly>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="FluentWPF" Version="0.10.1" />
