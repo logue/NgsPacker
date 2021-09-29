@@ -52,7 +52,10 @@
 
         </ui:NavigationView.MenuItems>
         <ui:NavigationView.FooterMenuItems>
-            <ui:NavigationViewItem Name="About" Icon="Message" Content="{lex:Loc AboutText}" />
+            <ui:NavigationViewItem
+                Name="About"
+                Content="{lex:Loc AboutText}"
+                Icon="Message" />
         </ui:NavigationView.FooterMenuItems>
         <Border
             Margin="6"

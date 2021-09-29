@@ -8,7 +8,9 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:prism="http://prismlibrary.com/"
     xmlns:ui="http://schemas.modernwpf.com/2019"
+    xmlns:viewmodels="clr-namespace:NgsPacker.ViewModels"
     d:Background="White"
+    d:DataContext="{d:DesignInstance Type=viewmodels:AboutPageViewModel}"
     d:DesignHeight="384"
     d:DesignWidth="512"
     lex:LocalizeDictionary.DesignCulture="en"
@@ -19,8 +21,7 @@
     <DockPanel Margin="5">
         <WrapPanel HorizontalAlignment="Right" DockPanel.Dock="Bottom">
             <Button
-                Margin="0,0,5,0"
-                Padding="5,5,5,5"
+                Padding="10,5"
                 Command="{Binding VisitCommand}"
                 Style="{StaticResource ButtonRevealStyle}">
                 <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
@@ -33,21 +34,32 @@
             </Button>
         </WrapPanel>
         <WrapPanel Orientation="Horizontal">
-            <!--Image
+            <Image
                 Width="96"
                 Height="96"
                 Margin="10,0,10,0"
-                Source="{Binding Logo}" /-->
-            <ui:FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" FontSize="96" Margin="10,0,10,0" Glyph="&#xecaa;"/>
+                Source="{Binding Logo}" />
+            <!--  ui:FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" FontSize="96" Margin="10,0,10,0" Glyph="&#xecaa;"/  -->
             <StackPanel Orientation="Vertical">
-                <TextBlock FontSize="24" Text="{Binding Assembly.Title}" />
+                <TextBlock
+                    FontSize="24"
+                    Foreground="{StaticResource ImmersiveSystemAccentBrush}"
+                    Text="{Binding Assembly.Title}" />
                 <TextBlock Text="{Binding Assembly.Description}" />
                 <TextBlock Text="{Binding Assembly.Version}" />
-                <TextBlock Margin="0,0,0,10" Text="{Binding Assembly.Copyright}" />
+                <TextBlock Text="{Binding Assembly.Copyright}" />
             </StackPanel>
             <StackPanel>
                 <Separator />
-                <TextBlock Text="{lex:Loc SegaCopyrightNotice}" Margin="10" TextWrapping="Wrap" />
+                <TextBlock
+                    Margin="10"
+                    Text="{lex:Loc ModdingWarningText}"
+                    TextWrapping="Wrap" />
+                <Separator />
+                <TextBlock
+                    Margin="10"
+                    Text="{lex:Loc SegaCopyrightNotice}"
+                    TextWrapping="Wrap" />
             </StackPanel>
         </WrapPanel>
     </DockPanel>

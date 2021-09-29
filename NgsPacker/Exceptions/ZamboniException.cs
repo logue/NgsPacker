@@ -13,7 +13,7 @@ namespace NgsPacker.Exeptions
     /// <summary>
     /// Zamboni内で発生した例外
     /// </summary>
-    class ZamboniException : Exception
+    internal class ZamboniException : Exception
     {
         public ZamboniException(Exception e) : base()
         {

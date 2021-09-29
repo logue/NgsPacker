@@ -41,8 +41,7 @@
                     Margin="10,0,0,5"
                     DisplayMemberPath="DisplayName"
                     ItemsSource="{Binding Path=SupportedLanguages, UpdateSourceTrigger=PropertyChanged}"
-                    SelectedItem="{Binding Path=SelectedLanguage, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                    />
+                    SelectedItem="{Binding Path=SelectedLanguage, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
             </StackPanel>
             <StackPanel>
                 <TextBlock Text="{lex:Loc NotifyCompleteText}" />
@@ -55,18 +54,16 @@
         <StackPanel Grid.Column="1">
             <TextBlock Text="{lex:Loc WhiteListText}" />
             <TextBox
-                MaxHeight="300"
+                MaxHeight="280"
                 Margin="10,0,5,5"
                 AcceptsReturn="True"
                 AutomationProperties.Name="multi-line TextBox"
-                
                 Text="{Binding WhiteList}" />
         </StackPanel>
         <Button
             Grid.Row="2"
             Grid.Column="2"
             Padding="10,5"
-            Margin="0,0,5,0"
             Command="{Binding SaveCommand}"
             Style="{StaticResource ButtonRevealStyle}">
             <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">

@@ -5,6 +5,7 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using NgsPacker.Helper;
 using NgsPacker.Models;
 using Prism.Commands;
 using Prism.Mvvm;
@@ -40,7 +41,7 @@ namespace NgsPacker.ViewModels
             VisitCommand = new DelegateCommand(ExecuteVisitCommand);
             Assembly = new AppAssemblyModel();
 
-            // Logo = BitmapToImageSource.Convert(Properties.Resources.AppIcon);
+            Logo = BitmapToImageSource.Convert(Properties.Resources.AppIcon);
         }
 
         /// <summary>

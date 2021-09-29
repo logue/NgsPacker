@@ -10,7 +10,7 @@
     <Authors>Masashi Yoshikawa</Authors>
     <Company>Logue</Company>
     <Copyright>(c) 2021 Logue</Copyright>
-    <Description>Packer and Unpacker for PhantasyStar Online2 New Genesis.</Description>
+    <Description>Data packer and unpacker for Phantasy Star Online 2 New Genesis.</Description>
     <PackageProjectUrl>https://logue.dev/NgsPacker</PackageProjectUrl>
     <RepositoryUrl>git@github.com:logue/NgsPacker.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>

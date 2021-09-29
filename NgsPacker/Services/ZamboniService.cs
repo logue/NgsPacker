@@ -168,7 +168,9 @@ namespace NgsPacker.Services
         private static bool ExportByGroup(byte[][] data, string outputPath)
         {
             if (!Directory.Exists(outputPath) && data != null && (uint)data.Length > 0U)
+            {
                 Directory.CreateDirectory(outputPath);
+            }
 
             for (int index = 0; index < data.Length; ++index)
             {

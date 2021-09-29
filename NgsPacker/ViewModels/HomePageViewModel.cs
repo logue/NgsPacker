@@ -99,26 +99,27 @@ namespace NgsPacker.ViewModels
                 return;
             }
 
-            // TODO:プログレスバーを表示
-            ProgressDialog = true;
-            ProgressText = LocalizerService.GetLocalizedString("PackingText");
-
-            Task task = Task.Run(async () =>
+            try
             {
-                // Iceで圧縮（結構重い）
-                byte[] iceStream;
-                try
+                ProgressDialog = true;
+                ProgressText = LocalizerService.GetLocalizedString("PackingText");
+                Task task = await Task.Run(async () =>
                 {
-                    iceStream = ZamboniService.Pack(folder.Path, true, false);
+                    // Iceで圧縮（結構重い）
+                    byte[] iceStream = ZamboniService.Pack(folder.Path, true, false);
                     await File.WriteAllBytesAsync(saveFileDialog.FileName, iceStream);
-                }
-                catch (Exception ex)
-                {
-                    _ = AcrylicMessageBox.Show(System.Windows.Application.Current.MainWindow, ex.Message, LocalizerService.GetLocalizedString("ErrorTitleText"));
-                }
-            });
 
-            ProgressDialog = false;
+                    return Task.CompletedTask;
+                });
+                ProgressDialog = false;
+            }
+            catch (Exception ex)
+            {
+                _ = AcrylicMessageBox.Show(System.Windows.Application.Current.MainWindow, ex.Message, LocalizerService.GetLocalizedString("ErrorTitleText"));
+                return;
+            }
+
+
 
             // 完了通知
             if (Properties.Settings.Default.NotifyComplete)
@@ -139,7 +140,7 @@ namespace NgsPacker.ViewModels
         /// <summary>
         /// アンパック処理
         /// </summary>
-        private void ExecuteUnpackCommand()
+        private async void ExecuteUnpackCommand()
         {
             // ファイルを開くダイアログ
             using OpenFileDialog openFileDialog = new()
@@ -165,23 +166,23 @@ namespace NgsPacker.ViewModels
             {
                 return;
             }
-            // TODO:プログレスバーを表示
-            ProgressDialog = true;
-            ProgressText = LocalizerService.GetLocalizedString("UnpackingText");
 
-            Task task = Task.Run(async () =>
+            try
             {
-                try
+                ProgressText = LocalizerService.GetLocalizedString("UnpackingText");
+                ProgressDialog = true;
+                Task task = await Task.Run(async () =>
                 {
                     ZamboniService.Unpack(openFileDialog.FileName, folder.Path);
-                }
-                catch (Exception ex)
-                {
-                    _ = AcrylicMessageBox.Show(System.Windows.Application.Current.MainWindow, ex.Message, LocalizerService.GetLocalizedString("ErrorTitleText"));
-                }
-            });
-
-            ProgressDialog = false;
+                    return Task.CompletedTask;
+                });
+                ProgressDialog = false;
+            }
+            catch (Exception ex)
+            {
+                _ = AcrylicMessageBox.Show(System.Windows.Application.Current.MainWindow, ex.Message, LocalizerService.GetLocalizedString("ErrorTitleText"));
+                return;
+            }
 
             // 完了通知
             if (Properties.Settings.Default.NotifyComplete)
@@ -198,6 +199,7 @@ namespace NgsPacker.ViewModels
                     LocalizerService.GetLocalizedString("UnpackText"), LocalizerService.GetLocalizedString("CompleteText"));
             }
         }
+
 
     }
 }

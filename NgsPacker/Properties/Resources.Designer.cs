@@ -19,7 +19,7 @@ namespace NgsPacker.Properties {
     // または Visual Studio のようなツールを使用して自動生成されました。
     // メンバーを追加または削除するには、.ResX ファイルを編集して、/str オプションと共に
     // ResGen を実行し直すか、または VS プロジェクトをビルドし直します。
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
@@ -70,6 +70,16 @@ namespace NgsPacker.Properties {
         }
         
         /// <summary>
+        ///   型 System.Drawing.Bitmap のローカライズされたリソースを検索します。
+        /// </summary>
+        public static System.Drawing.Bitmap AppIcon {
+            get {
+                object obj = ResourceManager.GetObject("AppIcon", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   The process is complete. に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string CompleteText {
@@ -115,18 +125,7 @@ namespace NgsPacker.Properties {
         }
         
         /// <summary>
-        ///   型 System.Drawing.Bitmap のローカライズされたリソースを検索します。
-        /// </summary>
-        public static System.Drawing.Bitmap Logo {
-            get {
-                object obj = ResourceManager.GetObject("Logo", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   * The act of modifying game data does not infringe the patent law and the right to retain identity based on the precedents of past trials, and is within the scope of freedom of expression, but it may damage the game environment.
-        ///Please note that it can potentially be banned.
+        ///   * The act of modifying game data does not infringe the right to retain identity under patent law and copyright law based on past judicial precedents, and is within the scope of freedom of expression. However, keep in mind that it can potentially damage the gaming environment and can be banned. In particular, distribution or diversion of private internal data to an unspecified number of people in an open place clearly violates the rules and may be sued.
         ///
         ///USE AT YOUR OWN RISK. に類似しているローカライズされた文字列を検索します。
         /// </summary>
@@ -210,8 +209,7 @@ namespace NgsPacker.Properties {
         }
         
         /// <summary>
-        ///   All rights to the copyrighted works (images, data, audios, texts, etc.) used in &quot;PSO2: NGS&quot; are owned by SEGA Corporation or its licensors.
-        /// Please note that any failure to comply with these guidelines or the Terms of Use may constitute a violation of the Terms of Use or copyright. に類似しているローカライズされた文字列を検索します。
+        ///   All rights to the copyrighted works (images, data, audios, texts, etc.) used in &quot;PSO2: NGS&quot; are owned by SEGA Corporation or its licensors. に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string SegaCopyrightNotice {
             get {
