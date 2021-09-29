@@ -26,7 +26,11 @@
     <SignAssembly>False</SignAssembly>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <ApplicationIcon>ice-cubes.ico</ApplicationIcon>
   </PropertyGroup>
+  <ItemGroup>
+    <Content Include="ice-cubes.ico" />
+  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="FluentWPF" Version="0.10.1" />
     <PackageReference Include="Microsoft.Toolkit.Uwp.Notifications" Version="7.1.0" />

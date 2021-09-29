@@ -8,12 +8,12 @@
 
   <Identity
     Name="191d3797-c540-45a7-9961-b4ce0a68cf1d"
-    Publisher="CN=logue"
-    Version="0.0.0.0" />
+    Publisher="CN=Logue"
+    Version="1.0.0.0" />
 
   <Properties>
     <DisplayName>NgsPacker (Package)</DisplayName>
-    <PublisherDisplayName>logue</PublisherDisplayName>
+    <PublisherDisplayName>Logue</PublisherDisplayName>
     <Logo>Images\StoreLogo.png</Logo>
   </Properties>
 

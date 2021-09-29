@@ -115,8 +115,18 @@ namespace NgsPacker.Properties {
         }
         
         /// <summary>
-        ///   The act of modifying game data does not infringe the patent law and the right to retain identity from the precedents of past trials, and is in the category of the right to freedom of expression, but it may damage the game environment.
-        ///Keep in mind that it can potentially cause a banned.
+        ///   型 System.Drawing.Bitmap のローカライズされたリソースを検索します。
+        /// </summary>
+        public static System.Drawing.Bitmap Logo {
+            get {
+                object obj = ResourceManager.GetObject("Logo", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   * The act of modifying game data does not infringe the patent law and the right to retain identity based on the precedents of past trials, and is within the scope of freedom of expression, but it may damage the game environment.
+        ///Please note that it can potentially be banned.
         ///
         ///USE AT YOUR OWN RISK. に類似しているローカライズされた文字列を検索します。
         /// </summary>
