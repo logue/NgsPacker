@@ -24,9 +24,12 @@
     <GenerateDocumentationFile>False</GenerateDocumentationFile>
     <ProduceReferenceAssembly>False</ProduceReferenceAssembly>
     <SignAssembly>False</SignAssembly>
-    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <ApplicationIcon>ice-cubes.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
     <Content Include="ice-cubes.ico" />
@@ -78,4 +81,10 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="rd &quot;$(TargetDir)af-ZA&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)am-ET&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)ar-SA&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)az-Latn-AZ&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)be-BY&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)bg-BG&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)bn-BD&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)bs-Latn-BA&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)ca-ES&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)cs-CZ&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)da-DK&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)de-DE&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)el-GR&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)es-ES&quot; /S /Q &#xD;&#xA;rd &quot;$(TargetDir)es-MX&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)et-EE&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)eu-ES&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)fa-IR&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)fi-FI&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)fr-CA&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)fr-FR&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)gl-ES&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)ha-Latn-NG&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)he-IL&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)hi-IN&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)hr-HR&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)hu-HU&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)id-ID&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)is-IS&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)it-IT&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)ka-GE&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)kk-KZ&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)km-KH&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)kn-KH&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)kn-IN&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)ko-KR&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)lo-LA&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)lt-LT&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)lv-LV&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)mk-MK&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)ml-IN&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)ms-MY&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)nb-NL&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)nb-NO&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)nl-NL&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)nn-NO&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)pl-PL&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)pt-BR&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)pt-PT&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)ro-RO&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)ru-RU&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)sk-SK&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)sl-SI&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)sq-AL&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)sr-Latn-RS&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)sv-SE&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)sw-KE&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)ta-IN&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)te-IN&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)th-TH&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)tr-TR&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)uk-UA&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)uz-Latn-UZ&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)vi-VN&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)zh-CN&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)zh-TW&quot; /S /Q&#xD;&#xA;" />
+  </Target>
+  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+    <Exec Command="copy &quot;$(SolutionDir)x64\$(Configuration)\ooz.dll&quot; $(TargetDir)" />
+  </Target>
 </Project>
