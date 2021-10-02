@@ -5,6 +5,7 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using zamboni;
 
@@ -17,7 +18,7 @@ namespace NgsPacker.Interfaces
         /// </summary>
         /// <param name="inputPath">パックしたいファイルのディレクトリ</param>
         /// <param name="recursive">サブディレクトリを再帰的に含めるか</param>
-        /// <param name="compress">圧縮する（非推奨）</param>
+        /// <param name="compress">圧縮する</param>
         /// <param name="forceUnencrypted">暗号化する（非推奨）</param>
         /// <returns>パックしたファイルのバイナリ</returns>
         public byte[] Pack(string inputPath, bool recursive, bool compress = false, bool forceUnencrypted = false);
@@ -26,9 +27,17 @@ namespace NgsPacker.Interfaces
         /// 指定されたファイルをアンパックする
         /// </summary>
         /// <param name="inputPath">入力ファイルのパス</param>
+        /// <param name="outputPath">出力先のパス</param>
         /// <param name="sepalate">グループ1と2で分ける</param>
         /// <returns>解凍したファイルのバイナリ</returns>
         public void Unpack(string inputPath, string outputPath = null, bool sepalate = false);
+
+        /// <summary>
+        /// ファイル一覧を取得
+        /// </summary>
+        /// <param name="inputPath">解析するdataディレクトリ</param>
+        /// <returns></returns>
+        public List<string> Filelist(string inputPath);
 
         /// <summary>
         /// Iceファイルを読み込む.

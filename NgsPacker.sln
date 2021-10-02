@@ -1,12 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31702.278
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31717.71
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NgsPacker", "NgsPacker\NgsPacker.csproj", "{1469A306-6324-4E7D-B435-C0DA536C3D9F}"
-	ProjectSection(ProjectDependencies) = postProject
-		{B6748219-A0E7-46BB-AE38-5343961CB36A} = {B6748219-A0E7-46BB-AE38-5343961CB36A}
-	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{1890804D-C1D4-4DC0-B739-4F87BC075825}"
 	ProjectSection(SolutionItems) = preProject

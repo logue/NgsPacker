@@ -9,7 +9,6 @@
     xmlns:ui="http://schemas.modernwpf.com/2019"
     xmlns:viewmodels="clr-namespace:NgsPacker.ViewModels"
     d:Background="White"
-    d:DataContext="{d:DesignInstance Type=viewmodels:HomePageViewModel}"
     d:DesignHeight="384"
     d:DesignWidth="512"
     lex:LocalizeDictionary.DesignCulture="en"
@@ -59,7 +58,6 @@
             <Button
                 Padding="10,5"
                 Command="{Binding ExportFilelistCommand}"
-                IsEnabled="False"
                 Style="{StaticResource ButtonRevealStyle}">
                 <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
                     <ui:FontIcon

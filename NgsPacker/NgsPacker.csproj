@@ -14,6 +14,7 @@
     <PackageProjectUrl>https://logue.dev/NgsPacker</PackageProjectUrl>
     <RepositoryUrl>git@github.com:logue/NgsPacker.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
+    <RuntimeIdentifiers>win-x86;win-x64</RuntimeIdentifiers>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <Version>1.0.1</Version>
     <SupportedOSPlatformVersion>10.0.19041.0</SupportedOSPlatformVersion>
