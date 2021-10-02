@@ -89,11 +89,38 @@ namespace NgsPacker.Properties {
         }
         
         /// <summary>
+        ///   Compress に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string CompressCheckboxText {
+            get {
+                return ResourceManager.GetString("CompressCheckboxText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Crypt (not recommended) に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string CryptCheckBoxText {
+            get {
+                return ResourceManager.GetString("CryptCheckBoxText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Error に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string ErrorTitleText {
             get {
                 return ResourceManager.GetString("ErrorTitleText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Export Filelist に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string ExportFileListText {
+            get {
+                return ResourceManager.GetString("ExportFileListText", resourceCulture);
             }
         }
         
@@ -125,9 +152,7 @@ namespace NgsPacker.Properties {
         }
         
         /// <summary>
-        ///   * The act of modifying game data does not infringe the right to retain identity under patent law and copyright law based on past judicial precedents, and is within the scope of freedom of expression. However, keep in mind that it can potentially damage the gaming environment and can be banned. In particular, distribution or diversion of private internal data to an unspecified number of people in an open place clearly violates the rules and may be sued.
-        ///
-        ///USE AT YOUR OWN RISK. に類似しているローカライズされた文字列を検索します。
+        ///   The act of modifying game data (Modding) does not infringe the right to retain identity under the Patent Law and Copyright Law from the precedents of past trials, and is within the scope of freedom of expression. However, keep in mind that mods are potentially damaging to the gaming environment and can be banned. In particular, distribution or diversion of private internal data to an unspecified number of people in an open place clearly violates the rules and may be sued. The author does not take any respon [残りの文字列は切り詰められました]&quot;; に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string ModdingWarningText {
             get {
@@ -163,8 +188,8 @@ namespace NgsPacker.Properties {
         }
         
         /// <summary>
-        ///   If you want to create a PSO2 mod, click &quot;Pack&quot; and select a directory. You can create a mod by creating modified data with the same contents as an existing file.
-        ///* A separate third-party launcher and checksum file (d5480a26b3dea3dda37abd1b61fb47cd) are required to activate the mod. に類似しているローカライズされた文字列を検索します。
+        ///   To create a PSO2 mod, click &quot;Pack&quot; and select a directory. You can create a mod by creating modified data with the same structure as an existing file.
+        ///* A separate third-party launcher is required to activate the mod. に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string PackInformationText {
             get {
@@ -218,6 +243,24 @@ namespace NgsPacker.Properties {
         }
         
         /// <summary>
+        ///   Separate output directories by group に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string SepareteByGroupCheckBoxText {
+            get {
+                return ResourceManager.GetString("SepareteByGroupCheckBoxText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   PSO2 data files are divided into two groups according to extension and file name. If you check this checkbox, subdirectories &quot;group1&quot; and &quot;group2&quot; will be created at the time of unpacking and sorted according to the file affiliation. に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string SepareteByGroupCheckBoxToolTip {
+            get {
+                return ResourceManager.GetString("SepareteByGroupCheckBoxToolTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Toggle dark theme に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string ToggleDarkThemeTooltip {
@@ -245,7 +288,7 @@ namespace NgsPacker.Properties {
         }
         
         /// <summary>
-        ///   If you want to unzip the PSO2 data file, click the &quot;Unpack&quot; button and select the data file. に類似しているローカライズされた文字列を検索します。
+        ///   To unzip the PSO2 data file, click the &quot;Unpack&quot; button, select the data file, and select the output destination directory in the next dialog. に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string UnpackInformationText {
             get {

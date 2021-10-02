@@ -33,7 +33,7 @@ namespace NgsPacker.ViewModels
         /// <summary>
         /// 進捗ダイアログ表示
         /// </summary>
-        public bool ProgressDialog { get; private set; } = true;
+        public bool InProgress { get; private set; }
 
         /// <summary>
         /// 進捗ダイアログのテキスト
@@ -41,14 +41,34 @@ namespace NgsPacker.ViewModels
         public string ProgressText { get; private set; }
 
         /// <summary>
+        /// アンパック
+        /// </summary>
+        public DelegateCommand UnpackCommand { get; private set; }
+
+        /// <summary>
+        /// アンパック時にグループによってディレクトリを分ける
+        /// </summary>
+        public bool IsSepareteByGroup { get; set; }
+
+        /// <summary>
         /// パック
         /// </summary>
         public DelegateCommand PackCommand { get; private set; }
 
         /// <summary>
-        /// アンパック
+        /// パック時に圧縮する
         /// </summary>
-        public DelegateCommand UnpackCommand { get; private set; }
+        public bool IsCompress { get; set; }
+
+        /// <summary>
+        /// パック時に暗号化する
+        /// </summary>
+        public bool IsCrypt { get; set; }
+
+        /// <summary>
+        /// ファイル一覧を出色
+        /// </summary>
+        public DelegateCommand ExportFilelistCommand { get; private set; }
 
         /// <summary>
         /// コンストラクタ
@@ -59,6 +79,8 @@ namespace NgsPacker.ViewModels
         {
             PackCommand = new DelegateCommand(ExecutePackCommand);
             UnpackCommand = new DelegateCommand(ExecuteUnpackCommand);
+
+            IsCompress = true;
 
             // サービスのインジェクション
             LocalizerService = localizerService;
@@ -99,26 +121,29 @@ namespace NgsPacker.ViewModels
                 return;
             }
 
+#if !DEBUG
             try
             {
-                ProgressDialog = true;
+#endif
+                InProgress = true;
                 ProgressText = LocalizerService.GetLocalizedString("PackingText");
                 Task task = await Task.Run(async () =>
                 {
                     // Iceで圧縮（結構重い）
-                    byte[] iceStream = ZamboniService.Pack(folder.Path, true, false);
+                    byte[] iceStream = ZamboniService.Pack(folder.Path, IsCompress, IsCrypt);
                     await File.WriteAllBytesAsync(saveFileDialog.FileName, iceStream);
 
                     return Task.CompletedTask;
                 });
-                ProgressDialog = false;
+                InProgress = false;
+#if !DEBUG
             }
             catch (Exception ex)
             {
                 _ = AcrylicMessageBox.Show(System.Windows.Application.Current.MainWindow, ex.Message, LocalizerService.GetLocalizedString("ErrorTitleText"));
                 return;
             }
-
+#endif
 
 
             // 完了通知
@@ -166,24 +191,26 @@ namespace NgsPacker.ViewModels
             {
                 return;
             }
-
+#if !DEBUG
             try
             {
+#endif
                 ProgressText = LocalizerService.GetLocalizedString("UnpackingText");
-                ProgressDialog = true;
+                InProgress = true;
                 Task task = await Task.Run(async () =>
                 {
-                    ZamboniService.Unpack(openFileDialog.FileName, folder.Path);
+                    ZamboniService.Unpack(openFileDialog.FileName, folder.Path, IsSepareteByGroup);
                     return Task.CompletedTask;
                 });
-                ProgressDialog = false;
+                InProgress = false;
+#if !DEBUG
             }
             catch (Exception ex)
             {
                 _ = AcrylicMessageBox.Show(System.Windows.Application.Current.MainWindow, ex.Message, LocalizerService.GetLocalizedString("ErrorTitleText"));
                 return;
             }
-
+#endif
             // 完了通知
             if (Properties.Settings.Default.NotifyComplete)
             {

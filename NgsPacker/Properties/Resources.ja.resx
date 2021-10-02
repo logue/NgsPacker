@@ -181,7 +181,7 @@
   </data>
   <data name="PackInformationText" xml:space="preserve">
     <value>PSO2のModを作成する場合は「パック」をクリックしてディレクトリを選択してください。既存のファイルと同じ構成で改変したデータを作成することでModを作成できます。
-※Modの有効化には、別途サードパーティー製ランチャーおよび、チェックサムファイル（d5480a26b3dea3dda37abd1b61fb47cd）が必要です。</value>
+※Modの有効化には、別途サードパーティー製ランチャーが必要です。</value>
   </data>
   <data name="UnpackInformationText" xml:space="preserve">
     <value>PSO2のデータファイルを解凍する場合は、「アンパック」ボタンをクリックしてデータファイルを選択し、次のダイアログで出力先のディレクトリを選択してください。</value>
@@ -191,5 +191,20 @@
   </data>
   <data name="SegaCopyrightNotice" xml:space="preserve">
     <value>『PSO2』で使用している著作物（画像、データ、音声、テキスト等）の一切の権利は、株式会社セガまたはそのライセンサーが保有しております。</value>
+  </data>
+  <data name="SepareteByGroupCheckBoxText" xml:space="preserve">
+    <value>グループによって出力先ディレクトリを分ける</value>
+  </data>
+  <data name="SepareteByGroupCheckBoxToolTip" xml:space="preserve">
+    <value>PSO2のデータファイルは、拡張子やファイル名によって2つのグループに別れています。このチェックボックスをチェックすると、アンパック時に「group1」と「group2」というサブディレクトリが作成され、ファイルの所属先によって振り分けられます。</value>
+  </data>
+  <data name="CompressCheckboxText" xml:space="preserve">
+    <value>圧縮</value>
+  </data>
+  <data name="CryptCheckBoxText" xml:space="preserve">
+    <value>暗号化（非推奨）</value>
+  </data>
+  <data name="ExportFileListText" xml:space="preserve">
+    <value>ファイル一覧を出力</value>
   </data>
 </root>

@@ -29,7 +29,7 @@ namespace NgsPacker.Helpers
         {
             mfolderPicker = new FolderPicker()
             {
-                ViewMode = PickerViewMode.Thumbnail,
+                ViewMode = PickerViewMode.List,
                 SuggestedStartLocation = PickerLocationId.Desktop,
             };
             mfolderPicker.FileTypeFilter.Add("*");

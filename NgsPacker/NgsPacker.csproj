@@ -14,16 +14,11 @@
     <PackageProjectUrl>https://logue.dev/NgsPacker</PackageProjectUrl>
     <RepositoryUrl>git@github.com:logue/NgsPacker.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <AssemblyVersion>1.0.0.0</AssemblyVersion>
-    <FileVersion>1.0.0.0</FileVersion>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <Version>1.0.0</Version>
+    <Version>1.0.1</Version>
     <SupportedOSPlatformVersion>10.0.19041.0</SupportedOSPlatformVersion>
     <PackageReadmeFile>Readme.md</PackageReadmeFile>
     <PackageTags>PSO2;Phantasy Star Online2;Phantasy Star Online New Genesis;PSO2NGS;Packer;Unpacker</PackageTags>
-    <GenerateDocumentationFile>False</GenerateDocumentationFile>
-    <ProduceReferenceAssembly>False</ProduceReferenceAssembly>
-    <SignAssembly>False</SignAssembly>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <ApplicationIcon>ice-cubes.ico</ApplicationIcon>
