@@ -19,7 +19,7 @@ namespace NgsPacker.Properties {
     // または Visual Studio のようなツールを使用して自動生成されました。
     // メンバーを追加または削除するには、.ResX ファイルを編集して、/str オプションと共に
     // ResGen を実行し直すか、または VS プロジェクトをビルドし直します。
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
@@ -112,6 +112,15 @@ namespace NgsPacker.Properties {
         public static string ErrorTitleText {
             get {
                 return ResourceManager.GetString("ErrorTitleText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Select the win32 (PSO2 data) or win32_reboot (PSO2NGS data) directory in the PSO2 data directory. に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string ExportFileListInformationText {
+            get {
+                return ResourceManager.GetString("ExportFileListInformationText", resourceCulture);
             }
         }
         

@@ -8,9 +8,11 @@
 using Microsoft.Toolkit.Uwp.Notifications;
 using NgsPacker.Helpers;
 using NgsPacker.Interfaces;
+using NgsPacker.Services;
 using Prism.Commands;
 using Prism.Mvvm;
 using SourceChord.FluentWPF;
+using System;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -23,6 +25,9 @@ namespace NgsPacker.ViewModels
         /// 多言語化サービス
         /// </summary>
         private readonly ILocalizerService LocalizerService;
+
+
+        private readonly IProgressContentDialogService ProgressContentDialogService;
 
         /// <summary>
         /// Zamboniサービス
@@ -74,7 +79,7 @@ namespace NgsPacker.ViewModels
         /// </summary>
         /// <param name="localizerService">多言語化サービス</param>
         /// <param name="zamboniService">Zamboniサービス</param>
-        public HomePageViewModel(ILocalizerService localizerService, IZamboniService zamboniService)
+        public HomePageViewModel(ILocalizerService localizerService, IProgressContentDialogService progressContentDialogService, IZamboniService zamboniService)
         {
             PackCommand = new DelegateCommand(ExecutePackCommand);
             UnpackCommand = new DelegateCommand(ExecuteUnpackCommand);
@@ -84,6 +89,7 @@ namespace NgsPacker.ViewModels
 
             // サービスのインジェクション
             LocalizerService = localizerService;
+            ProgressContentDialogService = progressContentDialogService;
             ZamboniService = zamboniService;
         }
 
@@ -121,11 +127,13 @@ namespace NgsPacker.ViewModels
                 return;
             }
 
+            InProgress = true;
+            ProgressText = LocalizerService.GetLocalizedString("PackingText");
+            // await ProgressContentDialogService.ShowAsync();
 #if !DEBUG
             try
             {
-                InProgress = true;
-                ProgressText = LocalizerService.GetLocalizedString("PackingText");
+                
                 Task task = await Task.Run(async () =>
                 {
                     // Iceで圧縮（結構重い）
@@ -134,7 +142,6 @@ namespace NgsPacker.ViewModels
 
                     return Task.CompletedTask;
                 });
-                InProgress = false;
             }
             catch (Exception ex)
             {
@@ -142,8 +149,6 @@ namespace NgsPacker.ViewModels
                 return;
             }
 #else
-            InProgress = true;
-            ProgressText = LocalizerService.GetLocalizedString("PackingText");
             Task task = await Task.Run(async () =>
             {
                 // Iceで圧縮（結構重い）
@@ -152,8 +157,9 @@ namespace NgsPacker.ViewModels
 
                 return Task.CompletedTask;
             });
-            InProgress = false;
 #endif
+            // ProgressContentDialogService.Hide();
+            InProgress = false;
 
             // 完了通知
             if (Properties.Settings.Default.NotifyComplete)
@@ -200,17 +206,18 @@ namespace NgsPacker.ViewModels
             {
                 return;
             }
+
+            ProgressText = LocalizerService.GetLocalizedString("UnpackingText");
+            InProgress = true;
+            // await ProgressContentDialogService.ShowAsync();
 #if !DEBUG
             try
             {
-                ProgressText = LocalizerService.GetLocalizedString("UnpackingText");
-                InProgress = true;
                 Task task = await Task.Run(async () =>
                 {
                     ZamboniService.Unpack(openFileDialog.FileName, folder.Path, IsSepareteByGroup);
                     return Task.CompletedTask;
                 });
-                InProgress = false;
             }
             catch (Exception ex)
             {
@@ -218,15 +225,15 @@ namespace NgsPacker.ViewModels
                 return;
             }
 #else
-            ProgressText = LocalizerService.GetLocalizedString("UnpackingText");
-            InProgress = true;
             Task task = await Task.Run(async () =>
             {
                 ZamboniService.Unpack(openFileDialog.FileName, folder.Path, IsSepareteByGroup);
                 return Task.CompletedTask;
             });
-            InProgress = false;
 #endif
+            // ProgressContentDialogService.Hide();
+            InProgress = false;
+
             // 完了通知
             if (Properties.Settings.Default.NotifyComplete)
             {
@@ -274,12 +281,16 @@ namespace NgsPacker.ViewModels
                 return;
             }
 
+            InProgress = true;
+            // await ProgressContentDialogService.ShowAsync();
 #if !DEBUG
             try
             {
-                InProgress = true;
-                await File.WriteAllTextAsync(saveFileDialog.FileName, string.Join("\r\n", ZamboniService.Filelist(folder.Path)));
-                InProgress = false;
+                 Task task = await Task.Run(async () =>
+                {
+                    await File.WriteAllTextAsync(saveFileDialog.FileName, string.Join("\r\n", ZamboniService.Filelist(folder.Path)));
+                    return Task.CompletedTask;
+                });
             }
             catch (Exception ex)
             {
@@ -287,10 +298,14 @@ namespace NgsPacker.ViewModels
                 return;
             }
 #else
-            InProgress = true;
-            await File.WriteAllTextAsync(saveFileDialog.FileName, string.Join("\r\n", ZamboniService.Filelist(folder.Path)));
-            InProgress = false;
+            Task task = await Task.Run(async () =>
+            {
+                await File.WriteAllTextAsync(saveFileDialog.FileName, string.Join("\r\n", ZamboniService.Filelist(folder.Path)));
+                return Task.CompletedTask;
+            });
 #endif
+            // ProgressContentDialogService.Hide();
+            InProgress = false;
 
             // 完了通知
             if (Properties.Settings.Default.NotifyComplete)

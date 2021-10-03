@@ -103,6 +103,8 @@ namespace NgsPacker
         {
             // 多言語化
             _ = containerRegistry.RegisterInstance<ILocalizerService>(Container.Resolve<LocalizerService>());
+
+            _ = containerRegistry.RegisterInstance<IProgressContentDialogService>(Container.Resolve<ProgressContentDialogService>());
             // Zamboni
             _ = containerRegistry.RegisterInstance<IZamboniService>(Container.Resolve<ZamboniService>());
 

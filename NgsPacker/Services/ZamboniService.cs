@@ -156,6 +156,7 @@ namespace NgsPacker.Services
 
             foreach (IceEntryModel model in groupOneFiles.Concat(groupTwoFiles))
             {
+                Debug.WriteLine(model.FileName);
                 // ファイル名（ひどい可読性だ）
                 string fileName = destinaton + (sepalate ?
                     (model.Group == IceGroupEnum.GROUP1 ? "group1" : "group2") + Path.DirectorySeparatorChar : "")
@@ -171,12 +172,15 @@ namespace NgsPacker.Services
         /// ファイル一覧を取得
         /// </summary>
         /// <param name="inputPath">解析するdataディレクトリ</param>
-        /// <returns></returns>
+        /// <returns>CSV配列</returns>
         public List<string> Filelist(string inputPath)
         {
             List<string> ret = new();
             string[] entries = Directory.EnumerateFiles(inputPath, "*.*", SearchOption.AllDirectories).ToArray();
             Debug.WriteLine("Entries: ", entries.Length);
+
+            // CSVのヘッダ
+            ret.Add("filename,version,group,content");
             foreach (string path in entries)
             {
                 if (path.Contains("."))
@@ -184,63 +188,64 @@ namespace NgsPacker.Services
                     continue;
                 }
                 Debug.WriteLine(path);
-                // Iceファイルを読み込む
-                using (FileStream fileStream = File.OpenRead(path))
+
+                // Iceファイルをバイトとして読み込む
+                byte[] buffer = File.ReadAllBytes(path);
+
+                // Iceファイルのヘッダチェック
+                if (buffer.Length <= 127 || buffer[0] != 73 || buffer[1] != 67 || buffer[2] != 69 || buffer[3] != 0)
                 {
-                    byte[] numArray = new byte[4];
-                    _ = fileStream.Read(numArray, 0, 4);
-                    _ = fileStream.Seek(0L, SeekOrigin.Begin);
-                    
+                    continue;
+                }
 
-                    string str1 = Encoding.ASCII.GetString(numArray).Replace("\0", "");
-                    if (str1 != "ICE")
+                // メモリーストリームを生成
+                using MemoryStream ms = new(buffer);
+                // ヘッダを確認
+                _ = ms.Seek(8L, SeekOrigin.Begin);
+                int num = ms.ReadByte();
+                _ = ms.Seek(0L, SeekOrigin.Begin);
+
+                
+                FileInfo fileInfo = new(path);
+
+                // NGSのデータファイルの場合、親ディレクトリのパスも含める
+                string ice =
+                    (fileInfo.Directory.Name != "win32" ? fileInfo.Directory.Name + Path.DirectorySeparatorChar : "")
+                     + fileInfo.Name + ",ICE" + num + ",";
+
+                // Iceファイルを読み込む
+                IceFile iceFile = IceFile.LoadIceFile(ms);
+                if (iceFile == null)
+                {
+                    ret.Add(ice + "0,ERROR");
+                    continue;
+                }
+
+
+
+                // グループ1のファイルをパース
+                if (iceFile.groupOneFiles != null)
+                {
+                    byte[][] groupOneFiles = iceFile.groupOneFiles;
+                    for (int index = 0; index < groupOneFiles.Length; ++index)
                     {
-                        fileStream.Close();
-                        // ICEファイルでない
-                        continue;
-                    }
-                    
-                    ret.Add(Path.GetFileName(path) + "\t\t\t" + str1);
-
-                    // Iceファイルをパースする
-                    IceFile iceFile = IceFile.LoadIceFile(fileStream);
-
-                    if (iceFile == null)
-                    {
-                        fileStream.Close();
-                        // パース不能
-                        continue;
-                    }
-
-                    // グループ1のファイルをパース
-                    if (iceFile.groupOneFiles != null)
-                    {
-                        ret.Add("\tGroup 1:");
-                        byte[][] groupOneFiles = iceFile.groupOneFiles;
-                        for (int index = 0; index < groupOneFiles.Length; ++index)
-                        {
-                            int int32 = BitConverter.ToInt32(groupOneFiles[index], 16);
-                            string str2 = Encoding.ASCII.GetString(groupOneFiles[index], 64, int32).TrimEnd(new char[1]);
-                            ret.Add("\t\t" + str2);
-                        }
-                    }
-
-                    // グループ2のファイルをパース
-                    if (iceFile.groupOneFiles != null)
-                    {
-                        ret.Add("\tGroup 2:");
-                        byte[][] groupTwoFiles = iceFile.groupTwoFiles;
-                        for (int index = 0; index < groupTwoFiles.Length; ++index)
-                        {
-                            int int32 = BitConverter.ToInt32(groupTwoFiles[index], 16);
-                            string str2 = Encoding.ASCII.GetString(groupTwoFiles[index], 64, int32).TrimEnd(new char[1]);
-                            ret.Add("\t\t" + str2);
-                        }
-                    
+                        int int32 = BitConverter.ToInt32(groupOneFiles[index], 16);
+                        string str2 = Encoding.ASCII.GetString(groupOneFiles[index], 64, int32).TrimEnd(new char[1]);
+                        ret.Add(ice + "1," + str2);
                     }
                 }
-                ret.Add("");
-                ret.Add("");
+
+                // グループ2のファイルをパース
+                if (iceFile.groupOneFiles != null)
+                {
+                    byte[][] groupTwoFiles = iceFile.groupTwoFiles;
+                    for (int index = 0; index < groupTwoFiles.Length; ++index)
+                    {
+                        int int32 = BitConverter.ToInt32(groupTwoFiles[index], 16);
+                        string str2 = Encoding.ASCII.GetString(groupTwoFiles[index], 64, int32).TrimEnd(new char[1]);
+                        ret.Add(ice + "2," + str2);
+                    }
+                }
             }
             return ret;
         }

@@ -207,4 +207,7 @@
   <data name="ExportFileListText" xml:space="preserve">
     <value>ファイル一覧を出力</value>
   </data>
+  <data name="ExportFileListInformationText" xml:space="preserve">
+    <value>PSO2のdataディレクトリ内にあるwin32（PSO2のデータ）か、win32_reboot（PSO2NGSのデータ）ディレクトリを選択してください。</value>
+  </data>
 </root>

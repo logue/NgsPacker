@@ -52,9 +52,12 @@
                     <TextBlock VerticalAlignment="Center" Text="{lex:Loc PackText}" />
                 </StackPanel>
             </Button>
-            <CheckBox Content="{lex:Loc CompressCheckBoxText}" IsChecked="{Binding IsCompress, Mode=TwoWay}" />
-            <CheckBox Content="{lex:Loc CryptCheckBoxText}" IsChecked="{Binding IsCrypt, Mode=TwoWay}" />
+            <StackPanel Orientation="Horizontal">
+                <CheckBox Content="{lex:Loc CompressCheckBoxText}" IsChecked="{Binding IsCompress, Mode=TwoWay}" />
+                <CheckBox Content="{lex:Loc CryptCheckBoxText}" IsChecked="{Binding IsCrypt, Mode=TwoWay}" />
+            </StackPanel>
             <Separator Margin="0,10" />
+            <TextBlock Text="{lex:Loc ExportFileListInformationText}" TextWrapping="Wrap" />
             <Button
                 Padding="10,5"
                 Command="{Binding ExportFilelistCommand}"

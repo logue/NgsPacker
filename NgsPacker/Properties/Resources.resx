@@ -211,4 +211,7 @@ USE AT YOUR OWN RISK.</value>
   <data name="ExportFileListText" xml:space="preserve">
     <value>Export Filelist</value>
   </data>
+  <data name="ExportFileListInformationText" xml:space="preserve">
+    <value>Select the win32 (PSO2 data) or win32_reboot (PSO2NGS data) directory in the PSO2 data directory.</value>
+  </data>
 </root>
