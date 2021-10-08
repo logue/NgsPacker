@@ -1,0 +1,58 @@
+<Page
+    x:Class="NgsPacker.Views.PackPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:lex="http://wpflocalizeextension.codeplex.com"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:prism="http://prismlibrary.com/"
+    xmlns:ui="http://schemas.modernwpf.com/2019"
+    xmlns:viewmodels="clr-namespace:NgsPacker.ViewModels"
+    d:Background="White"
+    d:DesignHeight="384"
+    d:DesignWidth="512"
+    lex:LocalizeDictionary.DesignCulture="en"
+    lex:ResxLocalizationProvider.DefaultAssembly="NgsPacker"
+    lex:ResxLocalizationProvider.DefaultDictionary="Resources"
+    prism:ViewModelLocator.AutoWireViewModel="True"
+    mc:Ignorable="d">
+    <ui:SimpleStackPanel Spacing="12">
+        <TextBlock Text="{lex:Loc PackInformationText}" TextWrapping="Wrap" />
+        <Button
+            Padding="10,5"
+            Command="{Binding PackCommand}"
+            Style="{StaticResource ButtonRevealStyle}">
+            <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                <ui:FontIcon
+                    Margin="0,0,5,0"
+                    Glyph="&#xe1d8;" />
+                <TextBlock VerticalAlignment="Center" Text="{lex:Loc PackText}" />
+            </StackPanel>
+        </Button>
+        <StackPanel Orientation="Horizontal">
+            <CheckBox Content="{lex:Loc CompressCheckBoxText}" IsChecked="{Binding IsCompress, Mode=TwoWay}" />
+            <CheckBox Content="{lex:Loc CryptCheckBoxText}" IsChecked="{Binding IsCrypt, Mode=TwoWay}" />
+        </StackPanel>
+        <Separator />
+        <Label Content="{lex:Loc WhiteListText}" />
+        <TextBox
+            AcceptsReturn="True"
+            Height="100"
+            AutomationProperties.Name="multi-line TextBox"
+            Text="{Binding WhiteList}"
+            ToolTip="{lex:Loc SepareteByGroupCheckBoxToolTip}"/>
+        <ui:SimpleStackPanel>
+            <Button
+                Padding="10,5"
+                Command="{Binding SaveCommand}"
+                Style="{StaticResource ButtonRevealStyle}" HorizontalAlignment="Right" VerticalAlignment="Center">
+                <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                    <ui:FontIcon
+                        Margin="0,0,5,0"
+                        Glyph="&#xe78c;" />
+                    <TextBlock VerticalAlignment="Center" Text="{lex:Loc SaveText}" />
+                </StackPanel>
+            </Button>
+        </ui:SimpleStackPanel>
+    </ui:SimpleStackPanel>
+</Page>

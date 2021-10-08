@@ -15,13 +15,20 @@ using System.Windows.Media;
 
 namespace NgsPacker.ViewModels
 {
+    /// <summary>
+    /// バージョン情報ページビューモデル
+    /// </summary>
     public class AboutPageViewModel : BindableBase
     {
         /// <summary>
-        /// Gets the VisitCommand
         /// プロジェクトサイト閲覧ボタンのコマンド.
         /// </summary>
         public DelegateCommand VisitCommand { get; }
+
+        /// <summary>
+        /// NexusModsサイト閲覧ボタンのコマンド.
+        /// </summary>
+        public DelegateCommand VisitNexusModsCommand { get; }
 
         /// <summary>
         /// ロゴ画像.
@@ -39,6 +46,7 @@ namespace NgsPacker.ViewModels
         public AboutPageViewModel()
         {
             VisitCommand = new DelegateCommand(ExecuteVisitCommand);
+            VisitNexusModsCommand = new DelegateCommand(ExecuteVisitNexusModsCommand);
             Assembly = new AppAssemblyModel();
 
             Logo = BitmapToImageSource.Convert(Properties.Resources.AppIcon);
@@ -49,7 +57,23 @@ namespace NgsPacker.ViewModels
         /// </summary>
         private void ExecuteVisitCommand()
         {
-            string url = "https://github.com/logue/NgsPacker";
+            Go("https://github.com/logue/NgsPacker");
+        }
+
+        /// <summary>
+        /// NexusModsへ
+        /// </summary>
+        private void ExecuteVisitNexusModsCommand()
+        {
+            Go("https://www.nexusmods.com/phantasystaronline2newgenesis/mods/26");
+        }
+
+        /// <summary>
+        /// リンク
+        /// </summary>
+        /// <param name="url"></param>
+        private static void Go(string url)
+        {
             try
             {
                 _ = Process.Start(url);

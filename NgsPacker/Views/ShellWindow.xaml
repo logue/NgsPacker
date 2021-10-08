@@ -29,10 +29,10 @@
     mc:Ignorable="d">
     <ui:NavigationView
         x:Name="NavView"
-        IsBackButtonVisible="Visible"
-        IsBackEnabled="False"
+        IsBackButtonVisible="Collapsed"
         IsPaneOpen="True"
-        PaneDisplayMode="Top">
+        IsBackEnabled="False" PaneDisplayMode="Top"
+        >
         <ui:NavigationView.Resources>
             <SolidColorBrush x:Key="NavigationViewTopPaneBackground" Color="Transparent" />
             <SolidColorBrush x:Key="NavigationViewDefaultPaneBackground" Color="{DynamicResource SystemListLowColor}" />
@@ -46,10 +46,14 @@
 
         <ui:NavigationView.MenuItems>
             <ui:NavigationViewItem
-                Name="Home"
-                Content="{lex:Loc HomeText}"
-                Icon="Home" />
-
+                Name="Unpack"
+                Content="{lex:Loc UnpackText}"
+                Icon="FullScreen"
+                IsSelected="True"/>
+            <ui:NavigationViewItem
+                Name="Pack"
+                Content="{lex:Loc PackText}"
+                Icon="BackToWindow" />
         </ui:NavigationView.MenuItems>
         <ui:NavigationView.FooterMenuItems>
             <ui:NavigationViewItem
@@ -57,14 +61,16 @@
                 Content="{lex:Loc AboutText}"
                 Icon="Message" />
         </ui:NavigationView.FooterMenuItems>
-        <Border
-            Margin="6"
-            Background="{DynamicResource SystemAltMediumLowColorBrush}"
-            CornerRadius="{DynamicResource ControlCornerRadius}">
-            <ScrollViewer Padding="12">
-                <ui:Frame prism:RegionManager.RegionName="ContentRegion" />
+
+        <Border Background="{DynamicResource SystemAltMediumLowColorBrush}"
+                CornerRadius="{DynamicResource ControlCornerRadius}">
+            <ScrollViewer>
+                <ui:SimpleStackPanel
+                    Spacing="24"
+                    Margin="24,32,24,0">
+                    <ui:Frame prism:RegionManager.RegionName="ContentRegion" />
+                </ui:SimpleStackPanel>
             </ScrollViewer>
         </Border>
-
     </ui:NavigationView>
 </fw:AcrylicWindow>

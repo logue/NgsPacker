@@ -139,8 +139,7 @@
     <value>A desktop notification is issued when the process is completed.</value>
   </data>
   <data name="WhiteListText" xml:space="preserve">
-    <value>File name to classify into group 1
-(last match, Line break delimiter)</value>
+    <value>File name to classify into group 1 (last match, Line break delimiter)</value>
   </data>
   <data name="UnpackText" xml:space="preserve">
     <value>Unpack</value>
@@ -209,7 +208,7 @@ USE AT YOUR OWN RISK.</value>
     <value>Export Filelist</value>
   </data>
   <data name="ExportFileListInformationText" xml:space="preserve">
-    <value>Select the win32 (PSO2 data) or win32_reboot (PSO2NGS data) directory in the PSO2 data directory.</value>
+    <value>Outputs the list of files included in the data file in CSV format. Select the win32 (PSO2 data) or win32_reboot (PSO2NGS data) directory in the PSO2 data directory.</value>
   </data>
   <data name="Pso2BinPathText" xml:space="preserve">
     <value>Path of pso2_bin Path:</value>
@@ -232,5 +231,14 @@ Please select the correct directory.</value>
   </data>
   <data name="PackInputPathText" xml:space="preserve">
     <value>Specify the folder that contains the files you want to pack.</value>
+  </data>
+  <data name="UnpackByFileListText" xml:space="preserve">
+    <value>Unpack from file list</value>
+  </data>
+  <data name="UnpackByFilelistInformationText" xml:space="preserve">
+    <value>Batch unpacks only the files contained in the line-delimited file list.</value>
+  </data>
+  <data name="SaveText" xml:space="preserve">
+    <value>Save</value>
   </data>
 </root>

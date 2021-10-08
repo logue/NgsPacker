@@ -16,7 +16,7 @@
     <RepositoryType>git</RepositoryType>
     <RuntimeIdentifiers>win-x86;win-x64</RuntimeIdentifiers>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <Version>1.1.1</Version>
+    <Version>1.2.0</Version>
     <SupportedOSPlatformVersion>10.0.19041.0</SupportedOSPlatformVersion>
     <PackageReadmeFile>Readme.md</PackageReadmeFile>
     <PackageTags>PSO2;Phantasy Star Online2;Phantasy Star Online New Genesis;PSO2NGS;Packer;Unpacker</PackageTags>
@@ -40,6 +40,7 @@
     <PackageReference Include="WPFLocalizeExtension" Version="3.9.0" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ProgressDialogModule\ProgressDialog.csproj" />
     <ProjectReference Include="..\ZamboniLib\ZamboniLib\ZamboniLib.csproj" />
   </ItemGroup>
   <ItemGroup>

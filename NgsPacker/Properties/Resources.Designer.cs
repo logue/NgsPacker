@@ -125,7 +125,7 @@ namespace NgsPacker.Properties {
         }
         
         /// <summary>
-        ///   Select the win32 (PSO2 data) or win32_reboot (PSO2NGS data) directory in the PSO2 data directory. に類似しているローカライズされた文字列を検索します。
+        ///   Outputs the list of files included in the data file in CSV format. Select the win32 (PSO2 data) or win32_reboot (PSO2NGS data) directory in the PSO2 data directory. に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string ExportFileListInformationText {
             get {
@@ -271,6 +271,15 @@ namespace NgsPacker.Properties {
         }
         
         /// <summary>
+        ///   Save に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string SaveText {
+            get {
+                return ResourceManager.GetString("SaveText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   All rights to the copyrighted works (images, data, audios, texts, etc.) used in &quot;PSO2: NGS&quot; are owned by SEGA Corporation or its licensors. に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string SegaCopyrightNotice {
@@ -334,6 +343,24 @@ namespace NgsPacker.Properties {
         }
         
         /// <summary>
+        ///   Batch unpacks only the files contained in the line-delimited file list. に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string UnpackByFilelistInformationText {
+            get {
+                return ResourceManager.GetString("UnpackByFilelistInformationText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Unpack from file list に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string UnpackByFileListText {
+            get {
+                return ResourceManager.GetString("UnpackByFileListText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Select the * .ice file you want to unpack. に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string UnpackDialogText {
@@ -388,8 +415,7 @@ namespace NgsPacker.Properties {
         }
         
         /// <summary>
-        ///   File name to classify into group 1
-        ///(last match, Line break delimiter) に類似しているローカライズされた文字列を検索します。
+        ///   File name to classify into group 1 (last match, Line break delimiter) に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string WhiteListText {
             get {

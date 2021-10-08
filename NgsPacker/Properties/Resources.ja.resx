@@ -139,8 +139,7 @@
     <value>処理完了時にデスクトップ通知を出します。</value>
   </data>
   <data name="WhiteListText" xml:space="preserve">
-    <value>グループ1に分類するファイル
-（後方一致・改行区切り）</value>
+    <value>グループ1に分類するファイル（後方一致・改行区切り）</value>
   </data>
   <data name="UnpackText" xml:space="preserve">
     <value>アンパック</value>
@@ -205,7 +204,7 @@
     <value>ファイル一覧を出力</value>
   </data>
   <data name="ExportFileListInformationText" xml:space="preserve">
-    <value>PSO2のdataディレクトリ内にあるwin32（PSO2のデータ）か、win32_reboot（PSO2NGSのデータ）ディレクトリを選択してください。</value>
+    <value>データファイルに含まれるファイル一覧をCSV型式で出力します。PSO2のdataディレクトリ内にあるwin32（PSO2のデータ）か、win32_reboot（PSO2NGSのデータ）ディレクトリを選択してください。</value>
   </data>
   <data name="Pso2BinPathText" xml:space="preserve">
     <value>pso2_binのパス：</value>
@@ -228,5 +227,14 @@
   </data>
   <data name="PackInputPathText" xml:space="preserve">
     <value>パックしたいファイルの入ったフォルダを指定してください。</value>
+  </data>
+  <data name="UnpackByFileListText" xml:space="preserve">
+    <value>ファイルリストからアンパックする</value>
+  </data>
+  <data name="UnpackByFilelistInformationText" xml:space="preserve">
+    <value>改行区切りのファイルリストに含まれるファイルのみを一括アンパックします。</value>
+  </data>
+  <data name="SaveText" xml:space="preserve">
+    <value>保存</value>
   </data>
 </root>

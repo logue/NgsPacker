@@ -7,7 +7,6 @@
 
 using ImTools;
 using NgsPacker.Exeptions;
-using NgsPacker.Helpers;
 using NgsPacker.Interfaces;
 using NgsPacker.Models;
 using Prism.Events;
@@ -206,7 +205,7 @@ namespace NgsPacker.Services
         public async Task<List<string>> Filelist(string inputPath)
         {
             List<string> ret = new();
-            List<string> entries = new (Directory.EnumerateFiles(inputPath, "*.*", SearchOption.AllDirectories));
+            List<string> entries = new(Directory.EnumerateFiles(inputPath, "*.*", SearchOption.AllDirectories));
             Debug.WriteLine("Entries: ", entries.Count);
 
             // CSVのヘッダ

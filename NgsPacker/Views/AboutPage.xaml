@@ -18,22 +18,8 @@
     lex:ResxLocalizationProvider.DefaultDictionary="Resources"
     prism:ViewModelLocator.AutoWireViewModel="True"
     mc:Ignorable="d">
-    <DockPanel Margin="5">
-        <WrapPanel HorizontalAlignment="Right" DockPanel.Dock="Bottom">
-            <Button
-                Padding="10,5"
-                Command="{Binding VisitCommand}"
-                Style="{StaticResource ButtonRevealStyle}">
-                <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-                    <ui:FontIcon
-                        Margin="0,0,5,0"
-                        FontFamily="{StaticResource SymbolThemeFontFamily}"
-                        Glyph="&#xE774;" />
-                    <TextBlock VerticalAlignment="Center" Text="{lex:Loc VisitText}" />
-                </StackPanel>
-            </Button>
-        </WrapPanel>
-        <WrapPanel Orientation="Horizontal">
+    <ui:SimpleStackPanel Spacing="12">
+        <ui:SimpleStackPanel Orientation="Horizontal">
             <Image
                 Width="96"
                 Height="96"
@@ -49,18 +35,36 @@
                 <TextBlock Text="{Binding Assembly.Version}" />
                 <TextBlock Text="{Binding Assembly.Copyright}" />
             </StackPanel>
-            <StackPanel>
-                <Separator />
-                <TextBlock
-                    Margin="10"
-                    Text="{lex:Loc ModdingWarningText}"
-                    TextWrapping="Wrap" />
-                <Separator />
-                <TextBlock
-                    Margin="10"
-                    Text="{lex:Loc SegaCopyrightNotice}"
-                    TextWrapping="Wrap" />
-            </StackPanel>
-        </WrapPanel>
-    </DockPanel>
+        </ui:SimpleStackPanel>
+        <Separator />
+        <TextBlock
+            Text="{lex:Loc ModdingWarningText}"
+            TextWrapping="Wrap" />
+        <Separator />
+        <TextBlock
+            Text="{lex:Loc SegaCopyrightNotice}"
+            TextWrapping="Wrap" />
+        <ui:SimpleStackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="24">
+            <Button
+                Padding="10,5"
+                Command="{Binding VisitNexusModCommand}"
+                Style="{StaticResource ButtonRevealStyle}">
+                <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                    <TextBlock VerticalAlignment="Center" Text="Nexus Mods" />
+                </StackPanel>
+            </Button>
+            <Button
+                Padding="10,5"
+                Command="{Binding VisitCommand}"
+                Style="{StaticResource ButtonRevealStyle}">
+                <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                    <ui:FontIcon
+                        Margin="0,0,5,0"
+                        FontFamily="{StaticResource SymbolThemeFontFamily}"
+                        Glyph="&#xE774;" />
+                    <TextBlock VerticalAlignment="Center" Text="{lex:Loc VisitText}" />
+                </StackPanel>
+            </Button>
+        </ui:SimpleStackPanel>
+    </ui:SimpleStackPanel>
 </Page>

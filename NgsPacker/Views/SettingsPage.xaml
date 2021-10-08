@@ -17,63 +17,34 @@
     lex:ResxLocalizationProvider.DefaultDictionary="Resources"
     prism:ViewModelLocator.AutoWireViewModel="True"
     mc:Ignorable="d">
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition />
-            <ColumnDefinition />
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition />
-        </Grid.RowDefinitions>
-
-        <StackPanel Grid.Column="0">
-            <ui:SimpleStackPanel Spacing="5">
-                <Label Content="{lex:Loc ToggleThemeText}" />
-                <ui:ToggleSwitch
-                    Margin="5,0"
-                    IsOn="{Binding ToggleDarkTheme}"
-                    ToolTip="{lex:Loc ToggleDarkThemeTooltip}" />
-            </ui:SimpleStackPanel>
-            <ui:SimpleStackPanel Spacing="5">
-                <Label Content="{lex:Loc LanguageText}"  />
-                <ComboBox
-                    Margin="5,0"
-                    DisplayMemberPath="DisplayName"
-                    ItemsSource="{Binding Path=SupportedLanguages, UpdateSourceTrigger=PropertyChanged}"
-                    SelectedItem="{Binding Path=SelectedLanguage, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
-            </ui:SimpleStackPanel>
-            <ui:SimpleStackPanel Spacing="5">
-                <Label Content="{lex:Loc NotifyCompleteText}" />
-                <ui:ToggleSwitch
-                    Margin="10,0,0,5"
-                    IsOn="{Binding ToggleNotifyComplete}"
-                    ToolTip="{lex:Loc NotifyCompleteTooltip}" />
-            </ui:SimpleStackPanel>
-            <ui:SimpleStackPanel Spacing="5">
-                <Label Content="{lex:Loc Pso2BinPathText}"/>
-                <TextBox Margin="5,0" Text="{Binding Pso2BinPath}" />
-                <Button
-                    Padding="10,5"
-                    Command="{Binding BrowseCommand}"
-                    Style="{StaticResource ButtonRevealStyle}" HorizontalAlignment="Right" VerticalAlignment="Center"> 
-                    <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-                        <ui:FontIcon
-                        Margin="0,0,5,0"
-                        FontFamily="{StaticResource SymbolThemeFontFamily}"
-                        Glyph="&#xf89a;" />
-                        <TextBlock VerticalAlignment="Center" Text="{lex:Loc BrowseText}" />
-                    </StackPanel>
-                </Button>
-            </ui:SimpleStackPanel>
-        </StackPanel>
-        <ui:SimpleStackPanel Grid.Column="1" Spacing="5" Margin="5">
-            <Label Content="{lex:Loc WhiteListText}" />
-            <TextBox
-                MaxHeight="280"
-                
-                AcceptsReturn="True"
-                AutomationProperties.Name="multi-line TextBox"
-                Text="{Binding WhiteList}" />
-        </ui:SimpleStackPanel>
-    </Grid>
+    <ui:SimpleStackPanel Spacing="12">
+        <Label Content="{lex:Loc ToggleThemeText}" />
+        <ui:ToggleSwitch
+            IsOn="{Binding ToggleDarkTheme}"
+            ToolTip="{lex:Loc ToggleDarkThemeTooltip}" />
+        <Label Content="{lex:Loc LanguageText}" />
+        <ComboBox
+            DisplayMemberPath="DisplayName"
+            ItemsSource="{Binding Path=SupportedLanguages, UpdateSourceTrigger=PropertyChanged}"
+            SelectedItem="{Binding Path=SelectedLanguage, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+        <Label Content="{lex:Loc NotifyCompleteText}" />
+        <ui:ToggleSwitch
+            IsOn="{Binding ToggleNotifyComplete}"
+            ToolTip="{lex:Loc NotifyCompleteTooltip}" />
+        <Label Content="{lex:Loc Pso2BinPathText}" />
+        <TextBox Text="{Binding Pso2BinPath}" />
+        <Button
+            Padding="10,5"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Center"
+            Command="{Binding BrowseCommand}"
+            Style="{StaticResource ButtonRevealStyle}">
+            <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                <ui:FontIcon
+                    Margin="0,0,5,0"
+                    Glyph="&#xec50;" />
+                <TextBlock VerticalAlignment="Center" Text="{lex:Loc BrowseText}" />
+            </StackPanel>
+        </Button>
+    </ui:SimpleStackPanel>
 </Page>

@@ -17,6 +17,9 @@ using System.IO;
 
 namespace NgsPacker.ViewModels
 {
+    /// <summary>
+    /// 設定ビューモデル
+    /// </summary>
     public class SettingsPageViewModel : BindableBase
     {
         /// <summary>
@@ -25,26 +28,9 @@ namespace NgsPacker.ViewModels
         private readonly ILocalizerService LocalizerService;
 
         /// <summary>
-        /// 設定を保存
-        /// </summary>
-        public DelegateCommand SaveCommand { get; private set; }
-
-        /// <summary>
         /// pso2_binのディレクトリ選択
         /// </summary>
         public DelegateCommand BrowseCommand { get; private set; }
-
-        /// <summary>
-        /// ホワイトリスト
-        /// </summary>
-        public static string WhiteList {
-            get => Properties.Settings.Default.WhiteList;
-            set
-            {
-                Properties.Settings.Default.WhiteList = value;
-                Properties.Settings.Default.Save();
-            }
-        }
 
         /// <summary>
         /// 対応言語.
@@ -54,9 +40,11 @@ namespace NgsPacker.ViewModels
         /// <summary>
         /// 完了時に通知を出す.
         /// </summary>
-        public static bool ToggleNotifyComplete {
+        public static bool ToggleNotifyComplete
+        {
             get => Properties.Settings.Default.NotifyComplete;
-            set {
+            set
+            {
                 Properties.Settings.Default.NotifyComplete = value;
                 Properties.Settings.Default.Save();
             }
@@ -96,7 +84,8 @@ namespace NgsPacker.ViewModels
         /// <summary>
         /// Pso2のバイナリディレクト
         /// </summary>
-        public static string Pso2BinPath {
+        public static string Pso2BinPath
+        {
             get => Properties.Settings.Default.Pso2BinPath;
             set
             {
@@ -111,21 +100,11 @@ namespace NgsPacker.ViewModels
         /// <param name="localizerService">多言語化サービス.</param>
         public SettingsPageViewModel(ILocalizerService localizerService)
         {
-            // 設定保存のイベント割当
-            SaveCommand = new DelegateCommand(ExecuteSaveCommand);
+
             // 設定保存のイベント割当
             BrowseCommand = new DelegateCommand(ExecuteBrowseCommand);
             // 多言語化サービスのインジェクション
             LocalizerService = localizerService;
-        }
-
-        /// <summary>
-        /// 設定保存.
-        /// </summary>
-        private void ExecuteSaveCommand()
-        {
-            // 設定を保存
-            Properties.Settings.Default.Save();
         }
 
         /// <summary>

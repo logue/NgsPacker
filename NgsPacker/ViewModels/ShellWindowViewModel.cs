@@ -16,6 +16,7 @@ using Prism.Regions;
 using SourceChord.FluentWPF;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Windows;
 
 namespace NgsPacker.ViewModels
@@ -46,7 +47,8 @@ namespace NgsPacker.ViewModels
         /// ページ名とビューの対応表
         /// </summary>
         private Dictionary<string, Uri> Pages { get; set; } = new Dictionary<string, Uri>(){
-            { "Home",  new Uri("HomePage", UriKind.Relative) },
+            { "Pack",  new Uri("PackPage", UriKind.Relative) },
+            { "Unpack",  new Uri("UnpackPage", UriKind.Relative) },
             { "About",  new Uri("AboutPage", UriKind.Relative) },
             { "SettingsItem",  new Uri("SettingsPage", UriKind.Relative)}
         };
@@ -61,13 +63,22 @@ namespace NgsPacker.ViewModels
             Title = AppAssemblyModel.Title;
 
             // ダークモード切替
-            ThemeManager.Current.ApplicationTheme = Properties.Settings.Default.ThemeDark ? ModernWpf.ApplicationTheme.Dark : ModernWpf.ApplicationTheme.Light;
+            ThemeManager.Current.ApplicationTheme = Properties.Settings.Default.ThemeDark ?
+                ModernWpf.ApplicationTheme.Dark : ModernWpf.ApplicationTheme.Light;
 
             // 初期状態のページ
-            _ = regionManager.RegisterViewWithRegion("ContentRegion", typeof(HomePage));
+            _ = regionManager.RegisterViewWithRegion("ContentRegion", typeof(UnpackPage));
 
-            // ナビゲーション遷移登録j
+            // ナビゲーション遷移登録
             SelectionChangedCommand = new DelegateCommand<NavigationViewSelectionChangedEventArgs>(SelectionChanged);
+
+            if (!File.Exists(Properties.Settings.Default.Pso2BinPath + Path.DirectorySeparatorChar + "pso2.exe"))
+            {
+                _ = AcrylicMessageBox.Show(System.Windows.Application.Current.MainWindow,
+                    LocalizerService.GetLocalizedString("Pso2ExeNotFoundErrorText"), LocalizerService.GetLocalizedString("ErrorTitleText"));
+                // 設定ページに遷移
+                RegionManager.RequestNavigate("ContentRegion", Pages["SettingsItem"]);
+            }
 
             // リージョンマネージャーをインジェクション
             RegionManager = regionManager;

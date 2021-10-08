@@ -107,7 +107,8 @@ namespace NgsPacker
             _ = containerRegistry.RegisterInstance<IZamboniService>(Container.Resolve<ZamboniService>());
 
             // ページの登録
-            containerRegistry.RegisterForNavigation<HomePage>();
+            containerRegistry.RegisterForNavigation<UnpackPage>();
+            containerRegistry.RegisterForNavigation<PackPage>();
             containerRegistry.RegisterForNavigation<AboutPage>();
             containerRegistry.RegisterForNavigation<SettingsPage>();
         }
@@ -119,7 +120,7 @@ namespace NgsPacker
         protected override void ConfigureModuleCatalog(IModuleCatalog moduleCatalog)
         {
             // 進捗ダイアログモジュール
-            moduleCatalog.AddModule<ProgressDialog.Module>();
+            _ = moduleCatalog.AddModule<ProgressDialog.Module>();
         }
     }
 }
