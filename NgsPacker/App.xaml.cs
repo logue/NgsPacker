@@ -103,8 +103,6 @@ namespace NgsPacker
         {
             // 多言語化
             _ = containerRegistry.RegisterInstance<ILocalizerService>(Container.Resolve<LocalizerService>());
-
-            _ = containerRegistry.RegisterInstance<IProgressContentDialogService>(Container.Resolve<ProgressContentDialogService>());
             // Zamboni
             _ = containerRegistry.RegisterInstance<IZamboniService>(Container.Resolve<ZamboniService>());
 
@@ -114,8 +112,14 @@ namespace NgsPacker
             containerRegistry.RegisterForNavigation<SettingsPage>();
         }
 
+        /// <summary>
+        /// モジュールの登録
+        /// </summary>
+        /// <param name="moduleCatalog"></param>
         protected override void ConfigureModuleCatalog(IModuleCatalog moduleCatalog)
         {
+            // 進捗ダイアログモジュール
+            moduleCatalog.AddModule<ProgressDialog.Module>();
         }
     }
 }

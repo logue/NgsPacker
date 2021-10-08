@@ -21,7 +21,7 @@ namespace NgsPacker.Interfaces
         /// <param name="compress">圧縮する</param>
         /// <param name="forceUnencrypted">暗号化する（非推奨）</param>
         /// <returns>パックしたファイルのバイナリ</returns>
-        public byte[] Pack(string inputPath, bool recursive, bool compress = false, bool forceUnencrypted = false);
+        public Task<byte[]> Pack(string inputPath, bool recursive = true, bool compress = false, bool forceUnencrypted = false);
 
         /// <summary>
         /// 指定されたファイルをアンパックする
@@ -30,14 +30,14 @@ namespace NgsPacker.Interfaces
         /// <param name="outputPath">出力先のパス</param>
         /// <param name="sepalate">グループ1と2で分ける</param>
         /// <returns>解凍したファイルのバイナリ</returns>
-        public void Unpack(string inputPath, string outputPath = null, bool sepalate = false);
+        public Task Unpack(string inputPath, string outputPath = null, bool sepalate = false);
 
         /// <summary>
         /// ファイル一覧を取得
         /// </summary>
         /// <param name="inputPath">解析するdataディレクトリ</param>
         /// <returns></returns>
-        public List<string> Filelist(string inputPath);
+        public Task<List<string>> Filelist(string inputPath);
 
         /// <summary>
         /// Iceファイルを読み込む.

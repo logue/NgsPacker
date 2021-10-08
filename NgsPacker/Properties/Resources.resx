@@ -176,9 +176,6 @@
     <value>The act of modifying game data (Modding) does not infringe the right to retain identity under the Patent Law and Copyright Law from the precedents of past trials, and is within the scope of freedom of expression. However, keep in mind that mods are potentially damaging to the gaming environment and can be banned. In particular, distribution or diversion of private internal data to an unspecified number of people in an open place clearly violates the rules and may be sued. The author does not take any responsibility for any damage caused by that.
 USE AT YOUR OWN RISK.</value>
   </data>
-  <data name="SaveText" xml:space="preserve">
-    <value>Save</value>
-  </data>
   <data name="PackInformationText" xml:space="preserve">
     <value>To create a PSO2 mod, click "Pack" and select a directory. You can create a mod by creating modified data with the same structure as an existing file.
 * A separate third-party launcher is required to activate the mod.</value>
@@ -213,5 +210,27 @@ USE AT YOUR OWN RISK.</value>
   </data>
   <data name="ExportFileListInformationText" xml:space="preserve">
     <value>Select the win32 (PSO2 data) or win32_reboot (PSO2NGS data) directory in the PSO2 data directory.</value>
+  </data>
+  <data name="Pso2BinPathText" xml:space="preserve">
+    <value>Path of pso2_bin Path:</value>
+  </data>
+  <data name="BrowseText" xml:space="preserve">
+    <value>Browse...</value>
+  </data>
+  <data name="SettingsSavedText" xml:space="preserve">
+    <value>Settings have been saved.</value>
+  </data>
+  <data name="SelectPso2BinPathText" xml:space="preserve">
+    <value>Select the pso2_bin directory (the directory where pso2.exe resides).</value>
+  </data>
+  <data name="Pso2ExeNotFoundErrorText" xml:space="preserve">
+    <value>pso2.exe cannot be found.
+Please select the correct directory.</value>
+  </data>
+  <data name="UnpackOutputPathText" xml:space="preserve">
+    <value>Please specify the output destination of the file.</value>
+  </data>
+  <data name="PackInputPathText" xml:space="preserve">
+    <value>Specify the folder that contains the files you want to pack.</value>
   </data>
 </root>

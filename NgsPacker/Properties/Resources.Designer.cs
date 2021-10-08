@@ -80,6 +80,15 @@ namespace NgsPacker.Properties {
         }
         
         /// <summary>
+        ///   Browse... に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string BrowseText {
+            get {
+                return ResourceManager.GetString("BrowseText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   The process is complete. に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string CompleteText {
@@ -216,11 +225,39 @@ namespace NgsPacker.Properties {
         }
         
         /// <summary>
+        ///   Specify the folder that contains the files you want to pack. に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string PackInputPathText {
+            get {
+                return ResourceManager.GetString("PackInputPathText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Pack に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string PackText {
             get {
                 return ResourceManager.GetString("PackText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Path of pso2_bin Path: に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Pso2BinPathText {
+            get {
+                return ResourceManager.GetString("Pso2BinPathText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   pso2.exe cannot be found.
+        ///Please select the correct directory. に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Pso2ExeNotFoundErrorText {
+            get {
+                return ResourceManager.GetString("Pso2ExeNotFoundErrorText", resourceCulture);
             }
         }
         
@@ -234,20 +271,20 @@ namespace NgsPacker.Properties {
         }
         
         /// <summary>
-        ///   Save に類似しているローカライズされた文字列を検索します。
-        /// </summary>
-        public static string SaveText {
-            get {
-                return ResourceManager.GetString("SaveText", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   All rights to the copyrighted works (images, data, audios, texts, etc.) used in &quot;PSO2: NGS&quot; are owned by SEGA Corporation or its licensors. に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string SegaCopyrightNotice {
             get {
                 return ResourceManager.GetString("SegaCopyrightNotice", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Select the pso2_bin directory (the directory where pso2.exe resides). に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string SelectPso2BinPathText {
+            get {
+                return ResourceManager.GetString("SelectPso2BinPathText", resourceCulture);
             }
         }
         
@@ -266,6 +303,15 @@ namespace NgsPacker.Properties {
         public static string SepareteByGroupCheckBoxToolTip {
             get {
                 return ResourceManager.GetString("SepareteByGroupCheckBoxToolTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Settings have been saved. に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string SettingsSavedText {
+            get {
+                return ResourceManager.GetString("SettingsSavedText", resourceCulture);
             }
         }
         
@@ -311,6 +357,15 @@ namespace NgsPacker.Properties {
         public static string UnpackingText {
             get {
                 return ResourceManager.GetString("UnpackingText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Please specify the output destination of the file. に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string UnpackOutputPathText {
+            get {
+                return ResourceManager.GetString("UnpackOutputPathText", resourceCulture);
             }
         }
         

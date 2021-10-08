@@ -4,7 +4,7 @@
     <RootNamespace>NgsPacker</RootNamespace>
     <AssemblyName>NgsPacker</AssemblyName>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net5.0-windows10.0.19041.0</TargetFramework>
+    <TargetFramework>net5.0-windows10.0.20348.0</TargetFramework>
     <UseWPF>true</UseWPF>
     <StartupObject>NgsPacker.App</StartupObject>
     <Authors>Masashi Yoshikawa</Authors>
@@ -16,7 +16,7 @@
     <RepositoryType>git</RepositoryType>
     <RuntimeIdentifiers>win-x86;win-x64</RuntimeIdentifiers>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <Version>1.1.0</Version>
+    <Version>1.1.1</Version>
     <SupportedOSPlatformVersion>10.0.19041.0</SupportedOSPlatformVersion>
     <PackageReadmeFile>Readme.md</PackageReadmeFile>
     <PackageTags>PSO2;Phantasy Star Online2;Phantasy Star Online New Genesis;PSO2NGS;Packer;Unpacker</PackageTags>

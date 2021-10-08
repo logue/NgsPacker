@@ -52,5 +52,8 @@ oxyresource.crc</Value>
     <Setting Name="FallbackPatchServerUri" Type="System.String" Scope="User">
       <Value Profile="(Default)">http://sub-download.pso2.jp/patch_prod/head_rc_4161_masterbase/patches/data/win32/</Value>
     </Setting>
+    <Setting Name="Pso2BinPath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">C:\Program Files (x86)\SEGA\PHANTASYSTARONLINE2\pso2_bin</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

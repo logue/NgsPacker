@@ -97,5 +97,17 @@ namespace NgsPacker.Properties {
                 this["FallbackPatchServerUri"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Program Files (x86)\\SEGA\\PHANTASYSTARONLINE2\\pso2_bin")]
+        public string Pso2BinPath {
+            get {
+                return ((string)(this["Pso2BinPath"]));
+            }
+            set {
+                this["Pso2BinPath"] = value;
+            }
+        }
     }
 }

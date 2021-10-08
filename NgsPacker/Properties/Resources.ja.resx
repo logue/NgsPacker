@@ -176,9 +176,6 @@
     <value>ゲームデータを改変する行為(Modding)は、過去の裁判の判例から特許法および、著作権法における同一性保持権の侵害にはあたらず、表現の自由の範疇にあります。しかしながら、Modは潜在的にゲーム環境に損害を与える可能性がある行為であり、バンされる可能性があるということについて留意してください。特に非公開の内部データの開いた場所での不特定多数へ配布や流用は明確に規約違反となり、訴えられる可能性があります。その事によって生じたいかなる損害について作者は一切の責任を負いません。
 使用は自己責任でお願いします。</value>
   </data>
-  <data name="SaveText" xml:space="preserve">
-    <value>保存</value>
-  </data>
   <data name="PackInformationText" xml:space="preserve">
     <value>PSO2のModを作成する場合は「パック」をクリックしてディレクトリを選択してください。既存のファイルと同じ構成で改変したデータを作成することでModを作成できます。
 ※Modの有効化には、別途サードパーティー製ランチャーが必要です。</value>
@@ -209,5 +206,27 @@
   </data>
   <data name="ExportFileListInformationText" xml:space="preserve">
     <value>PSO2のdataディレクトリ内にあるwin32（PSO2のデータ）か、win32_reboot（PSO2NGSのデータ）ディレクトリを選択してください。</value>
+  </data>
+  <data name="Pso2BinPathText" xml:space="preserve">
+    <value>pso2_binのパス：</value>
+  </data>
+  <data name="BrowseText" xml:space="preserve">
+    <value>選択...</value>
+  </data>
+  <data name="SettingsSavedText" xml:space="preserve">
+    <value>設定を保存しました。</value>
+  </data>
+  <data name="SelectPso2BinPathText" xml:space="preserve">
+    <value>pso2_binディレクトリ（pso2.exeが存在するディレクトリ）を選択してください。</value>
+  </data>
+  <data name="Pso2ExeNotFoundErrorText" xml:space="preserve">
+    <value>pso2.exeが見つかりません。
+正しいディレクトリを選択してください。</value>
+  </data>
+  <data name="UnpackOutputPathText" xml:space="preserve">
+    <value>ファイルの出力先を指定してください。</value>
+  </data>
+  <data name="PackInputPathText" xml:space="preserve">
+    <value>パックしたいファイルの入ったフォルダを指定してください。</value>
   </data>
 </root>

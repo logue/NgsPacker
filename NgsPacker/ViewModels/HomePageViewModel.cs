@@ -8,11 +8,11 @@
 using Microsoft.Toolkit.Uwp.Notifications;
 using NgsPacker.Helpers;
 using NgsPacker.Interfaces;
-using NgsPacker.Services;
 using Prism.Commands;
 using Prism.Mvvm;
 using SourceChord.FluentWPF;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -25,9 +25,6 @@ namespace NgsPacker.ViewModels
         /// 多言語化サービス
         /// </summary>
         private readonly ILocalizerService LocalizerService;
-
-
-        private readonly IProgressContentDialogService ProgressContentDialogService;
 
         /// <summary>
         /// Zamboniサービス
@@ -79,7 +76,7 @@ namespace NgsPacker.ViewModels
         /// </summary>
         /// <param name="localizerService">多言語化サービス</param>
         /// <param name="zamboniService">Zamboniサービス</param>
-        public HomePageViewModel(ILocalizerService localizerService, IProgressContentDialogService progressContentDialogService, IZamboniService zamboniService)
+        public HomePageViewModel(ILocalizerService localizerService, IZamboniService zamboniService)
         {
             PackCommand = new DelegateCommand(ExecutePackCommand);
             UnpackCommand = new DelegateCommand(ExecuteUnpackCommand);
@@ -89,7 +86,6 @@ namespace NgsPacker.ViewModels
 
             // サービスのインジェクション
             LocalizerService = localizerService;
-            ProgressContentDialogService = progressContentDialogService;
             ZamboniService = zamboniService;
         }
 
@@ -99,23 +95,21 @@ namespace NgsPacker.ViewModels
         private async void ExecutePackCommand()
         {
             // フォルダ選択ダイアログ
-            FolderPickerEx picker = new();
-
+            FolderPicker picker = new();
+            picker.Title = LocalizerService.GetLocalizedString("PackInputPathText");
+            picker.InputPath = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
             // ファイルダイアログを表示
-            Windows.Storage.StorageFolder folder = picker.PickSingleFolder();
-
-            if (folder == null)
+            if (picker.ShowDialog() != true)
             {
                 return;
             }
-
-            // Windows.Storage.AccessCache.StorageApplicationPermissions.FutureAccessList.AddOrReplace("PickedFolderToken", folder);
 
             // ファイル保存ダイアログ
             using SaveFileDialog saveFileDialog = new()
             {
                 Title = LocalizerService.GetLocalizedString("SaveAsDialogText"),
                 Filter = LocalizerService.GetLocalizedString("IceFileFilterText"),
+                InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal),
                 FileName = "pso2data.ice"
             };
 
@@ -127,39 +121,14 @@ namespace NgsPacker.ViewModels
                 return;
             }
 
-            InProgress = true;
-            ProgressText = LocalizerService.GetLocalizedString("PackingText");
-            // await ProgressContentDialogService.ShowAsync();
-#if !DEBUG
-            try
-            {
-                
-                Task task = await Task.Run(async () =>
-                {
-                    // Iceで圧縮（結構重い）
-                    byte[] iceStream = ZamboniService.Pack(folder.Path, IsCompress, IsCrypt);
-                    await File.WriteAllBytesAsync(saveFileDialog.FileName, iceStream);
-
-                    return Task.CompletedTask;
-                });
-            }
-            catch (Exception ex)
-            {
-                _ = AcrylicMessageBox.Show(System.Windows.Application.Current.MainWindow, ex.Message, LocalizerService.GetLocalizedString("ErrorTitleText"));
-                return;
-            }
-#else
-            Task task = await Task.Run(async () =>
+            _ = await Task.Run(async () =>
             {
                 // Iceで圧縮（結構重い）
-                byte[] iceStream = ZamboniService.Pack(folder.Path, IsCompress, IsCrypt);
+                byte[] iceStream = await ZamboniService.Pack(picker.ResultPath, IsCompress, IsCrypt);
                 await File.WriteAllBytesAsync(saveFileDialog.FileName, iceStream);
 
                 return Task.CompletedTask;
             });
-#endif
-            // ProgressContentDialogService.Hide();
-            InProgress = false;
 
             // 完了通知
             if (Properties.Settings.Default.NotifyComplete)
@@ -186,6 +155,7 @@ namespace NgsPacker.ViewModels
             using OpenFileDialog openFileDialog = new()
             {
                 Title = LocalizerService.GetLocalizedString("UnpackDialogText"),
+                InitialDirectory = Properties.Settings.Default.Pso2BinPath
             };
 
             // ダイアログを表示
@@ -197,42 +167,22 @@ namespace NgsPacker.ViewModels
             }
 
             // フォルダ選択ダイアログ
-            FolderPickerEx picker = new();
+            FolderPicker picker = new();
+            picker.Title = LocalizerService.GetLocalizedString("UnpackOutputPathText");
+            picker.InputPath = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
 
             // 出力先ファイルダイアログを表示
-            Windows.Storage.StorageFolder folder = picker.PickSingleFolder();
-
-            if (folder == null)
+            if (picker.ShowDialog() != true)
             {
                 return;
             }
 
-            ProgressText = LocalizerService.GetLocalizedString("UnpackingText");
-            InProgress = true;
-            // await ProgressContentDialogService.ShowAsync();
-#if !DEBUG
-            try
-            {
-                Task task = await Task.Run(async () =>
-                {
-                    ZamboniService.Unpack(openFileDialog.FileName, folder.Path, IsSepareteByGroup);
-                    return Task.CompletedTask;
-                });
-            }
-            catch (Exception ex)
-            {
-                _ = AcrylicMessageBox.Show(System.Windows.Application.Current.MainWindow, ex.Message, LocalizerService.GetLocalizedString("ErrorTitleText"));
-                return;
-            }
-#else
-            Task task = await Task.Run(async () =>
-            {
-                ZamboniService.Unpack(openFileDialog.FileName, folder.Path, IsSepareteByGroup);
-                return Task.CompletedTask;
-            });
-#endif
-            // ProgressContentDialogService.Hide();
-            InProgress = false;
+            _ = await Task.Run(async () =>
+             {
+                 await ZamboniService.Unpack(openFileDialog.FileName, picker.ResultPath, IsSepareteByGroup);
+                 return Task.CompletedTask;
+             });
+
 
             // 完了通知
             if (Properties.Settings.Default.NotifyComplete)
@@ -256,12 +206,10 @@ namespace NgsPacker.ViewModels
         private async void ExecuteExportFilelistCommand()
         {
             // フォルダ選択ダイアログ
-            FolderPickerEx picker = new();
+            FolderPicker picker = new();
 
             // 出力先ファイルダイアログを表示
-            Windows.Storage.StorageFolder folder = picker.PickSingleFolder();
-
-            if (folder == null)
+            if (picker.ShowDialog() != true)
             {
                 return;
             }
@@ -270,6 +218,7 @@ namespace NgsPacker.ViewModels
             using SaveFileDialog saveFileDialog = new()
             {
                 Title = LocalizerService.GetLocalizedString("SaveAsDialogText"),
+                InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal),
                 FileName = "list.csv"
             };
 
@@ -281,31 +230,12 @@ namespace NgsPacker.ViewModels
                 return;
             }
 
-            InProgress = true;
-            // await ProgressContentDialogService.ShowAsync();
-#if !DEBUG
-            try
-            {
-                 Task task = await Task.Run(async () =>
-                {
-                    await File.WriteAllTextAsync(saveFileDialog.FileName, string.Join("\r\n", ZamboniService.Filelist(folder.Path)));
-                    return Task.CompletedTask;
-                });
-            }
-            catch (Exception ex)
-            {
-                _ = AcrylicMessageBox.Show(System.Windows.Application.Current.MainWindow, ex.Message, LocalizerService.GetLocalizedString("ErrorTitleText"));
-                return;
-            }
-#else
-            Task task = await Task.Run(async () =>
-            {
-                await File.WriteAllTextAsync(saveFileDialog.FileName, string.Join("\r\n", ZamboniService.Filelist(folder.Path)));
-                return Task.CompletedTask;
-            });
-#endif
-            // ProgressContentDialogService.Hide();
-            InProgress = false;
+            _ = await Task.Run(async () =>
+              {
+                  List<string> list = new(await ZamboniService.Filelist(picker.ResultPath));
+                  await File.WriteAllTextAsync(saveFileDialog.FileName, string.Join("\r\n", list));
+                  return Task.CompletedTask;
+              });
 
             // 完了通知
             if (Properties.Settings.Default.NotifyComplete)
@@ -320,6 +250,32 @@ namespace NgsPacker.ViewModels
             {
                 _ = AcrylicMessageBox.Show(System.Windows.Application.Current.MainWindow,
                     LocalizerService.GetLocalizedString("ExportFileListText"), LocalizerService.GetLocalizedString("CompleteText"));
+            }
+        }
+
+        private void ExecuteUnpackByFileList()
+        {
+            // ファイルを開くダイアログ
+            using OpenFileDialog openFileDialog = new()
+            {
+                Title = "Choose list file.",
+            };
+
+            // ダイアログを表示
+            DialogResult dialogResult = openFileDialog.ShowDialog();
+            if (dialogResult != DialogResult.OK)
+            {
+                // キャンセルされたので終了
+                return;
+            }
+
+            // フォルダ選択ダイアログ
+            FolderPicker picker = new();
+
+            // 出力先ファイルダイアログを表示
+            if (picker.ShowDialog() != true)
+            {
+                return;
             }
         }
     }
