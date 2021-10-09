@@ -74,7 +74,8 @@ namespace NgsPacker.ViewModels
 
             if (!File.Exists(Properties.Settings.Default.Pso2BinPath + Path.DirectorySeparatorChar + "pso2.exe"))
             {
-                _ = AcrylicMessageBox.Show(System.Windows.Application.Current.MainWindow,
+                // pso.exe存在確認チェック
+                _ = AcrylicMessageBox.Show(Application.Current.MainWindow,
                     LocalizerService.GetLocalizedString("Pso2ExeNotFoundErrorText"), LocalizerService.GetLocalizedString("ErrorTitleText"));
                 // 設定ページに遷移
                 RegionManager.RequestNavigate("ContentRegion", Pages["SettingsItem"]);

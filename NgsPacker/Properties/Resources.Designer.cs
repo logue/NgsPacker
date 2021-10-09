@@ -243,6 +243,15 @@ namespace NgsPacker.Properties {
         }
         
         /// <summary>
+        ///   Please wait for a while ... に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string ProgressDialogText {
+            get {
+                return ResourceManager.GetString("ProgressDialogText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Path of pso2_bin Path: に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Pso2BinPathText {
@@ -343,6 +352,15 @@ namespace NgsPacker.Properties {
         }
         
         /// <summary>
+        ///   Select the list file that contains the list of files you want to unpack. に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string UnpackByFileListDialogText {
+            get {
+                return ResourceManager.GetString("UnpackByFileListDialogText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Batch unpacks only the files contained in the line-delimited file list. に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string UnpackByFilelistInformationText {
@@ -366,6 +384,15 @@ namespace NgsPacker.Properties {
         public static string UnpackDialogText {
             get {
                 return ResourceManager.GetString("UnpackDialogText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Select the PSO2 data file directory (win32 or win32_reboot). に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string UnpackDirectoryDialogText {
+            get {
+                return ResourceManager.GetString("UnpackDirectoryDialogText", resourceCulture);
             }
         }
         

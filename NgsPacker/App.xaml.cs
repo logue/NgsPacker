@@ -119,8 +119,6 @@ namespace NgsPacker
         /// <param name="moduleCatalog"></param>
         protected override void ConfigureModuleCatalog(IModuleCatalog moduleCatalog)
         {
-            // 進捗ダイアログモジュール
-            _ = moduleCatalog.AddModule<ProgressDialog.Module>();
         }
     }
 }

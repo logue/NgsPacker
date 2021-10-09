@@ -37,6 +37,8 @@ namespace NgsPacker.Services
         /// </summary>
         private readonly ILocalizerService LocalizerService;
 
+        private readonly Views.ProgressDialog progressDialog;
+
         /// <summary>
         /// イベントアグリエイター
         /// </summary>
@@ -53,6 +55,9 @@ namespace NgsPacker.Services
 
             LocalizerService = localizerService;
             EventAggregator = eventAggregator;
+
+
+            progressDialog = new Views.ProgressDialog();
         }
 
         /// <summary>
@@ -70,6 +75,7 @@ namespace NgsPacker.Services
             {
                 throw new DirectoryNotFoundException("ZamboniService: Input directory is not found.");
             }
+            _ = progressDialog.ShowAsync();
 
             // ファイル一覧を取得
             string[] files = recursive ? Directory.EnumerateFiles(inputPath, "*.*", SearchOption.AllDirectories).ToArray() : Directory.GetFiles(inputPath);
@@ -91,7 +97,7 @@ namespace NgsPacker.Services
                 // int index = files.IndexOf(currentFile);
 
                 // ファイルをバイト配列として読み込む
-                List<byte> file = new(File.ReadAllBytes(currentFile));
+                List<byte> file = new(await File.ReadAllBytesAsync(currentFile));
 
                 // ヘッダを書き込む
                 file.InsertRange(0, new IceFileHeader(currentFile, (uint)file.Count).GetBytes());
@@ -128,6 +134,8 @@ namespace NgsPacker.Services
                 throw new ZamboniException("An error occurred while generating the Ice file.", ex);
             }
 
+            progressDialog.Hide();
+
             return ret;
         }
 
@@ -135,18 +143,21 @@ namespace NgsPacker.Services
         /// 指定されたファイルをアンパックする
         /// </summary>
         /// <param name="inputPath">入力ファイルのパス</param>
+        /// <param name="subdir">サブディレクトリを作成する</param>
         /// <param name="sepalate">グループ1と2で分ける</param>
-        public Task Unpack(string inputPath, string outputPath = null, bool sepalate = false)
+        public async void Unpack(string inputPath, string outputPath = null, bool subdir = true, bool sepalate = false)
         {
+            _ = progressDialog.ShowAsync();
             if (string.IsNullOrEmpty(outputPath))
             {
-                outputPath = Directory.GetCurrentDirectory();
+                outputPath = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
             }
+
             // Iceファイルを読み込む
             IceFile iceFile = LoadIceFile(inputPath);
 
             // 出力先のディレクトリ（ファイル名_ext）　※repack_ice.exeと同じ仕様
-            string destinaton = outputPath + Path.DirectorySeparatorChar + Path.GetFileName(inputPath) + "_ext" + Path.DirectorySeparatorChar;
+            string destinaton = outputPath + (subdir ? Path.DirectorySeparatorChar + Path.GetFileName(inputPath) + "_ext" : "") + Path.DirectorySeparatorChar;
 
             // グループ1
             List<IceEntryModel> groupOneFiles = IceToFilelist(iceFile.groupOneFiles, true);
@@ -162,39 +173,51 @@ namespace NgsPacker.Services
                 throw new ZamboniException($"Neither group1 nor group2 was dumped from {Path.GetFileName(inputPath)}.");
             }
 
-            // 出力先のディレクトリ作成
-            if (!Directory.Exists(destinaton))
+            if (subdir)
             {
-                _ = Directory.CreateDirectory(destinaton);
-            }
-            if (sepalate)
-            {
-                if (!Directory.Exists(destinaton + Path.DirectorySeparatorChar + "group1"))
+                // 出力先のディレクトリ作成
+                if (!Directory.Exists(destinaton))
                 {
-                    _ = Directory.CreateDirectory(destinaton + Path.DirectorySeparatorChar + "group1");
+                    _ = Directory.CreateDirectory(destinaton);
                 }
-                if (!Directory.Exists(destinaton + Path.DirectorySeparatorChar + "group2"))
+                if (sepalate)
                 {
-                    _ = Directory.CreateDirectory(destinaton + Path.DirectorySeparatorChar + "group2");
+                    if (!Directory.Exists(destinaton + Path.DirectorySeparatorChar + "group1"))
+                    {
+                        _ = Directory.CreateDirectory(destinaton + Path.DirectorySeparatorChar + "group1");
+                    }
+                    if (!Directory.Exists(destinaton + Path.DirectorySeparatorChar + "group2"))
+                    {
+                        _ = Directory.CreateDirectory(destinaton + Path.DirectorySeparatorChar + "group2");
+                    }
                 }
             }
 
 
             foreach (IceEntryModel model in groupOneFiles)
             {
-                Debug.WriteLine(model.FileName);
                 int index = groupOneFiles.IndexOf(model);
                 // ファイル名（ひどい可読性だ）
                 string fileName = destinaton + (sepalate ?
                     (model.Group == IceGroupEnum.GROUP1 ? "group1" : "group2") + Path.DirectorySeparatorChar : "")
                     + model.FileName;
 
+                try
+                {
+                    await File.WriteAllBytesAsync(fileName, model.Content);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex.ToString());
+                }
+
+                /*
                 using BinaryWriter writer = new(new FileStream(fileName, FileMode.Create));
-                Task.Yield();
-                writer.Write(model.Content);
+                await writer.WriteAsync(model.Content);
                 writer.Close();
+                */
             }
-            return Task.CompletedTask;
+            progressDialog.Hide();
         }
 
         /// <summary>
@@ -204,6 +227,7 @@ namespace NgsPacker.Services
         /// <returns>CSV配列</returns>
         public async Task<List<string>> Filelist(string inputPath)
         {
+            _ = progressDialog.ShowAsync();
             List<string> ret = new();
             List<string> entries = new(Directory.EnumerateFiles(inputPath, "*.*", SearchOption.AllDirectories));
             Debug.WriteLine("Entries: ", entries.Count);
@@ -212,7 +236,8 @@ namespace NgsPacker.Services
             ret.Add("filename,version,group,content");
             foreach (string path in entries)
             {
-                int index = entries.IndexOf(path);
+                Debug.WriteLine(path);
+                // int index = entries.IndexOf(path);
 
                 if (path.Contains("."))
                 {
@@ -275,6 +300,7 @@ namespace NgsPacker.Services
                     }
                 }
             }
+            progressDialog.Hide();
             return ret;
         }
 

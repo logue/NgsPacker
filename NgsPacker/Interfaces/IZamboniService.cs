@@ -27,10 +27,9 @@ namespace NgsPacker.Interfaces
         /// 指定されたファイルをアンパックする
         /// </summary>
         /// <param name="inputPath">入力ファイルのパス</param>
-        /// <param name="outputPath">出力先のパス</param>
+        /// <param name="subdir">サブディレクトリを作成する</param>
         /// <param name="sepalate">グループ1と2で分ける</param>
-        /// <returns>解凍したファイルのバイナリ</returns>
-        public Task Unpack(string inputPath, string outputPath = null, bool sepalate = false);
+        public void Unpack(string inputPath, string outputPath = null, bool subdir = true, bool sepalate = false);
 
         /// <summary>
         /// ファイル一覧を取得

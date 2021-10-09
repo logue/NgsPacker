@@ -13,7 +13,6 @@ using Prism.Mvvm;
 using SourceChord.FluentWPF;
 using System;
 using System.IO;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace NgsPacker.ViewModels
@@ -59,11 +58,7 @@ namespace NgsPacker.ViewModels
         public static string WhiteList
         {
             get => Properties.Settings.Default.WhiteList;
-            set
-            {
-                Properties.Settings.Default.WhiteList = value;
-                Properties.Settings.Default.Save();
-            }
+            set => Properties.Settings.Default.WhiteList = value;
         }
 
         /// <summary>
@@ -117,14 +112,10 @@ namespace NgsPacker.ViewModels
                 return;
             }
 
-            _ = await Task.Run(async () =>
-            {
-                // Iceで圧縮（結構重い）
-                byte[] iceStream = await ZamboniService.Pack(picker.ResultPath, IsCompress, IsCrypt);
-                await File.WriteAllBytesAsync(saveFileDialog.FileName, iceStream);
 
-                return Task.CompletedTask;
-            });
+            // Iceで圧縮（結構重い）
+            byte[] iceStream = await ZamboniService.Pack(picker.ResultPath, IsCompress, IsCrypt);
+            await File.WriteAllBytesAsync(saveFileDialog.FileName, iceStream);
 
             // 完了通知
             if (Properties.Settings.Default.NotifyComplete)

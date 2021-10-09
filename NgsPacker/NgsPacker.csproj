@@ -40,7 +40,6 @@
     <PackageReference Include="WPFLocalizeExtension" Version="3.9.0" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ProgressDialogModule\ProgressDialog.csproj" />
     <ProjectReference Include="..\ZamboniLib\ZamboniLib\ZamboniLib.csproj" />
   </ItemGroup>
   <ItemGroup>

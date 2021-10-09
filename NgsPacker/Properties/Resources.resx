@@ -241,4 +241,13 @@ Please select the correct directory.</value>
   <data name="SaveText" xml:space="preserve">
     <value>Save</value>
   </data>
+  <data name="UnpackByFileListDialogText" xml:space="preserve">
+    <value>Select the list file that contains the list of files you want to unpack.</value>
+  </data>
+  <data name="UnpackDirectoryDialogText" xml:space="preserve">
+    <value>Select the PSO2 data file directory (win32 or win32_reboot).</value>
+  </data>
+  <data name="ProgressDialogText" xml:space="preserve">
+    <value>Please wait for a while ...</value>
+  </data>
 </root>

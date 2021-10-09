@@ -237,4 +237,13 @@
   <data name="SaveText" xml:space="preserve">
     <value>保存</value>
   </data>
+  <data name="UnpackByFileListDialogText" xml:space="preserve">
+    <value>アンパックしたいファイルの一覧の入ったリストファイルを選択してください。</value>
+  </data>
+  <data name="UnpackDirectoryDialogText" xml:space="preserve">
+    <value>PSO2のデータファイルのディレクトリ（win32かwin32_reboot）を選択してください。</value>
+  </data>
+  <data name="ProgressDialogText" xml:space="preserve">
+    <value>しばらくお待ち下さい…</value>
+  </data>
 </root>

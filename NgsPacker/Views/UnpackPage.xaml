@@ -43,7 +43,6 @@
             <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
                 <ui:FontIcon
                     Margin="0,0,5,0"
-
                     Glyph="&#xe7bc;" />
                 <TextBlock VerticalAlignment="Center" Text="{lex:Loc ExportFileListText}" />
             </StackPanel>
@@ -53,8 +52,7 @@
         <Button
             Padding="10,5"
             Command="{Binding UnpackByFilelistCommand}"
-            Style="{StaticResource ButtonRevealStyle}"
-            IsEnabled="False">
+            Style="{StaticResource ButtonRevealStyle}">
             <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
                 <ui:FontIcon
                     Margin="0,0,5,0"

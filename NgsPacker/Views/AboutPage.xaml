@@ -47,7 +47,7 @@
         <ui:SimpleStackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="24">
             <Button
                 Padding="10,5"
-                Command="{Binding VisitNexusModCommand}"
+                Command="{Binding VisitNexusModsCommand}"
                 Style="{StaticResource ButtonRevealStyle}">
                 <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
                     <TextBlock VerticalAlignment="Center" Text="Nexus Mods" />
