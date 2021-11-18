@@ -10,11 +10,9 @@ using NgsPacker.Helpers;
 using NgsPacker.Interfaces;
 using Prism.Commands;
 using Prism.Mvvm;
-using SourceChord.FluentWPF;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Windows.Forms;
 
 namespace NgsPacker.ViewModels
 {
@@ -75,15 +73,15 @@ namespace NgsPacker.ViewModels
         private void ExecuteUnpackCommand()
         {
             // ファイルを開くダイアログ
-            using OpenFileDialog openFileDialog = new()
+            using System.Windows.Forms.OpenFileDialog openFileDialog = new()
             {
                 Title = LocalizerService.GetLocalizedString("UnpackDialogText"),
                 InitialDirectory = Properties.Settings.Default.Pso2BinPath
             };
 
             // ダイアログを表示
-            DialogResult dialogResult = openFileDialog.ShowDialog();
-            if (dialogResult != DialogResult.OK)
+            System.Windows.Forms.DialogResult dialogResult = openFileDialog.ShowDialog();
+            if (dialogResult != System.Windows.Forms.DialogResult.OK)
             {
                 // キャンセルされたので終了
                 return;
@@ -114,7 +112,7 @@ namespace NgsPacker.ViewModels
             }
             else
             {
-                _ = AcrylicMessageBox.Show(System.Windows.Application.Current.MainWindow,
+                _ = ModernWpf.MessageBox.Show(
                     LocalizerService.GetLocalizedString("UnpackText"), LocalizerService.GetLocalizedString("CompleteText"));
             }
         }
@@ -135,7 +133,7 @@ namespace NgsPacker.ViewModels
             }
 
             // ファイル保存ダイアログ
-            using SaveFileDialog saveFileDialog = new()
+            using System.Windows.Forms.SaveFileDialog saveFileDialog = new()
             {
                 Title = LocalizerService.GetLocalizedString("SaveAsDialogText"),
                 InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal),
@@ -143,8 +141,8 @@ namespace NgsPacker.ViewModels
             };
 
             // ダイアログを表示
-            DialogResult dialogResult = saveFileDialog.ShowDialog();
-            if (dialogResult != DialogResult.OK)
+            System.Windows.Forms.DialogResult dialogResult = saveFileDialog.ShowDialog();
+            if (dialogResult != System.Windows.Forms.DialogResult.OK)
             {
                 // キャンセルされたので終了
                 return;
@@ -165,7 +163,7 @@ namespace NgsPacker.ViewModels
             }
             else
             {
-                _ = AcrylicMessageBox.Show(System.Windows.Application.Current.MainWindow,
+                _ = ModernWpf.MessageBox.Show(
                     LocalizerService.GetLocalizedString("ExportFileListText"), LocalizerService.GetLocalizedString("CompleteText"));
             }
         }
@@ -176,15 +174,15 @@ namespace NgsPacker.ViewModels
         private async void ExecuteUnpackByFilelistCommand()
         {
             // ファイルを開くダイアログ
-            using OpenFileDialog openFileDialog = new()
+            using System.Windows.Forms.OpenFileDialog openFileDialog = new()
             {
                 Title = LocalizerService.GetLocalizedString("UnpackByFileListDialogText"),
                 InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal),
             };
 
             // ダイアログを表示
-            DialogResult dialogResult = openFileDialog.ShowDialog();
-            if (dialogResult != DialogResult.OK)
+            System.Windows.Forms.DialogResult dialogResult = openFileDialog.ShowDialog();
+            if (dialogResult != System.Windows.Forms.DialogResult.OK)
             {
                 // キャンセルされたので終了
                 return;
@@ -209,7 +207,7 @@ namespace NgsPacker.ViewModels
 
             if (!Directory.Exists(outputPath))
             {
-                Directory.CreateDirectory(outputPath);
+                _ = Directory.CreateDirectory(outputPath);
             }
 
             foreach (string file in fileList)
@@ -235,7 +233,7 @@ namespace NgsPacker.ViewModels
             }
             else
             {
-                _ = AcrylicMessageBox.Show(System.Windows.Application.Current.MainWindow,
+                _ = ModernWpf.MessageBox.Show(
                     LocalizerService.GetLocalizedString("UnpackByFileListText"), LocalizerService.GetLocalizedString("CompleteText"));
             }
         }

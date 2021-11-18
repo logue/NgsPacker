@@ -10,7 +10,6 @@ using NgsPacker.Helpers;
 using NgsPacker.Interfaces;
 using Prism.Commands;
 using Prism.Mvvm;
-using SourceChord.FluentWPF;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -125,7 +124,7 @@ namespace NgsPacker.ViewModels
 
             if (!File.Exists(picker.ResultPath + Path.DirectorySeparatorChar + "pso2.exe"))
             {
-                _ = AcrylicMessageBox.Show(System.Windows.Application.Current.MainWindow,
+                _ = ModernWpf.MessageBox.Show(
                    LocalizerService.GetLocalizedString("Pso2ExeNotFoundErrorText"), LocalizerService.GetLocalizedString("ErrorTitleText"));
                 return;
             }

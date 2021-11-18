@@ -17,8 +17,9 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using zamboni;
-using static zamboni.IceHeaderStructures;
+using Zamboni;
+using Zamboni.IceFileFormats;
+using static Zamboni.IceFileFormats.IceHeaderStructures;
 
 namespace NgsPacker.Services
 {

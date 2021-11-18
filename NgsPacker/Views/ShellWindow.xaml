@@ -24,7 +24,7 @@
     prism:ViewModelLocator.AutoWireViewModel="True"
     ui:ThemeManager.IsThemeAware="True"
     ui:WindowHelper.UseModernWindowStyle="True"
-    Background="{DynamicResource SystemAltMediumHighColorBrush}"
+    Background="{DynamicResource SystemAltMediumColorBrush}"
     ExtendViewIntoTitleBar="True"
     mc:Ignorable="d">
     <ui:NavigationView

@@ -128,7 +128,8 @@ namespace NgsPacker.ViewModels
             }
             else
             {
-                _ = AcrylicMessageBox.Show(System.Windows.Application.Current.MainWindow,
+                // _ = AcrylicMessageBox.Show(System.Windows.Application.Current.MainWindow,
+                _= ModernWpf.MessageBox.Show(
                     LocalizerService.GetLocalizedString("PackText"), LocalizerService.GetLocalizedString("CompleteText"));
             }
         }

@@ -13,7 +13,6 @@ using NgsPacker.Views;
 using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Regions;
-using SourceChord.FluentWPF;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -64,7 +63,7 @@ namespace NgsPacker.ViewModels
 
             // ダークモード切替
             ThemeManager.Current.ApplicationTheme = Properties.Settings.Default.ThemeDark ?
-                ModernWpf.ApplicationTheme.Dark : ModernWpf.ApplicationTheme.Light;
+                ApplicationTheme.Dark : ApplicationTheme.Light;
 
             // 初期状態のページ
             _ = regionManager.RegisterViewWithRegion("ContentRegion", typeof(UnpackPage));
@@ -75,8 +74,8 @@ namespace NgsPacker.ViewModels
             if (!File.Exists(Properties.Settings.Default.Pso2BinPath + Path.DirectorySeparatorChar + "pso2.exe"))
             {
                 // pso.exe存在確認チェック
-                _ = AcrylicMessageBox.Show(Application.Current.MainWindow,
-                    LocalizerService.GetLocalizedString("Pso2ExeNotFoundErrorText"), LocalizerService.GetLocalizedString("ErrorTitleText"));
+                _ = ModernWpf.MessageBox.Show(
+                   LocalizerService.GetLocalizedString("Pso2ExeNotFoundErrorText"), LocalizerService.GetLocalizedString("ErrorTitleText"));
                 // 設定ページに遷移
                 RegionManager.RequestNavigate("ContentRegion", Pages["SettingsItem"]);
             }
@@ -101,7 +100,8 @@ namespace NgsPacker.ViewModels
             }
             catch (Exception ex)
             {
-                _ = AcrylicMessageBox.Show(Application.Current.MainWindow, ex.Message, LocalizerService.GetLocalizedString("ErrorTitleText"));
+                // _ = AcrylicMessageBox.Show(Application.Current.MainWindow, ex.Message, LocalizerService.GetLocalizedString("ErrorTitleText"));
+                _ = ModernWpf.MessageBox.Show(ex.Message, LocalizerService.GetLocalizedString("ErrorTitleText"));
             }
         }
 

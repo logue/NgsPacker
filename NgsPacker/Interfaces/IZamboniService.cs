@@ -7,7 +7,7 @@
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using zamboni;
+using Zamboni;
 
 namespace NgsPacker.Interfaces
 {
