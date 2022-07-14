@@ -1,6 +1,6 @@
 # NGSPacker
 
-本プログラムは、PSO2NGS のデータファイルを解凍（アンパック）したり生成（パック）するものです。
+本プログラムは、PSO2NGS のゲームデータファイルを解凍（アンパック）したり生成（パック）するものです。
 
 動作には.net6.0 ランタイムが必要です。下記サイトからダウンロードしてください。
 <https://dotnet.microsoft.com/download/dotnet>
@@ -17,11 +17,11 @@
 - [PSO2 Modding Tutorial](http://www.pso-world.com/forums/showthread.php?237103-PSO2-Modding-Tutorial-2-0)
 - [PSO2 File Directory](https://docs.google.com/spreadsheets/d/1GQwG49iYM1sgJhyAU5AWP-gboemzfIZjBGjTGEZSET4/edit?usp=sharing)
   - [PSO2-Modding](https://discord.com/invite/cV3QRkB) - Discord ※日本語情報あり
-- [Arks-Layer](https://arks-layer.com/) - Third party launcher. Required when enabling mods.
+- [Arks-Layer](https://arks-layer.com/) - サードパーティー製ランチャーです。日本語や英語以外でプレイしたい場合や Mod を使用する場合必須です。
   - [Phantasy Star Fleet](https://discord.com/invite/pso2) - Discord
-- [Checksum File](http://www.mediafire.com/file/85m6h56u5w3181g/checksum.zip/file) - %%%Required when enabling mods.%%%
+- [チェックサムファイル](http://www.mediafire.com/file/85m6h56u5w3181g/checksum.zip/file) - Required when enabling mods
 - [PSO2 Modding Database](https://pso2mod.com/)
-  - [PSO2 Mod Manager](https://github.com/PolCPP/PSO2-Mod-Manager) - Official PSO2 Modding Database Client, But not maintained.
+  - [PSO2 Mod Manager](https://github.com/PolCPP/PSO2-Mod-Manager) - PSO2Mods.com 公式 Mod マネージャーですが長らくメンテナンスされていません。
 - [PSO2NGS @ Nexus Mods](https://www.nexusmods.com/phantasystaronline2newgenesis)
 
 ## 免責事項

@@ -30,9 +30,9 @@
     <ui:NavigationView
         x:Name="NavView"
         IsBackButtonVisible="Collapsed"
+        IsBackEnabled="False"
         IsPaneOpen="True"
-        IsBackEnabled="False" PaneDisplayMode="Top"
-        >
+        PaneDisplayMode="Top">
         <ui:NavigationView.Resources>
             <SolidColorBrush x:Key="NavigationViewTopPaneBackground" Color="Transparent" />
             <SolidColorBrush x:Key="NavigationViewDefaultPaneBackground" Color="{DynamicResource SystemListLowColor}" />
@@ -49,11 +49,15 @@
                 Name="Unpack"
                 Content="{lex:Loc UnpackText}"
                 Icon="FullScreen"
-                IsSelected="True"/>
+                IsSelected="True" />
             <ui:NavigationViewItem
                 Name="Pack"
                 Content="{lex:Loc PackText}"
                 Icon="BackToWindow" />
+            <!--ui:NavigationViewItem
+                Name="Tool"
+                Content="{lex:Loc ToolText}"
+                Icon="Repair" /-->
         </ui:NavigationView.MenuItems>
         <ui:NavigationView.FooterMenuItems>
             <ui:NavigationViewItem
@@ -62,15 +66,12 @@
                 Icon="Message" />
         </ui:NavigationView.FooterMenuItems>
 
-        <Border Background="{DynamicResource SystemAltMediumLowColorBrush}"
-                CornerRadius="{DynamicResource ControlCornerRadius}">
-            <ScrollViewer>
-                <ui:SimpleStackPanel
-                    Spacing="24"
-                    Margin="24,32,24,0">
+        <Border Background="{DynamicResource SystemAltMediumLowColorBrush}">
+            <ui:SimpleStackPanel Margin="24,32,24,0" Spacing="24">
+                <ScrollViewer>
                     <ui:Frame prism:RegionManager.RegionName="ContentRegion" />
-                </ui:SimpleStackPanel>
-            </ScrollViewer>
+                </ScrollViewer>
+            </ui:SimpleStackPanel>
         </Border>
     </ui:NavigationView>
 </fw:AcrylicWindow>

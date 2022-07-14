@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------------
 // <copyright file="ZamboniService.cs" company="Logue">
-// Copyright (c) 2021 Masashi Yoshikawa All rights reserved.
+// Copyright (c) 2021-2022 Masashi Yoshikawa All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 // </copyright>
 // -----------------------------------------------------------------------
@@ -270,34 +270,51 @@ namespace NgsPacker.Services
                         + fileInfo.Name + ",ICE" + num + ",";
 
                 // Iceファイルを読み込む
-                IceFile iceFile = IceFile.LoadIceFile(ms);
+                IceFile iceFile;
+                try
+                {
+                    iceFile = IceFile.LoadIceFile(ms);
+                }
+                catch
+                {
+                    ret.Add(ice + "0,[ERROR] Could not load ice file.");
+                    continue;
+                }
                 if (iceFile == null)
                 {
-                    ret.Add(ice + "0,ERROR");
+                    ret.Add(ice + "0,[ERROR] Could not parse ice file.");
                     continue;
                 }
 
                 // グループ1のファイルをパース
                 if (iceFile.groupOneFiles != null)
                 {
-                    byte[][] groupOneFiles = iceFile.groupOneFiles;
-                    for (int f = 0; f < groupOneFiles.Length; ++f)
-                    {
-                        int int32 = BitConverter.ToInt32(groupOneFiles[f], 16);
-                        string str2 = Encoding.ASCII.GetString(groupOneFiles[f], 64, int32).TrimEnd(new char[1]);
-                        ret.Add(ice + "1," + str2);
+                    try {
+                        byte[][] groupOneFiles = iceFile.groupOneFiles;
+                        for (int f = 0; f < groupOneFiles.Length; ++f)
+                        {
+                            int int32 = BitConverter.ToInt32(groupOneFiles[f], 16);
+                            string str2 = Encoding.ASCII.GetString(groupOneFiles[f], 64, int32).TrimEnd(new char[1]);
+                            ret.Add(ice + "1," + str2);
+                        }
+                    }catch {
+                        ret.Add(ice + "1,[ERROR] Could not parse Group1 files.");
                     }
                 }
 
                 // グループ2のファイルをパース
                 if (iceFile.groupTwoFiles != null)
                 {
-                    byte[][] groupTwoFiles = iceFile.groupTwoFiles;
-                    for (int f = 0; f < groupTwoFiles.Length; ++f)
-                    {
-                        int int32 = BitConverter.ToInt32(groupTwoFiles[f], 16);
-                        string str2 = Encoding.ASCII.GetString(groupTwoFiles[f], 64, int32).TrimEnd(new char[1]);
-                        ret.Add(ice + "2," + str2);
+                    try {
+                        byte[][] groupTwoFiles = iceFile.groupTwoFiles;
+                        for (int f = 0; f < groupTwoFiles.Length; ++f)
+                        {
+                            int int32 = BitConverter.ToInt32(groupTwoFiles[f], 16);
+                            string str2 = Encoding.ASCII.GetString(groupTwoFiles[f], 64, int32).TrimEnd(new char[1]);
+                            ret.Add(ice + "2," + str2);
+                        }
+                    } catch {
+                        ret.Add(ice + "2,[ERROR] Could not parse Group2 files.");
                     }
                 }
             }

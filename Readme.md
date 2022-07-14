@@ -18,7 +18,7 @@ It requires the .net 6.0 runtime to work. Please download from the following sit
 
 - [PSO2 Modding Tutorial](http://www.pso-world.com/forums/showthread.php?237103-PSO2-Modding-Tutorial-2-0)
 - [PSO2 File Directory](https://docs.google.com/spreadsheets/d/1GQwG49iYM1sgJhyAU5AWP-gboemzfIZjBGjTGEZSET4/edit?usp=sharing)
-  - [PSO2-Modding](https://discord.com/invite/cV3QRkB) - Discord ※日本語情報あり
+  - [PSO2-Modding](https://discord.com/invite/cV3QRkB) - Discord
 - [Arks-Layer](https://arks-layer.com/) - Third party launcher. Required when enabling mods.
   - [Phantasy Star Fleet](https://discord.com/invite/pso2) - Discord
 - [Checksum File](http://www.mediafire.com/file/85m6h56u5w3181g/checksum.zip/file) - Required when enabling mods.

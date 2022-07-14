@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------------
 // <copyright file="UnpackPageViewModel.cs" company="Logue">
-// Copyright (c) 2021 Masashi Yoshikawa All rights reserved.
+// Copyright (c) 2021-2022 Masashi Yoshikawa All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 // </copyright>
 // -----------------------------------------------------------------------
@@ -8,6 +8,7 @@
 using Microsoft.Toolkit.Uwp.Notifications;
 using NgsPacker.Helpers;
 using NgsPacker.Interfaces;
+using NgsPacker.Views;
 using Prism.Commands;
 using Prism.Mvvm;
 using System;
@@ -210,6 +211,8 @@ namespace NgsPacker.ViewModels
                 _ = Directory.CreateDirectory(outputPath);
             }
 
+            ProgressDialog progressDialog = new();
+            _ = progressDialog.ShowAsync();
             foreach (string file in fileList)
             {
                 string path = picker.ResultPath + Path.DirectorySeparatorChar + file;
@@ -221,6 +224,7 @@ namespace NgsPacker.ViewModels
                 // アンパック
                 ZamboniService.Unpack(path, outputPath, false);
             }
+            progressDialog.Hide();
 
             // 完了通知
             if (Properties.Settings.Default.NotifyComplete)
