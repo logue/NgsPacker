@@ -289,7 +289,8 @@ namespace NgsPacker.Services
                 // グループ1のファイルをパース
                 if (iceFile.groupOneFiles != null)
                 {
-                    try {
+                    try
+                    {
                         byte[][] groupOneFiles = iceFile.groupOneFiles;
                         for (int f = 0; f < groupOneFiles.Length; ++f)
                         {
@@ -297,7 +298,9 @@ namespace NgsPacker.Services
                             string str2 = Encoding.ASCII.GetString(groupOneFiles[f], 64, int32).TrimEnd(new char[1]);
                             ret.Add(ice + "1," + str2);
                         }
-                    }catch {
+                    }
+                    catch
+                    {
                         ret.Add(ice + "1,[ERROR] Could not parse Group1 files.");
                     }
                 }
@@ -305,7 +308,8 @@ namespace NgsPacker.Services
                 // グループ2のファイルをパース
                 if (iceFile.groupTwoFiles != null)
                 {
-                    try {
+                    try
+                    {
                         byte[][] groupTwoFiles = iceFile.groupTwoFiles;
                         for (int f = 0; f < groupTwoFiles.Length; ++f)
                         {
@@ -313,7 +317,9 @@ namespace NgsPacker.Services
                             string str2 = Encoding.ASCII.GetString(groupTwoFiles[f], 64, int32).TrimEnd(new char[1]);
                             ret.Add(ice + "2," + str2);
                         }
-                    } catch {
+                    }
+                    catch
+                    {
                         ret.Add(ice + "2,[ERROR] Could not parse Group2 files.");
                     }
                 }

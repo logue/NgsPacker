@@ -10,7 +10,6 @@ using NgsPacker.Helpers;
 using NgsPacker.Interfaces;
 using Prism.Commands;
 using Prism.Mvvm;
-using SourceChord.FluentWPF;
 using System;
 using System.IO;
 using System.Windows.Forms;
@@ -129,7 +128,7 @@ namespace NgsPacker.ViewModels
             else
             {
                 // _ = AcrylicMessageBox.Show(System.Windows.Application.Current.MainWindow,
-                _= ModernWpf.MessageBox.Show(
+                _ = ModernWpf.MessageBox.Show(
                     LocalizerService.GetLocalizedString("PackText"), LocalizerService.GetLocalizedString("CompleteText"));
             }
         }

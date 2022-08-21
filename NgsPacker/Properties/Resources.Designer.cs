@@ -170,7 +170,10 @@ namespace NgsPacker.Properties {
         }
         
         /// <summary>
-        ///   The act of modifying game data (Modding) does not infringe the right to retain identity under the Patent Law and Copyright Law from the precedents of past trials, and is within the scope of freedom of expression. However, keep in mind that mods are potentially damaging to the gaming environment and can be banned. In particular, distribution or diversion of private internal data to an unspecified number of people in an open place clearly violates the rules and may be sued. The author does not take any respon [残りの文字列は切り詰められました]&quot;; に類似しているローカライズされた文字列を検索します。
+        ///   The act of modifying game data (modding) does not infringe on the right to maintain integrity, and is within the scope of the freedom of expression stipulated in Article 21 of the Japanese Constitution and the Fair Use law stipulated in Article 107 of the U.S. Copyright Act.
+        ///
+        ///However, please keep in mind that modding is potentially damaging to the game environment and may result in a ban.
+        ///In particular, the dissemination of private internal data in a community that can be viewed by an unspecified number  [残りの文字列は切り詰められました]&quot;; に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string ModdingWarningText {
             get {

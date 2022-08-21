@@ -39,7 +39,7 @@
         <Separator />
         <TextBlock
             Text="{lex:Loc ModdingWarningText}"
-            TextWrapping="Wrap" />
+            TextWrapping="Wrap" FontSize="11" />
         <Separator />
         <TextBlock
             Text="{lex:Loc SegaCopyrightNotice}"

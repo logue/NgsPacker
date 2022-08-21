@@ -28,12 +28,15 @@ It requires the .net 6.0 runtime to work. Please download from the following sit
 
 ## Disclaimer
 
-The act of modifying game data (Modding) does not infringe the right to retain identity under the Patent Law and Copyright Law from the precedents of past trials, and is within the scope of freedom of expression.
-However, keep in mind that mods are potentially damaging to the gaming environment and can be banned.
-In particular, distribution or diversion of private internal data to an unspecified number of people in an open place clearly violates the rules and may be sued.
+The act of modifying game data (modding) does not infringe on the right to maintain integrity,　and is within the scope of
+the freedom of expression stipulated in Article 21 of the Japanese Constitution and the Fair Use law stipulated in Article 107 of the U.S. Copyright Act.
 
-The author does not take any responsibility for any damage caused by that.
-USE AT YOUR OWN RISK.
+However, please keep in mind that modding is potentially damaging to the game environment and may result in a ban.
+In particular, the dissemination of private internal data in a community that can be viewed by an unspecified number of people and the diversion to other works
+(such as converting model data and diverting it) are acts that clearly deviate from the above law, and compensation for damages may result in litigation.
+
+The authors are not responsible for any damage caused by that.
+Please use it with common sense, and USE AT YOUR OWN RISK.
 
 ## License
 

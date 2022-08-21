@@ -78,6 +78,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ProgressModule\ProgressModule.csproj" />
     <ProjectReference Include="..\ZamboniLib\ZamboniLib\ZamboniLib.csproj" />
   </ItemGroup>
   <ItemGroup>

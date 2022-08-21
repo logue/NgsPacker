@@ -20,6 +20,8 @@ Project("{C7167F0D-BC9F-4E6E-AFE1-012C56B48DB5}") = "NgsPacker (Package)", "NgsP
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ZamboniLib", "ZamboniLib\ZamboniLib\ZamboniLib.csproj", "{2F24AB89-3D2D-4DB4-A054-718B61C936B7}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProgressModule", "ProgressModule\ProgressModule.csproj", "{68CCB1A5-46F0-4960-9F64-4C7B2CF48108}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -144,6 +146,36 @@ Global
 		{2F24AB89-3D2D-4DB4-A054-718B61C936B7}.Release|x64.Build.0 = Release|Any CPU
 		{2F24AB89-3D2D-4DB4-A054-718B61C936B7}.Release|x86.ActiveCfg = Release|Any CPU
 		{2F24AB89-3D2D-4DB4-A054-718B61C936B7}.Release|x86.Build.0 = Release|Any CPU
+		{68CCB1A5-46F0-4960-9F64-4C7B2CF48108}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{68CCB1A5-46F0-4960-9F64-4C7B2CF48108}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{68CCB1A5-46F0-4960-9F64-4C7B2CF48108}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{68CCB1A5-46F0-4960-9F64-4C7B2CF48108}.Debug|ARM.Build.0 = Debug|Any CPU
+		{68CCB1A5-46F0-4960-9F64-4C7B2CF48108}.Debug|arm64.ActiveCfg = Debug|Any CPU
+		{68CCB1A5-46F0-4960-9F64-4C7B2CF48108}.Debug|arm64.Build.0 = Debug|Any CPU
+		{68CCB1A5-46F0-4960-9F64-4C7B2CF48108}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{68CCB1A5-46F0-4960-9F64-4C7B2CF48108}.Debug|x64.Build.0 = Debug|Any CPU
+		{68CCB1A5-46F0-4960-9F64-4C7B2CF48108}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{68CCB1A5-46F0-4960-9F64-4C7B2CF48108}.Debug|x86.Build.0 = Debug|Any CPU
+		{68CCB1A5-46F0-4960-9F64-4C7B2CF48108}.Experimental|Any CPU.ActiveCfg = Debug|Any CPU
+		{68CCB1A5-46F0-4960-9F64-4C7B2CF48108}.Experimental|Any CPU.Build.0 = Debug|Any CPU
+		{68CCB1A5-46F0-4960-9F64-4C7B2CF48108}.Experimental|ARM.ActiveCfg = Debug|Any CPU
+		{68CCB1A5-46F0-4960-9F64-4C7B2CF48108}.Experimental|ARM.Build.0 = Debug|Any CPU
+		{68CCB1A5-46F0-4960-9F64-4C7B2CF48108}.Experimental|arm64.ActiveCfg = Debug|Any CPU
+		{68CCB1A5-46F0-4960-9F64-4C7B2CF48108}.Experimental|arm64.Build.0 = Debug|Any CPU
+		{68CCB1A5-46F0-4960-9F64-4C7B2CF48108}.Experimental|x64.ActiveCfg = Debug|Any CPU
+		{68CCB1A5-46F0-4960-9F64-4C7B2CF48108}.Experimental|x64.Build.0 = Debug|Any CPU
+		{68CCB1A5-46F0-4960-9F64-4C7B2CF48108}.Experimental|x86.ActiveCfg = Debug|Any CPU
+		{68CCB1A5-46F0-4960-9F64-4C7B2CF48108}.Experimental|x86.Build.0 = Debug|Any CPU
+		{68CCB1A5-46F0-4960-9F64-4C7B2CF48108}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{68CCB1A5-46F0-4960-9F64-4C7B2CF48108}.Release|Any CPU.Build.0 = Release|Any CPU
+		{68CCB1A5-46F0-4960-9F64-4C7B2CF48108}.Release|ARM.ActiveCfg = Release|Any CPU
+		{68CCB1A5-46F0-4960-9F64-4C7B2CF48108}.Release|ARM.Build.0 = Release|Any CPU
+		{68CCB1A5-46F0-4960-9F64-4C7B2CF48108}.Release|arm64.ActiveCfg = Release|Any CPU
+		{68CCB1A5-46F0-4960-9F64-4C7B2CF48108}.Release|arm64.Build.0 = Release|Any CPU
+		{68CCB1A5-46F0-4960-9F64-4C7B2CF48108}.Release|x64.ActiveCfg = Release|Any CPU
+		{68CCB1A5-46F0-4960-9F64-4C7B2CF48108}.Release|x64.Build.0 = Release|Any CPU
+		{68CCB1A5-46F0-4960-9F64-4C7B2CF48108}.Release|x86.ActiveCfg = Release|Any CPU
+		{68CCB1A5-46F0-4960-9F64-4C7B2CF48108}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

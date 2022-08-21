@@ -13,7 +13,7 @@
     x:Name="Window"
     Title="{Binding Title}"
     Width="640"
-    Height="480"
+    Height="512"
     d:DataContext="{d:DesignInstance Type=viewmodels:ShellWindowViewModel}"
     fw:AcrylicWindow.AcrylicWindowStyle="None"
     fw:AcrylicWindow.Enabled="True"
@@ -68,7 +68,7 @@
 
         <Border Background="{DynamicResource SystemAltMediumLowColorBrush}">
             <ui:SimpleStackPanel Margin="24,32,24,0" Spacing="24">
-                <ScrollViewer>
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
                     <ui:Frame prism:RegionManager.RegionName="ContentRegion" />
                 </ScrollViewer>
             </ui:SimpleStackPanel>
