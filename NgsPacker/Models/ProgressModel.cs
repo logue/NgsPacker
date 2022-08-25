@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------------
-// <copyright file="IceEntryModel.cs" company="Logue">
-// Copyright (c) 2022 Masashi Yoshikawa All rights reserved.
+// <copyright file="ProgressModel.cs" company="Logue">
+// Copyright (c) 2021-2022 Masashi Yoshikawa All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 // </copyright>
 // -----------------------------------------------------------------------
@@ -23,10 +23,10 @@ namespace NgsPacker.Models
         public string Message { get; set; }
 
         /// <summary>
-        /// コンストラクタ
+        /// Initializes a new instance of the <see cref="ProgressModel"/> class.
         /// </summary>
-        /// <param name="value"></param>
-        /// <param name="text"></param>
+        /// <param name="value">値</param>
+        /// <param name="text">メッセージ</param>
         public ProgressModel(int value, string text)
         {
             Value = value;

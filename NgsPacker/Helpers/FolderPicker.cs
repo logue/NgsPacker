@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------------
-// <copyright file="FoldarPicker.cs" company="Logue">
-// Copyright (c) 2021 Masashi Yoshikawa All rights reserved.
+// <copyright file="FolderPicker.cs" company="Logue">
+// Copyright (c) 2021-2022 Masashi Yoshikawa All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 // </copyright>
 // -----------------------------------------------------------------------
@@ -216,7 +216,7 @@ namespace NgsPacker.Helpers
             SIGDN_PARENTRELATIVEEDITING = 0x80031001,
             SIGDN_PARENTRELATIVEFORADDRESSBAR = 0x8007c001,
             SIGDN_PARENTRELATIVEPARSING = 0x80018001,
-            SIGDN_URL = 0x80068000
+            SIGDN_URL = 0x80068000,
         }
 
         [Flags]
@@ -244,7 +244,7 @@ namespace NgsPacker.Helpers
             FOS_FORCESHOWHIDDEN = 0x10000000,
             FOS_DEFAULTNOMINIMODE = 0x20000000,
             FOS_FORCEPREVIEWPANEON = 0x40000000,
-            FOS_SUPPORTSTREAMABLEITEMS = unchecked((int)0x80000000)
+            FOS_SUPPORTSTREAMABLEITEMS = unchecked((int)0x80000000),
         }
 #pragma warning restore CA1712 // Do not prefix enum values with type name
     }

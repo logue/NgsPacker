@@ -1,18 +1,18 @@
 // -----------------------------------------------------------------------
-// <copyright file="HomePageViewModel.cs" company="Logue">
-// Copyright (c) 2021 Masashi Yoshikawa All rights reserved.
+// <copyright file="PackPageViewModel.cs" company="Logue">
+// Copyright (c) 2021-2022 Masashi Yoshikawa All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 // </copyright>
 // -----------------------------------------------------------------------
 
+using System;
+using System.IO;
+using System.Windows.Forms;
 using Microsoft.Toolkit.Uwp.Notifications;
 using NgsPacker.Helpers;
 using NgsPacker.Interfaces;
 using Prism.Commands;
 using Prism.Mvvm;
-using System;
-using System.IO;
-using System.Windows.Forms;
 
 namespace NgsPacker.ViewModels
 {
@@ -24,12 +24,21 @@ namespace NgsPacker.ViewModels
         /// <summary>
         /// 多言語化サービス
         /// </summary>
-        private readonly ILocalizerService LocalizerService;
+        private readonly ILocalizerService localizerService;
 
         /// <summary>
         /// Zamboniサービス
         /// </summary>
-        private readonly IZamboniService ZamboniService;
+        private readonly IZamboniService zamboniService;
+
+        /// <summary>
+        /// ホワイトリスト
+        /// </summary>
+        public static string WhiteList
+        {
+            get => Properties.Settings.Default.WhiteList;
+            set => Properties.Settings.Default.WhiteList = value;
+        }
 
         /// <summary>
         /// パック
@@ -52,16 +61,7 @@ namespace NgsPacker.ViewModels
         public bool IsCrypt { get; set; }
 
         /// <summary>
-        /// ホワイトリスト
-        /// </summary>
-        public static string WhiteList
-        {
-            get => Properties.Settings.Default.WhiteList;
-            set => Properties.Settings.Default.WhiteList = value;
-        }
-
-        /// <summary>
-        /// コンストラクタ
+        /// Initializes a new instance of the <see cref="PackPageViewModel"/> class.
         /// </summary>
         /// <param name="localizerService">多言語化サービス</param>
         /// <param name="zamboniService">Zamboniサービス</param>
@@ -69,14 +69,15 @@ namespace NgsPacker.ViewModels
         {
             // パックのイベント割当
             PackCommand = new DelegateCommand(ExecutePackCommand);
+
             // 設定保存のイベント割当
             SaveCommand = new DelegateCommand(ExecuteSaveCommand);
 
             IsCompress = true;
 
             // サービスのインジェクション
-            LocalizerService = localizerService;
-            ZamboniService = zamboniService;
+            this.localizerService = localizerService;
+            this.zamboniService = zamboniService;
         }
 
         /// <summary>
@@ -85,9 +86,10 @@ namespace NgsPacker.ViewModels
         private async void ExecutePackCommand()
         {
             // フォルダ選択ダイアログ
-            FolderPicker picker = new();
-            picker.Title = LocalizerService.GetLocalizedString("PackInputPathText");
+            FolderPicker picker = new ();
+            picker.Title = localizerService.GetLocalizedString("PackInputPathText");
             picker.InputPath = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+
             // ファイルダイアログを表示
             if (picker.ShowDialog() != true)
             {
@@ -95,12 +97,12 @@ namespace NgsPacker.ViewModels
             }
 
             // ファイル保存ダイアログ
-            using SaveFileDialog saveFileDialog = new()
+            using SaveFileDialog saveFileDialog = new ()
             {
-                Title = LocalizerService.GetLocalizedString("SaveAsDialogText"),
-                Filter = LocalizerService.GetLocalizedString("IceFileFilterText"),
+                Title = localizerService.GetLocalizedString("SaveAsDialogText"),
+                Filter = localizerService.GetLocalizedString("IceFileFilterText"),
                 InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal),
-                FileName = "pso2data.ice"
+                FileName = "pso2data.ice",
             };
 
             // ダイアログを表示
@@ -111,9 +113,8 @@ namespace NgsPacker.ViewModels
                 return;
             }
 
-
             // Iceで圧縮（結構重い）
-            byte[] iceStream = await ZamboniService.Pack(picker.ResultPath, IsCompress, IsCrypt);
+            byte[] iceStream = await zamboniService.Pack(picker.ResultPath, IsCompress, IsCrypt);
             await File.WriteAllBytesAsync(saveFileDialog.FileName, iceStream);
 
             // 完了通知
@@ -121,15 +122,15 @@ namespace NgsPacker.ViewModels
             {
                 // トースト通知
                 new ToastContentBuilder()
-                    .AddText(LocalizerService.GetLocalizedString("PackText"))
-                    .AddText(LocalizerService.GetLocalizedString("CompleteText"))
+                    .AddText(localizerService.GetLocalizedString("PackText"))
+                    .AddText(localizerService.GetLocalizedString("CompleteText"))
                     .Show();
             }
             else
             {
                 // _ = AcrylicMessageBox.Show(System.Windows.Application.Current.MainWindow,
                 _ = ModernWpf.MessageBox.Show(
-                    LocalizerService.GetLocalizedString("PackText"), LocalizerService.GetLocalizedString("CompleteText"));
+                    localizerService.GetLocalizedString("PackText"), localizerService.GetLocalizedString("CompleteText"));
             }
         }
 

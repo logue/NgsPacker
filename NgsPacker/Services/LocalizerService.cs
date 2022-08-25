@@ -1,13 +1,13 @@
 // -----------------------------------------------------------------------
 // <copyright file="LocalizerService.cs" company="Logue">
-// Copyright (c) 2021 Masashi Yoshikawa All rights reserved.
+// Copyright (c) 2021-2022 Masashi Yoshikawa All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 // </copyright>
 // -----------------------------------------------------------------------
-using NgsPacker.Interfaces;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using NgsPacker.Interfaces;
 using WPFLocalizeExtension.Engine;
 using WPFLocalizeExtension.Extensions;
 
@@ -75,7 +75,7 @@ namespace NgsPacker.Services
         /// <returns>.</returns>
         public string GetLocalizedString(string key)
         {
-            LocExtension locExtension = new(key);
+            LocExtension locExtension = new (key);
             _ = locExtension.ResolveLocalizedValue(out string uiString);
             return uiString;
         }

@@ -5,11 +5,6 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-using ImTools;
-using NgsPacker.Exeptions;
-using NgsPacker.Interfaces;
-using NgsPacker.Models;
-using Prism.Events;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -17,6 +12,11 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ImTools;
+using NgsPacker.Exeptions;
+using NgsPacker.Interfaces;
+using NgsPacker.Models;
+using Prism.Events;
 using Zamboni;
 using Zamboni.IceFileFormats;
 using static Zamboni.IceFileFormats.IceHeaderStructures;
@@ -31,32 +31,119 @@ namespace NgsPacker.Services
         /// <summary>
         /// グループ１のホワイトリスト
         /// </summary>
-        private readonly List<string> WhiteList;
+        private readonly List<string> whiteList;
 
         /// <summary>
         /// 多言語化サービス
         /// </summary>
-        private readonly ILocalizerService LocalizerService;
+        private readonly ILocalizerService localizerService;
 
+        /// <summary>
+        /// 進捗ダイアログ.
+        /// </summary>
         private readonly Views.ProgressDialog progressDialog;
 
         /// <summary>
         /// イベントアグリエイター
         /// </summary>
-        private readonly IEventAggregator EventAggregator;
+        private readonly IEventAggregator eventAggregator;
 
         /// <summary>
-        /// コンストラクタ
+        /// グループをファイルと内容の辞書型にする
         /// </summary>
+        /// <param name="data">解凍済みのIceのデータストリーム</param>
+        /// <param name="isGroupOne">グループ１のファイルか</param>
+        /// <returns>グループ別ファイルリスト</returns>
+        public static List<IceEntryModel> IceToFilelist(byte[][] data, bool isGroupOne = false)
+        {
+            List<IceEntryModel> fileList = new ();
+            for (int index = 0; index < data.Length; ++index)
+            {
+                int int32 = BitConverter.ToInt32(data[index], 16);
+
+                // ヘッダーを取得
+                int iceHeaderSize = BitConverter.ToInt32(data[index], 0xC);
+                int newLength = data[index].Length - iceHeaderSize;
+
+                // データを取得
+                byte[] content = new byte[newLength];
+                Array.ConstrainedCopy(data[index], iceHeaderSize, content, 0, newLength);
+
+                // 配列に流し込む
+                fileList.Add(new IceEntryModel()
+                {
+                    FileName = Encoding.ASCII.GetString(data[index], 64, int32).TrimEnd(new char[1]),
+                    Content = content,
+                    Group = isGroupOne ? IceGroupEnum.GROUP1 : IceGroupEnum.GROUP1,
+                });
+
+                data[index] = null;
+            }
+
+            return fileList;
+        }
+
+        /// <summary>
+        /// ファイルリストをIceEntryModelにする
+        /// </summary>
+        /// <param name="files">ファイル一覧</param>
+        /// <returns>IceEntryModel</returns>
+        public List<IceEntryModel> FilelistToIce(string[] files)
+        {
+            List<IceEntryModel> ret = new ();
+
+            // 入力ディレクトリ内のファイルを走査
+            foreach (string fileName in files)
+            {
+                // ファイルをバイト配列として読み込む
+                ret.Add(new IceEntryModel()
+                {
+                    FileName = Path.GetFileName(fileName),
+                    Content = File.ReadAllBytes(fileName),
+                    Group = whiteList.Contains(fileName) ? IceGroupEnum.GROUP1 : IceGroupEnum.GROUP2,
+                });
+            }
+
+            return ret;
+        }
+
+        /// <summary>
+        /// ファイルリストをIceEntryModelにする（非同期）
+        /// </summary>
+        /// <param name="files">ファイル一覧</param>
+        /// <returns>IceEntryModel</returns>
+        public async Task<List<IceEntryModel>> FilelistToIceAsync(string[] files)
+        {
+            List<IceEntryModel> ret = new ();
+
+            // 入力ディレクトリ内のファイルを走査
+            foreach (string fileName in files)
+            {
+                // ファイルをバイト配列として読み込む
+                ret.Add(new IceEntryModel()
+                {
+                    FileName = Path.GetFileName(fileName),
+                    Content = await File.ReadAllBytesAsync(fileName),
+                    Group = whiteList.Contains(fileName) ? IceGroupEnum.GROUP1 : IceGroupEnum.GROUP2,
+                });
+            }
+
+            return ret;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ZamboniService"/> class.
+        /// </summary>
+        /// <param name="localizerService">多言語化サービス</param>
+        /// <param name="eventAggregator">イベントサービス</param>
         public ZamboniService(ILocalizerService localizerService, IEventAggregator eventAggregator)
         {
             // 設定からホワイトリストを読み込む
             string[] whiteList = Properties.Settings.Default.WhiteList.Replace("\r\n", "\n").Split(new[] { '\n', '\r' });
-            WhiteList = new List<string>(whiteList);
+            this.whiteList = new List<string>(whiteList);
 
-            LocalizerService = localizerService;
-            EventAggregator = eventAggregator;
-
+            this.localizerService = localizerService;
+            this.eventAggregator = eventAggregator;
 
             progressDialog = new Views.ProgressDialog();
         }
@@ -76,29 +163,32 @@ namespace NgsPacker.Services
             {
                 throw new DirectoryNotFoundException("ZamboniService: Input directory is not found.");
             }
+
             _ = progressDialog.ShowAsync();
 
             // ファイル一覧を取得
             string[] files = recursive ? Directory.EnumerateFiles(inputPath, "*.*", SearchOption.AllDirectories).ToArray() : Directory.GetFiles(inputPath);
 
             // グループ1に書き込むバイナリデータ
-            List<byte[]> group1Binaries = new();
-            // グループ2に書き込むバイナリデータ
-            List<byte[]> group2Binaries = new();
+            List<byte[]> group1Binaries = new ();
 
+            // グループ2に書き込むバイナリデータ
+            List<byte[]> group2Binaries = new ();
 
             // LocalizerService.GetLocalizedString("PackingText"),
 
             byte[] ret;
+
             // 入力ディレクトリ内のファイルを走査
             foreach (string currentFile in files)
             {
                 // 入力ファイル
                 string fileName = Path.GetFileName(currentFile);
+
                 // int index = files.IndexOf(currentFile);
 
                 // ファイルをバイト配列として読み込む
-                List<byte> file = new(await File.ReadAllBytesAsync(currentFile));
+                List<byte> file = new (await File.ReadAllBytesAsync(currentFile));
 
                 // ヘッダを書き込む
                 file.InsertRange(0, new IceFileHeader(currentFile, (uint)file.Count).GetBytes());
@@ -110,7 +200,7 @@ namespace NgsPacker.Services
                 // 　たとえばテスクチャなどの.ddsファイルはグループ1に書き込まれるが、
                 // 　モデルやポリゴンを定義するaqoファイルなどはグループ2に書き込まれないと動かない。
                 // 　ちなみに、グループ1に書き込まれるoxyresource.crcは、Modを有効化させるとき必要だぞ。
-                if (WhiteList.Contains(fileName))
+                if (whiteList.Contains(fileName))
                 {
                     // グループ1に分類されるファイル
                     group1Binaries.Add(file.ToArray());
@@ -121,13 +211,14 @@ namespace NgsPacker.Services
                     group2Binaries.Add(file.ToArray());
                 }
             }
+
             // ヘッダ
-            IceArchiveHeader header = new();
+            IceArchiveHeader header = new ();
 
             try
             {
                 // Iceファイルとして書き出す
-                IceV4File ice = new(header.GetBytes(), group1Binaries.ToArray(), group2Binaries.ToArray());
+                IceV4File ice = new (header.GetBytes(), group1Binaries.ToArray(), group2Binaries.ToArray());
                 ret = ice.getRawData(compress, forceUnencrypted);
             }
             catch (Exception ex)
@@ -140,12 +231,7 @@ namespace NgsPacker.Services
             return ret;
         }
 
-        /// <summary>
-        /// 指定されたファイルをアンパックする
-        /// </summary>
-        /// <param name="inputPath">入力ファイルのパス</param>
-        /// <param name="subdir">サブディレクトリを作成する</param>
-        /// <param name="sepalate">グループ1と2で分ける</param>
+        /// <inheritdoc/>
         public async void Unpack(string inputPath, string outputPath = null, bool subdir = true, bool sepalate = false)
         {
             _ = progressDialog.ShowAsync();
@@ -158,10 +244,11 @@ namespace NgsPacker.Services
             IceFile iceFile = LoadIceFile(inputPath);
 
             // 出力先のディレクトリ（ファイル名_ext）　※repack_ice.exeと同じ仕様
-            string destinaton = outputPath + (subdir ? Path.DirectorySeparatorChar + Path.GetFileName(inputPath) + "_ext" : "") + Path.DirectorySeparatorChar;
+            string destinaton = outputPath + (subdir ? Path.DirectorySeparatorChar + Path.GetFileName(inputPath) + "_ext" : string.Empty) + Path.DirectorySeparatorChar;
 
             // グループ1
             List<IceEntryModel> groupOneFiles = IceToFilelist(iceFile.groupOneFiles, true);
+
             // グループ2
             List<IceEntryModel> groupTwoFiles = IceToFilelist(iceFile.groupTwoFiles);
 
@@ -181,12 +268,14 @@ namespace NgsPacker.Services
                 {
                     _ = Directory.CreateDirectory(destinaton);
                 }
+
                 if (sepalate)
                 {
                     if (!Directory.Exists(destinaton + Path.DirectorySeparatorChar + "group1"))
                     {
                         _ = Directory.CreateDirectory(destinaton + Path.DirectorySeparatorChar + "group1");
                     }
+
                     if (!Directory.Exists(destinaton + Path.DirectorySeparatorChar + "group2"))
                     {
                         _ = Directory.CreateDirectory(destinaton + Path.DirectorySeparatorChar + "group2");
@@ -194,13 +283,13 @@ namespace NgsPacker.Services
                 }
             }
 
-
             foreach (IceEntryModel model in groupOneFiles)
             {
-                int index = groupOneFiles.IndexOf(model);
+                // int index = groupOneFiles.IndexOf(model);
+
                 // ファイル名（ひどい可読性だ）
                 string fileName = destinaton + (sepalate ?
-                    (model.Group == IceGroupEnum.GROUP1 ? "group1" : "group2") + Path.DirectorySeparatorChar : "")
+                    (model.Group == IceGroupEnum.GROUP1 ? "group1" : "group2") + Path.DirectorySeparatorChar : string.Empty)
                     + model.FileName;
 
                 try
@@ -218,19 +307,16 @@ namespace NgsPacker.Services
                 writer.Close();
                 */
             }
+
             progressDialog.Hide();
         }
 
-        /// <summary>
-        /// ファイル一覧を取得
-        /// </summary>
-        /// <param name="inputPath">解析するdataディレクトリ</param>
-        /// <returns>CSV配列</returns>
+        /// <inheritdoc/>
         public async Task<List<string>> Filelist(string inputPath)
         {
             _ = progressDialog.ShowAsync();
-            List<string> ret = new();
-            List<string> entries = new(Directory.EnumerateFiles(inputPath, "*.*", SearchOption.AllDirectories));
+            List<string> ret = new ();
+            List<string> entries = new (Directory.EnumerateFiles(inputPath, "*.*", SearchOption.AllDirectories));
             Debug.WriteLine("Entries: ", entries.Count);
 
             // CSVのヘッダ
@@ -238,6 +324,7 @@ namespace NgsPacker.Services
             foreach (string path in entries)
             {
                 Debug.WriteLine(path);
+
                 // int index = entries.IndexOf(path);
 
                 if (path.Contains("."))
@@ -255,18 +342,18 @@ namespace NgsPacker.Services
                 }
 
                 // メモリーストリームを生成
-                using MemoryStream ms = new(buffer);
+                using MemoryStream ms = new (buffer);
+
                 // ヘッダを確認
                 _ = ms.Seek(8L, SeekOrigin.Begin);
                 int num = ms.ReadByte();
                 _ = ms.Seek(0L, SeekOrigin.Begin);
 
-
-                FileInfo fileInfo = new(path);
+                FileInfo fileInfo = new (path);
 
                 // NGSのデータファイルの場合、親ディレクトリのパスも含める
                 string ice =
-                    (fileInfo.Directory.Name != "win32" ? fileInfo.Directory.Name + Path.DirectorySeparatorChar : "")
+                    (fileInfo.Directory.Name != "win32" ? fileInfo.Directory.Name + Path.DirectorySeparatorChar : string.Empty)
                         + fileInfo.Name + ",ICE" + num + ",";
 
                 // Iceファイルを読み込む
@@ -280,6 +367,7 @@ namespace NgsPacker.Services
                     ret.Add(ice + "0,[ERROR] Could not load ice file.");
                     continue;
                 }
+
                 if (iceFile == null)
                 {
                     ret.Add(ice + "0,[ERROR] Could not parse ice file.");
@@ -324,16 +412,12 @@ namespace NgsPacker.Services
                     }
                 }
             }
+
             progressDialog.Hide();
             return ret;
         }
 
-        /// <summary>
-        /// Iceファイルを読み込む.
-        /// </summary>
-        /// <param name="inputPath">Iceファイルへのパス</param>
-        /// <returns>Iceファイルのオブジェクト</returns>
-        /// <exception cref="ZamboniException">パースできなかった場合</exception>
+        /// <inheritdoc/>
         public IceFile LoadIceFile(string inputPath)
         {
             // Iceファイルをバイトとして読み込む
@@ -346,20 +430,16 @@ namespace NgsPacker.Services
             {
                 throw new ZamboniException("Not ice file.");
             }
+
             // メモリーストリームを生成
-            using MemoryStream ms = new(buffer);
+            using MemoryStream ms = new (buffer);
 
             // Iceファイルを読み込む
             IceFile iceFile = IceFile.LoadIceFile(ms);
             return iceFile ?? throw new ZamboniException("Could not parse ice file.");
         }
 
-        /// <summary>
-        /// Iceファイルを読み込む（非同期版）.
-        /// </summary>
-        /// <param name="inputPath">Iceファイルへのパス</param>
-        /// <returns>Iceファイルのオブジェクト</returns>
-        /// <exception cref="ZamboniException">パースできなかった場合</exception>
+        /// <inheritdoc/>
         public async Task<IceFile> LoadIceFileAsync(string inputPath)
         {
             // Iceファイルをバイトとして読み込む
@@ -370,91 +450,13 @@ namespace NgsPacker.Services
             {
                 throw new ZamboniException("Not ice file.");
             }
+
             // メモリーストリームを生成
-            using MemoryStream ms = new(buffer);
+            using MemoryStream ms = new (buffer);
 
             // Iceファイルを読み込む
             IceFile iceFile = IceFile.LoadIceFile(ms);
             return iceFile ?? throw new ZamboniException("Could not parse ice file.");
-        }
-
-        /// <summary>
-        /// グループをファイルと内容の辞書型にする
-        /// </summary>
-        /// <param name="data">解凍済みのIceのデータストリーム</param>
-        /// <returns></returns>
-        public static List<IceEntryModel> IceToFilelist(byte[][] data, bool isGroupOne = false)
-        {
-            List<IceEntryModel> fileList = new();
-            for (int index = 0; index < data.Length; ++index)
-            {
-                int int32 = BitConverter.ToInt32(data[index], 16);
-
-                // ヘッダーを取得
-                int iceHeaderSize = BitConverter.ToInt32(data[index], 0xC);
-                int newLength = data[index].Length - iceHeaderSize;
-
-                // データを取得
-                byte[] content = new byte[newLength];
-                Array.ConstrainedCopy(data[index], iceHeaderSize, content, 0, newLength);
-
-                // 配列に流し込む
-                fileList.Add(new IceEntryModel()
-                {
-                    FileName = Encoding.ASCII.GetString(data[index], 64, int32).TrimEnd(new char[1]),
-                    Content = content,
-                    Group = isGroupOne ? IceGroupEnum.GROUP1 : IceGroupEnum.GROUP1
-                });
-
-                data[index] = null;
-            }
-            return fileList;
-        }
-
-        /// <summary>
-        /// ファイルリストをIceEntryModelにする
-        /// </summary>
-        /// <param name="files"></param>
-        /// <returns></returns>
-        public List<IceEntryModel> FilelistToIce(string[] files)
-        {
-            List<IceEntryModel> ret = new();
-
-            // 入力ディレクトリ内のファイルを走査
-            foreach (string fileName in files)
-            {
-                // ファイルをバイト配列として読み込む
-                ret.Add(new IceEntryModel()
-                {
-                    FileName = Path.GetFileName(fileName),
-                    Content = File.ReadAllBytes(fileName),
-                    Group = WhiteList.Contains(fileName) ? IceGroupEnum.GROUP1 : IceGroupEnum.GROUP2
-                });
-            }
-            return ret;
-        }
-
-        /// <summary>
-        /// ファイルリストをIceEntryModelにする
-        /// </summary>
-        /// <param name="files"></param>
-        /// <returns></returns>
-        public async Task<List<IceEntryModel>> FilelistToIceAsync(string[] files)
-        {
-            List<IceEntryModel> ret = new();
-
-            // 入力ディレクトリ内のファイルを走査
-            foreach (string fileName in files)
-            {
-                // ファイルをバイト配列として読み込む
-                ret.Add(new IceEntryModel()
-                {
-                    FileName = Path.GetFileName(fileName),
-                    Content = await File.ReadAllBytesAsync(fileName),
-                    Group = WhiteList.Contains(fileName) ? IceGroupEnum.GROUP1 : IceGroupEnum.GROUP2
-                });
-            }
-            return ret;
         }
     }
 }

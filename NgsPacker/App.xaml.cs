@@ -1,22 +1,22 @@
 // -----------------------------------------------------------------------
 // <copyright file="App.xaml.cs" company="Logue">
-// Copyright (c) 2021 Masashi Yoshikawa All rights reserved.
+// Copyright (c) 2021-2022 Masashi Yoshikawa All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 // </copyright>
 // -----------------------------------------------------------------------
 
-using NgsPacker.Interfaces;
-using NgsPacker.Services;
-using NgsPacker.Views;
-using Prism.DryIoc;
-using Prism.Ioc;
-using Prism.Modularity;
 using System;
 using System.Diagnostics;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows;
+using NgsPacker.Interfaces;
+using NgsPacker.Services;
+using NgsPacker.Views;
+using Prism.DryIoc;
+using Prism.Ioc;
+using Prism.Modularity;
 
 namespace NgsPacker
 {
@@ -103,6 +103,7 @@ namespace NgsPacker
         {
             // 多言語化
             _ = containerRegistry.RegisterInstance<ILocalizerService>(Container.Resolve<LocalizerService>());
+
             // Zamboni
             _ = containerRegistry.RegisterInstance<IZamboniService>(Container.Resolve<ZamboniService>());
 
@@ -114,9 +115,9 @@ namespace NgsPacker
         }
 
         /// <summary>
-        /// モジュールの登録
+        /// モジュールの登録.
         /// </summary>
-        /// <param name="moduleCatalog"></param>
+        /// <param name="moduleCatalog">登録するモジュール</param>
         protected override void ConfigureModuleCatalog(IModuleCatalog moduleCatalog)
         {
             _ = moduleCatalog.AddModule<ProgressModule.Module>();

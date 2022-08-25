@@ -28,6 +28,12 @@
     <PackageReleaseNotes>一括処理（リスト出力時など）で処理不能なファイルがあったときに、そこで処理が中断してしまう問題を修正。
 （主に旧PSO2のdataディレクトリで発生）</PackageReleaseNotes>
   </PropertyGroup>
+  <PropertyGroup>
+      <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)..\StyleCop.Analyzers.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <AdditionalFiles Include="$(MSBuildThisFileDirectory)..\stylecop.json" Link="stylecop.json" />
+  </ItemGroup>
   <ItemGroup>
     <Content Include="ice-cubes.ico" />
   </ItemGroup>
@@ -38,6 +44,10 @@
     <PackageReference Include="ModernWpfUIs.MessageBox" Version="0.5.2" />
     <PackageReference Include="Prism.DryIoc" Version="8.1.97" />
     <PackageReference Include="ReactiveProperty" Version="8.1.2" />
+    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="WPFLocalizeExtension" Version="3.9.4" />
   </ItemGroup>
   <ItemGroup>

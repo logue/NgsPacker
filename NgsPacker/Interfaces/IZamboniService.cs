@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------------
 // <copyright file="IZamboniService.cs" company="Logue">
-// Copyright (c) 2021 Masashi Yoshikawa All rights reserved.
+// Copyright (c) 2021-2022 Masashi Yoshikawa All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 // </copyright>
 // -----------------------------------------------------------------------
@@ -11,6 +11,9 @@ using Zamboni;
 
 namespace NgsPacker.Interfaces
 {
+    /// <summary>
+    /// Zamboniサービスのインターフェース
+    /// </summary>
     public interface IZamboniService
     {
         /// <summary>
@@ -27,6 +30,7 @@ namespace NgsPacker.Interfaces
         /// 指定されたファイルをアンパックする
         /// </summary>
         /// <param name="inputPath">入力ファイルのパス</param>
+        /// <param name="outputPath">出力先のパス</param>
         /// <param name="subdir">サブディレクトリを作成する</param>
         /// <param name="sepalate">グループ1と2で分ける</param>
         public void Unpack(string inputPath, string outputPath = null, bool subdir = true, bool sepalate = false);
@@ -35,7 +39,7 @@ namespace NgsPacker.Interfaces
         /// ファイル一覧を取得
         /// </summary>
         /// <param name="inputPath">解析するdataディレクトリ</param>
-        /// <returns></returns>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public Task<List<string>> Filelist(string inputPath);
 
         /// <summary>

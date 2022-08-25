@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------------
-// <copyright file="ProgressDialog.cs" company="Logue">
-// Copyright (c) 2021 Masashi Yoshikawa All rights reserved.
+// <copyright file="ProgressDialog.xaml.cs" company="Logue">
+// Copyright (c) 2021-2022 Masashi Yoshikawa All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 // </copyright>
 // -----------------------------------------------------------------------
@@ -14,6 +14,9 @@ namespace NgsPacker.Views
     /// </summary>
     public partial class ProgressDialog : ContentDialog
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ProgressDialog"/> class.
+        /// </summary>
         public ProgressDialog()
         {
             InitializeComponent();
