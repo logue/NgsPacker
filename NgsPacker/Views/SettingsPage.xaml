@@ -19,30 +19,23 @@
     mc:Ignorable="d">
     <ui:SimpleStackPanel Spacing="12">
         <Label Content="{lex:Loc ToggleThemeText}" />
-        <ui:ToggleSwitch
-            IsOn="{Binding ToggleDarkTheme}"
-            ToolTip="{lex:Loc ToggleDarkThemeTooltip}" />
+        <ui:ToggleSwitch IsOn="{Binding ToggleDarkTheme}" ToolTip="{lex:Loc ToggleDarkThemeTooltip}" />
         <Label Content="{lex:Loc LanguageText}" />
         <ComboBox
             DisplayMemberPath="DisplayName"
             ItemsSource="{Binding Path=SupportedLanguages, UpdateSourceTrigger=PropertyChanged}"
             SelectedItem="{Binding Path=SelectedLanguage, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
         <Label Content="{lex:Loc NotifyCompleteText}" />
-        <ui:ToggleSwitch
-            IsOn="{Binding ToggleNotifyComplete}"
-            ToolTip="{lex:Loc NotifyCompleteTooltip}" />
+        <ui:ToggleSwitch IsOn="{Binding ToggleNotifyComplete}" ToolTip="{lex:Loc NotifyCompleteTooltip}" />
         <Label Content="{lex:Loc Pso2BinPathText}" />
         <TextBox Text="{Binding Pso2BinPath}" />
         <Button
             Padding="10,5"
             HorizontalAlignment="Right"
             VerticalAlignment="Center"
-            Command="{Binding BrowseCommand}"
-            Style="{StaticResource ButtonRevealStyle}">
+            Command="{Binding BrowseCommand}">
             <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-                <ui:FontIcon
-                    Margin="0,0,5,0"
-                    Glyph="&#xec50;" />
+                <ui:FontIcon Margin="0,0,5,0" Glyph="&#xec50;" />
                 <TextBlock VerticalAlignment="Center" Text="{lex:Loc BrowseText}" />
             </StackPanel>
         </Button>

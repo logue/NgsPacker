@@ -24,26 +24,32 @@ namespace NgsPacker.Helpers
         /// 選択されたパス
         /// </summary>
         public virtual string ResultPath { get; protected set; }
+
         /// <summary>
         /// 結果名
         /// </summary>
         public virtual string ResultName { get; protected set; }
+
         /// <summary>
         /// 初期パス
         /// </summary>
         public virtual string InputPath { get; set; }
+
         /// <summary>
         /// 
         /// </summary>
         public virtual bool ForceFileSystem { get; set; }
+
         /// <summary>
         /// タイトル
         /// </summary>
         public virtual string Title { get; set; }
+
         /// <summary>
         /// OKボタンのラベル
         /// </summary>
         public virtual string OkButtonLabel { get; set; }
+
         /// <summary>
         /// 「ファイル名」の項目名
         /// </summary>

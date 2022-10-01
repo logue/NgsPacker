@@ -19,14 +19,9 @@
 
     <ui:SimpleStackPanel Spacing="12">
         <TextBlock Text="{lex:Loc UnpackInformationText}" TextWrapping="Wrap" />
-        <Button
-            Padding="10,5"
-            Command="{Binding UnpackCommand}"
-            Style="{StaticResource ButtonRevealStyle}">
+        <Button Padding="10,5" Command="{Binding UnpackCommand}">
             <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-                <ui:FontIcon
-                    Margin="0,0,5,0"
-                    Glyph="&#xe1d9;" />
+                <ui:FontIcon Margin="0,0,5,0" Glyph="&#xe1d9;" />
                 <TextBlock VerticalAlignment="Center" Text="{lex:Loc UnpackText}" />
             </StackPanel>
         </Button>
@@ -36,29 +31,28 @@
             ToolTip="{lex:Loc SepareteByGroupCheckBoxToolTip}" />
         <Separator />
         <TextBlock Text="{lex:Loc ExportFileListInformationText}" TextWrapping="Wrap" />
-        <Button
-            Padding="10,5"
-            Command="{Binding ExportFilelistCommand}"
-            Style="{StaticResource ButtonRevealStyle}">
+        <Button Padding="10,5" Command="{Binding ExportFilelistCommand}">
             <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-                <ui:FontIcon
-                    Margin="0,0,5,0"
-                    Glyph="&#xe7bc;" />
+                <ui:FontIcon Margin="0,0,5,0" Glyph="&#xe7bc;" />
                 <TextBlock VerticalAlignment="Center" Text="{lex:Loc ExportFileListText}" />
             </StackPanel>
         </Button>
         <Separator />
         <TextBlock Text="{lex:Loc UnpackByFileListInformationText}" TextWrapping="Wrap" />
-        <Button
-            Padding="10,5"
-            Command="{Binding UnpackByFilelistCommand}"
-            Style="{StaticResource ButtonRevealStyle}">
+        <Button Padding="10,5" Command="{Binding UnpackByFilelistCommand}">
             <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-                <ui:FontIcon
-                    Margin="0,0,5,0"
-                    Glyph="&#xe8e5;" />
+                <ui:FontIcon Margin="0,0,5,0" Glyph="&#xe8e5;" />
                 <TextBlock VerticalAlignment="Center" Text="{lex:Loc UnpackByFileListText}" />
             </StackPanel>
         </Button>
+        <!--  D&D  -->
+        <!--i:Interaction.Triggers>
+            <i:EventTrigger EventName="PreviewDragOver">
+                <ri1:EventToReactiveCommand Command="{Binding PreviewDragOverCommand}" />
+            </i:EventTrigger>
+            <i:EventTrigger EventName="Drop">
+                <ri1:EventToReactiveCommand Command="{Binding DropCommand}" />
+            </i:EventTrigger>
+        </i:Interaction.Triggers-->
     </ui:SimpleStackPanel>
 </Page>

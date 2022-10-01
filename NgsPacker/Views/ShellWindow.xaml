@@ -1,9 +1,8 @@
-<fw:AcrylicWindow
+<Window
     x:Class="NgsPacker.Views.ShellWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:fw="clr-namespace:SourceChord.FluentWPF;assembly=FluentWPF"
     xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
     xmlns:lex="http://wpflocalizeextension.codeplex.com"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -15,17 +14,12 @@
     Width="640"
     Height="512"
     d:DataContext="{d:DesignInstance Type=viewmodels:ShellWindowViewModel}"
-    fw:AcrylicWindow.AcrylicWindowStyle="None"
-    fw:AcrylicWindow.Enabled="True"
-    fw:PointerTracker.Enabled="True"
     lex:LocalizeDictionary.DesignCulture="en"
     lex:ResxLocalizationProvider.DefaultAssembly="NgsPacker"
     lex:ResxLocalizationProvider.DefaultDictionary="Resources"
     prism:ViewModelLocator.AutoWireViewModel="True"
     ui:ThemeManager.IsThemeAware="True"
     ui:WindowHelper.UseModernWindowStyle="True"
-    Background="{DynamicResource SystemAltMediumColorBrush}"
-    ExtendViewIntoTitleBar="True"
     mc:Ignorable="d">
     <ui:NavigationView
         x:Name="NavView"
@@ -54,10 +48,12 @@
                 Name="Pack"
                 Content="{lex:Loc PackText}"
                 Icon="BackToWindow" />
-            <!--ui:NavigationViewItem
+            <!--
+                ui:NavigationViewItem
                 Name="Tool"
                 Content="{lex:Loc ToolText}"
-                Icon="Repair" /-->
+                Icon="Repair" /
+            -->
         </ui:NavigationView.MenuItems>
         <ui:NavigationView.FooterMenuItems>
             <ui:NavigationViewItem
@@ -66,7 +62,7 @@
                 Icon="Message" />
         </ui:NavigationView.FooterMenuItems>
 
-        <Border Background="{DynamicResource SystemAltMediumLowColorBrush}">
+        <Border>
             <ui:SimpleStackPanel Margin="24,32,24,0" Spacing="24">
                 <ScrollViewer VerticalScrollBarVisibility="Auto">
                     <ui:Frame prism:RegionManager.RegionName="ContentRegion" />
@@ -74,4 +70,4 @@
             </ui:SimpleStackPanel>
         </Border>
     </ui:NavigationView>
-</fw:AcrylicWindow>
+</Window>

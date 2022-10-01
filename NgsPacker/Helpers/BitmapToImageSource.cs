@@ -20,19 +20,10 @@ namespace NgsPacker.Helper
     public class BitmapToImageSource
     {
         /// <summary>
-        /// The DeleteObject.
-        /// </summary>
-        /// <param name="hObject">The hObject<see cref="IntPtr"/>.</param>
-        /// <returns>The <see cref="bool"/>.</returns>
-        [DllImport("gdi32.dll", EntryPoint = "DeleteObject")]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        private static extern bool DeleteObject([In] IntPtr hObject);
-
-        /// <summary>
         /// BitmapをImageSourceに変換する処理.
         /// </summary>
-        /// <param name="bmp">.</param>
-        /// <returns>.</returns>
+        /// <param name="bmp">ビットマップ型</param>
+        /// <returns>イメージソース型</returns>
         public static ImageSource Convert(Bitmap bmp)
         {
             IntPtr handle = bmp.GetHbitmap();
@@ -45,5 +36,14 @@ namespace NgsPacker.Helper
                 _ = DeleteObject(handle);
             }
         }
+
+        /// <summary>
+        /// The DeleteObject.
+        /// </summary>
+        /// <param name="hObject">The hObject<see cref="IntPtr"/>.</param>
+        /// <returns>The <see cref="bool"/>.</returns>
+        [DllImport("gdi32.dll", EntryPoint = "DeleteObject")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static extern bool DeleteObject([In] IntPtr hObject);
     }
 }

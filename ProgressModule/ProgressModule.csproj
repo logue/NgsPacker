@@ -13,7 +13,6 @@
     <AdditionalFiles Include="$(MSBuildThisFileDirectory)..\stylecop.json" Link="stylecop.json" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="FluentWPF" Version="0.9.0" />
     <PackageReference Include="ModernWpfUI" Version="0.9.6" />
     <PackageReference Include="Prism.Wpf" Version="8.1.97" />
     <PackageReference Include="WPFLocalizeExtension" Version="3.9.4" />

@@ -19,10 +19,10 @@
     <RepositoryUrl>git@github.com:logue/NgsPacker.git</RepositoryUrl>
     <RootNamespace>NgsPacker</RootNamespace>
     <StartupObject>NgsPacker.App</StartupObject>
-    <SupportedOSPlatformVersion>10.0.19041.0</SupportedOSPlatformVersion>
+    <SupportedOSPlatformVersion>10.0.20348.0</SupportedOSPlatformVersion>
     <TargetFramework>net6.0-windows10.0.22621.0</TargetFramework>
     <UseWPF>true</UseWPF>
-    <Version>1.2.3</Version>
+    <Version>1.3.0</Version>
     <IsPublishable>True</IsPublishable>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <PackageReleaseNotes>一括処理（リスト出力時など）で処理不能なファイルがあったときに、そこで処理が中断してしまう問題を修正。
@@ -38,12 +38,13 @@
     <Content Include="ice-cubes.ico" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="FluentWPF" Version="0.9.0" />
     <PackageReference Include="Microsoft.Toolkit.Uwp.Notifications" Version="7.1.2" />
     <PackageReference Include="ModernWpfUI" Version="0.9.6" />
     <PackageReference Include="ModernWpfUIs.MessageBox" Version="0.5.2" />
     <PackageReference Include="Prism.DryIoc" Version="8.1.97" />
+    <PackageReference Include="Prism.Wpf" Version="8.1.97" />
     <PackageReference Include="ReactiveProperty" Version="8.1.2" />
+    <PackageReference Include="ReactiveProperty.WPF" Version="8.1.2" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

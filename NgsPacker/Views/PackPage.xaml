@@ -18,14 +18,9 @@
     mc:Ignorable="d">
     <ui:SimpleStackPanel Spacing="12">
         <TextBlock Text="{lex:Loc PackInformationText}" TextWrapping="Wrap" />
-        <Button
-            Padding="10,5"
-            Command="{Binding PackCommand}"
-            Style="{StaticResource ButtonRevealStyle}">
+        <Button Padding="10,5" Command="{Binding PackCommand}">
             <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-                <ui:FontIcon
-                    Margin="0,0,5,0"
-                    Glyph="&#xe1d8;" />
+                <ui:FontIcon Margin="0,0,5,0" Glyph="&#xe1d8;" />
                 <TextBlock VerticalAlignment="Center" Text="{lex:Loc PackText}" />
             </StackPanel>
         </Button>
@@ -36,20 +31,19 @@
         <Separator />
         <Label Content="{lex:Loc WhiteListText}" />
         <TextBox
-            AcceptsReturn="True"
             Height="100"
+            AcceptsReturn="True"
             AutomationProperties.Name="multi-line TextBox"
             Text="{Binding WhiteList}"
-            ToolTip="{lex:Loc SepareteByGroupCheckBoxToolTip}"/>
+            ToolTip="{lex:Loc SepareteByGroupCheckBoxToolTip}" />
         <ui:SimpleStackPanel>
             <Button
                 Padding="10,5"
-                Command="{Binding SaveCommand}"
-                Style="{StaticResource ButtonRevealStyle}" HorizontalAlignment="Right" VerticalAlignment="Center">
+                HorizontalAlignment="Right"
+                VerticalAlignment="Center"
+                Command="{Binding SaveCommand}">
                 <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-                    <ui:FontIcon
-                        Margin="0,0,5,0"
-                        Glyph="&#xe78c;" />
+                    <ui:FontIcon Margin="0,0,5,0" Glyph="&#xe78c;" />
                     <TextBlock VerticalAlignment="Center" Text="{lex:Loc SaveText}" />
                 </StackPanel>
             </Button>

@@ -253,6 +253,6 @@ Please select the correct directory.</value>
     <value>Select the PSO2 data file directory (win32 or win32_reboot).</value>
   </data>
   <data name="ProgressDialogText" xml:space="preserve">
-    <value>Please wait for a while ...</value>
+    <value>Please wait for a while...</value>
   </data>
 </root>

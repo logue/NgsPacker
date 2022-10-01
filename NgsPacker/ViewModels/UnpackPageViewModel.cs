@@ -7,20 +7,26 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
+using System.Windows;
 using Microsoft.Toolkit.Uwp.Notifications;
 using NgsPacker.Helpers;
 using NgsPacker.Interfaces;
 using NgsPacker.Views;
 using Prism.Commands;
 using Prism.Mvvm;
+using Reactive.Bindings;
+using Reactive.Bindings.Extensions;
 
 namespace NgsPacker.ViewModels
 {
     /// <summary>
     /// アンパックページビューモデル
     /// </summary>
-    public class UnpackPageViewModel : BindableBase
+    public class UnpackPageViewModel : BindableBase, INotifyPropertyChanged
     {
         /// <summary>
         /// 多言語化サービス
@@ -53,6 +59,26 @@ namespace NgsPacker.ViewModels
         public DelegateCommand UnpackByFilelistCommand { get; private set; }
 
         /// <summary>
+        /// 表示するイメージのファイル名.
+        /// </summary>
+        public ReactivePropertySlim<string> ViewImage { get; } = new ReactivePropertySlim<string>();
+
+        /// <summary>
+        /// PreviewDragOverイベントのコマンド.
+        /// </summary>
+        public ReactiveCommand<DragEventArgs> PreviewDragOverCommand { get; } = new ReactiveCommand<DragEventArgs>();
+
+        /// <summary>
+        /// Dropイベントのコマンド.
+        /// </summary>
+        public ReactiveCommand<DragEventArgs> DropCommand { get; } = new ReactiveCommand<DragEventArgs>();
+
+        /// <summary>
+        /// Disposeが必要な処理をまとめてやる.
+        /// </summary>
+        private CompositeDisposable Disposable { get; } = new CompositeDisposable();
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="UnpackPageViewModel"/> class.
         /// コンストラクタ
         /// </summary>
@@ -63,6 +89,10 @@ namespace NgsPacker.ViewModels
             UnpackCommand = new DelegateCommand(ExecuteUnpackCommand);
             ExportFilelistCommand = new DelegateCommand(ExecuteExportFilelistCommand);
             UnpackByFilelistCommand = new DelegateCommand(ExecuteUnpackByFilelistCommand);
+
+            // ドラッグアンドドロップハンドラ
+            _ = PreviewDragOverCommand.Subscribe(OnPreviewDragOver).AddTo(Disposable);
+            _ = DropCommand.Subscribe(OnDrop).AddTo(Disposable);
 
             // サービスのインジェクション
             this.localizerService = localizerService;
@@ -213,6 +243,80 @@ namespace NgsPacker.ViewModels
             }
 
             ProgressDialog progressDialog = new ();
+            _ = progressDialog.ShowAsync();
+            foreach (string file in fileList)
+            {
+                string path = picker.ResultPath + Path.DirectorySeparatorChar + file;
+                if (!File.Exists(path))
+                {
+                    // ファイルが存在しないときスキップ
+                    continue;
+                }
+
+                // アンパック
+                zamboniService.Unpack(path, outputPath, false);
+            }
+
+            progressDialog.Hide();
+
+            // 完了通知
+            if (Properties.Settings.Default.NotifyComplete)
+            {
+                // トースト通知
+                new ToastContentBuilder()
+                    .AddText(localizerService.GetLocalizedString("UnpackByFileListText"))
+                    .AddText(localizerService.GetLocalizedString("CompleteText"))
+                    .Show();
+            }
+            else
+            {
+                _ = ModernWpf.MessageBox.Show(
+                    localizerService.GetLocalizedString("UnpackByFileListText"), localizerService.GetLocalizedString("CompleteText"));
+            }
+        }
+
+        /// <summary>
+        /// ImageのPreviewDragOverイベントに対する処理.
+        /// </summary>
+        /// <param name="e">.</param>
+        private void OnPreviewDragOver(DragEventArgs e)
+        {
+            // マウスカーソルをコピーにする。
+            e.Effects = DragDropEffects.Copy;
+
+            // ドラッグされてきたものがFileDrop形式の場合だけ、このイベントを処理済みにする。
+            e.Handled = e.Data.GetDataPresent(DataFormats.FileDrop);
+        }
+
+        /// <summary>
+        /// ImageのDropイベントに対する処理.
+        /// </summary>
+        /// <param name="e">.</param>
+        private void OnDrop(DragEventArgs e)
+        {
+            // フォルダ選択ダイアログ
+            FolderPicker picker = new();
+            picker.Title = localizerService.GetLocalizedString("UnpackDirectoryDialogText");
+            picker.InputPath = Properties.Settings.Default.Pso2BinPath;
+
+            // 出力先ファイルダイアログを表示
+            if (picker.ShowDialog() != true)
+            {
+                return;
+            }
+
+            // ドロップされたものがFileDrop形式の場合は、各ファイルのパス文字列を文字列配列に格納する。
+            List<string> fileList = new((string[])e.Data.GetData(DataFormats.FileDrop));
+
+            // 出力先ディレクトリ
+            string outputPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+
+            if (!Directory.Exists(outputPath))
+            {
+                _ = Directory.CreateDirectory(outputPath);
+            }
+
+            ProgressDialog progressDialog = new();
             _ = progressDialog.ShowAsync();
             foreach (string file in fileList)
             {

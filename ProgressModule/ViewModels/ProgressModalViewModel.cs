@@ -87,23 +87,19 @@ namespace ProgressModule.ViewModels
                             ProgressRingVisibility = Visibility.Collapsed;
                             ProgressBarVisibility = Visibility.Visible;
                         }
-                        break;
 
+                        break;
                 }
             };
 
             CloseCommand =
-                new DelegateCommand
-                (
-                    () => CloseDialog(),
-                    () => Progress >= 100
-                )
-                .ObservesProperty(() => Progress);
+                new DelegateCommand(() => CloseDialog(), () => Progress >= 100).ObservesProperty(() => Progress);
         }
 
         /// <summary>
         /// ダイアログを閉じることができるか
         /// </summary>
+        /// <returns>可否</returns>
         public bool CanCloseDialog()
         {
             return true;
@@ -120,8 +116,10 @@ namespace ProgressModule.ViewModels
         /// <summary>
         /// ダイアログを開いたとき
         /// </summary>
-        /// <param name="parameters"></param>
-        public void OnDialogOpened(IDialogParameters parameters) { }
+        /// <param name="parameters">ダイアログに送信するパラメータ</param>
+        public void OnDialogOpened(IDialogParameters parameters)
+        {
+        }
 
         /// <summary>
         /// ダイアログを閉じるボタンが押されたとき
