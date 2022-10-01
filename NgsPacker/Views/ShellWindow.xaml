@@ -21,17 +21,17 @@
     ui:ThemeManager.IsThemeAware="True"
     ui:WindowHelper.UseModernWindowStyle="True"
     mc:Ignorable="d">
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding OnLoadedCommand}" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
     <ui:NavigationView
         x:Name="NavView"
         IsBackButtonVisible="Collapsed"
         IsBackEnabled="False"
         IsPaneOpen="True"
         PaneDisplayMode="Top">
-        <ui:NavigationView.Resources>
-            <SolidColorBrush x:Key="NavigationViewTopPaneBackground" Color="Transparent" />
-            <SolidColorBrush x:Key="NavigationViewDefaultPaneBackground" Color="{DynamicResource SystemListLowColor}" />
-            <SolidColorBrush x:Key="NavigationViewExpandedPaneBackground" Color="Transparent" />
-        </ui:NavigationView.Resources>
         <i:Interaction.Triggers>
             <i:EventTrigger EventName="SelectionChanged">
                 <prism:InvokeCommandAction Command="{Binding SelectionChangedCommand}" />

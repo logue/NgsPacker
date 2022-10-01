@@ -51,6 +51,11 @@ namespace NgsPacker.ViewModels
         /// <summary>
         /// ナビゲーション変更
         /// </summary>
+        public DelegateCommand OnLoadedCommand { get; private set; }
+
+        /// <summary>
+        /// 読み込まれた
+        /// </summary>
         public DelegateCommand<NavigationViewSelectionChangedEventArgs> SelectionChangedCommand { get; private set; }
 
         /// <summary>
@@ -81,9 +86,24 @@ namespace NgsPacker.ViewModels
             // 初期状態のページ
             _ = regionManager.RegisterViewWithRegion("ContentRegion", typeof(UnpackPage));
 
+            // 画面が読み込まれたときの処理
+            OnLoadedCommand = new DelegateCommand(OnLoaded);
+
             // ナビゲーション遷移登録
             SelectionChangedCommand = new DelegateCommand<NavigationViewSelectionChangedEventArgs>(SelectionChanged);
 
+            // リージョンマネージャーをインジェクション
+            this.regionManager = regionManager;
+
+            // 多言語サービスをインジェクション
+            this.localizerService = localizerService;
+        }
+
+        /// <summary>
+        /// 画面が読み込まれたとき
+        /// </summary>
+        public void OnLoaded()
+        {
             if (!File.Exists(Properties.Settings.Default.Pso2BinPath + Path.DirectorySeparatorChar + "pso2.exe"))
             {
                 // pso.exe存在確認チェック
@@ -93,12 +113,6 @@ namespace NgsPacker.ViewModels
                 // 設定ページに遷移
                 this.regionManager.RequestNavigate("ContentRegion", Pages["SettingsItem"]);
             }
-
-            // リージョンマネージャーをインジェクション
-            this.regionManager = regionManager;
-
-            // 多言語サービスをインジェクション
-            this.localizerService = localizerService;
         }
 
         /// <summary>
