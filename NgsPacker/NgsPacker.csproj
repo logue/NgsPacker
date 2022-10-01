@@ -19,14 +19,15 @@
     <RepositoryUrl>git@github.com:logue/NgsPacker.git</RepositoryUrl>
     <RootNamespace>NgsPacker</RootNamespace>
     <StartupObject>NgsPacker.App</StartupObject>
-    <SupportedOSPlatformVersion>10.0.20348.0</SupportedOSPlatformVersion>
+    <SupportedOSPlatformVersion>10.0.19041.0</SupportedOSPlatformVersion>
     <TargetFramework>net6.0-windows10.0.22621.0</TargetFramework>
     <UseWPF>true</UseWPF>
     <Version>1.3.0</Version>
     <IsPublishable>True</IsPublishable>
     <PlatformTarget>AnyCPU</PlatformTarget>
-    <PackageReleaseNotes>一括処理（リスト出力時など）で処理不能なファイルがあったときに、そこで処理が中断してしまう問題を修正。
-（主に旧PSO2のdataディレクトリで発生）</PackageReleaseNotes>
+    <PackageReleaseNotes>pso2.exeの存在確認処理で見つからなかったときにアプリがクラッシュする問題を修正。
+ウィンドウドラッグ時にもたつく問題を修正。（FluentWPFを外した） 
+ZamboniLibを更新</PackageReleaseNotes>
   </PropertyGroup>
   <PropertyGroup>
       <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)..\StyleCop.Analyzers.ruleset</CodeAnalysisRuleSet>
