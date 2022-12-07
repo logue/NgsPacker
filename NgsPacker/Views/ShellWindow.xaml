@@ -20,7 +20,17 @@
     prism:ViewModelLocator.AutoWireViewModel="True"
     ui:ThemeManager.IsThemeAware="True"
     ui:WindowHelper.UseModernWindowStyle="True"
+    Foreground="{DynamicResource SystemControlPageTextBaseHighBrush}"
+    Loaded="Window_Loaded"
     mc:Ignorable="d">
+    <WindowChrome.WindowChrome>
+        <WindowChrome
+            CaptionHeight="20"
+            CornerRadius="0"
+            GlassFrameThickness="-1"
+            ResizeBorderThickness="8"
+            UseAeroCaptionButtons="True" />
+    </WindowChrome.WindowChrome>
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
             <i:InvokeCommandAction Command="{Binding OnLoadedCommand}" />

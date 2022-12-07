@@ -36,7 +36,7 @@ namespace NgsPacker.Helpers
         public virtual string InputPath { get; set; }
 
         /// <summary>
-        /// 
+        /// ファイルシステムを強制
         /// </summary>
         public virtual bool ForceFileSystem { get; set; }
 
@@ -55,16 +55,27 @@ namespace NgsPacker.Helpers
         /// </summary>
         public virtual string FileNameLabel { get; set; }
 
+        /// <summary>
+        /// オプションを設定
+        /// </summary>
+        /// <param name="options">オプション</param>
+        /// <returns>オプション</returns>
         protected virtual int SetOptions(int options)
         {
             if (ForceFileSystem)
             {
                 options |= (int)FOS.FOS_FORCEFILESYSTEM;
             }
+
             return options;
         }
 
-        // for WPF support
+        /// <summary>
+        /// ダイアログを表示
+        /// </summary>
+        /// <param name="owner">親ウィンドウ</param>
+        /// <param name="throwOnError">エラー</param>
+        /// <returns>成否</returns>
         public bool? ShowDialog(Window owner = null, bool throwOnError = false)
         {
             owner ??= Application.Current.MainWindow;
@@ -140,6 +151,7 @@ namespace NgsPacker.Helpers
             {
                 ResultName = path;
             }
+
             return true;
         }
 
@@ -152,6 +164,7 @@ namespace NgsPacker.Helpers
                     Marshal.ThrowExceptionForHR(hr);
                 }
             }
+
             return hr;
         }
 
@@ -166,7 +179,10 @@ namespace NgsPacker.Helpers
 
         private const int ERROR_CANCELLED = unchecked((int)0x800704C7);
 
-        [ComImport, Guid("DC1C5A9C-E88A-4dde-A5A1-60F82A20AEF7")] // CLSID_FileOpenDialog
+        /// <summary>
+        /// CLSID_FileOpenDialog
+        /// </summary>
+        [ComImport, Guid("DC1C5A9C-E88A-4dde-A5A1-60F82A20AEF7")] 
         private class FileOpenDialog
         {
         }

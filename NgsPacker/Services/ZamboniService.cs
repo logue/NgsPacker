@@ -13,12 +13,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ImTools;
-using NgsPacker.Exeptions;
 using NgsPacker.Interfaces;
 using NgsPacker.Models;
 using Prism.Events;
 using Zamboni;
 using Zamboni.IceFileFormats;
+
 using static Zamboni.IceFileFormats.IceHeaderStructures;
 
 namespace NgsPacker.Services
@@ -215,16 +215,9 @@ namespace NgsPacker.Services
             // ヘッダ
             IceArchiveHeader header = new ();
 
-            try
-            {
-                // Iceファイルとして書き出す
-                IceV4File ice = new (header.GetBytes(), group1Binaries.ToArray(), group2Binaries.ToArray());
-                ret = ice.getRawData(compress, forceUnencrypted);
-            }
-            catch (Exception ex)
-            {
-                throw new ZamboniException("An error occurred while generating the Ice file.", ex);
-            }
+            // Iceファイルとして書き出す
+            IceV4File ice = new (header.GetBytes(), group1Binaries.ToArray(), group2Binaries.ToArray());
+            ret = ice.getRawData(compress, forceUnencrypted);
 
             progressDialog.Hide();
 
@@ -234,7 +227,10 @@ namespace NgsPacker.Services
         /// <inheritdoc/>
         public async void Unpack(string inputPath, string outputPath = null, bool subdir = true, bool sepalate = false)
         {
+
             _ = progressDialog.ShowAsync();
+
+
             if (string.IsNullOrEmpty(outputPath))
             {
                 outputPath = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
@@ -258,7 +254,7 @@ namespace NgsPacker.Services
             // 出力できるファイルがない場合
             if (groupOneFiles.Count == 0)
             {
-                throw new ZamboniException($"Neither group1 nor group2 was dumped from {Path.GetFileName(inputPath)}.");
+                throw new Exception($"Neither group1 nor group2 was dumped from {Path.GetFileName(inputPath)}.");
             }
 
             if (subdir)
@@ -428,7 +424,7 @@ namespace NgsPacker.Services
             // Iceファイルのヘッダチェック
             if (buffer.Length <= 127 || buffer[0] != 73 || buffer[1] != 67 || buffer[2] != 69 || buffer[3] != 0)
             {
-                throw new ZamboniException("Not ice file.");
+                throw new Exception("Not ice file.");
             }
 
             // メモリーストリームを生成
@@ -436,7 +432,7 @@ namespace NgsPacker.Services
 
             // Iceファイルを読み込む
             IceFile iceFile = IceFile.LoadIceFile(ms);
-            return iceFile ?? throw new ZamboniException("Could not parse ice file.");
+            return iceFile ?? throw new Exception("Could not parse ice file.");
         }
 
         /// <inheritdoc/>
@@ -448,7 +444,7 @@ namespace NgsPacker.Services
             // Iceファイルのヘッダチェック
             if (buffer.Length <= 127 || buffer[0] != 73 || buffer[1] != 67 || buffer[2] != 69 || buffer[3] != 0)
             {
-                throw new ZamboniException("Not ice file.");
+                throw new Exception("Not ice file.");
             }
 
             // メモリーストリームを生成
@@ -456,7 +452,7 @@ namespace NgsPacker.Services
 
             // Iceファイルを読み込む
             IceFile iceFile = IceFile.LoadIceFile(ms);
-            return iceFile ?? throw new ZamboniException("Could not parse ice file.");
+            return iceFile ?? throw new Exception("Could not parse ice file.");
         }
     }
 }

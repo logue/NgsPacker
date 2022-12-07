@@ -4,12 +4,13 @@
   xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
   xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
   xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
-  IgnorableNamespaces="uap rescap">
+  xmlns:genTemplate="http://schemas.microsoft.com/appx/developer/templatestudio"
+  IgnorableNamespaces="uap rescap genTemplate">
 
   <Identity
     Name="afcfe12b-ae80-4b8e-84c2-e6fd58edfaf6"
     Publisher="CN=logue"
-    Version="1.2.0.0" />
+    Version="1.3.1.0" />
 
   <Properties>
     <DisplayName>NgsPacker (Package)</DisplayName>
@@ -39,10 +40,20 @@
         <uap:DefaultTile Wide310x150Logo="Images\Wide310x150Logo.png" />
         <uap:SplashScreen Image="Images\SplashScreen.png" />
       </uap:VisualElements>
+      <Extensions>
+      </Extensions>
     </Application>
   </Applications>
 
   <Capabilities>
     <rescap:Capability Name="runFullTrust" />
   </Capabilities>
+
+  <genTemplate:Metadata>
+    <genTemplate:Item Name="generator" Value="Template Studio"/>
+    <genTemplate:Item Name="wizardVersion" Version="v5.2" />
+    <genTemplate:Item Name="projectType" Value="SplitView" />
+    <genTemplate:Item Name="framework" Value="Prism" />
+    <genTemplate:Item Name="platform" Value="Wpf" />
+  </genTemplate:Metadata>
 </Package>
