@@ -28,15 +28,17 @@ It requires the .net 6.0 runtime to work. Please download from the following sit
 
 ## Disclaimer
 
-The act of modifying game data (modding) does not infringe on the right to maintain integrity,　and is within the scope of
+The act of modifying game data (modding) does not infringe on the right to maintain integrity, and is within the scope of
 the freedom of expression stipulated in Article 21 of the Japanese Constitution and the Fair Use law stipulated in Article 107 of the U.S. Copyright Act.
 
 However, please keep in mind that modding is potentially damaging to the game environment and may result in a ban.
 In particular, the dissemination of private internal data in a community that can be viewed by an unspecified number of people and the diversion to other works
-(such as converting model data and diverting it) are acts that clearly deviate from the above law, and compensation for damages may result in litigation.
+(such as converting model data and diverting it) are acts that clearly deviate from the above law, and compensation for damages may result in litigation. [^1]
 
 The authors are not responsible for any damage caused by that.
 Please use it with common sense, and USE AT YOUR OWN RISK.
+
+[^1] For details, please see [Regarding Copyright Infringement and Illicit Activities](https://pso2.com/players/news/780/) on the official website.
 
 ## License
 
