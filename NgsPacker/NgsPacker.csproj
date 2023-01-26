@@ -5,7 +5,7 @@
     <AssemblyName>NgsPacker</AssemblyName>
     <Authors>Masashi Yoshikawa</Authors>
     <Company>Logue</Company>
-    <Copyright>(c) 2021-2022 Logue All rights reserved.</Copyright>
+    <Copyright>(c) 2021-2023 Logue All rights reserved.</Copyright>
     <Description>Data packer and unpacker for Phantasy Star Online 2 New Genesis.</Description>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <OutputType>WinExe</OutputType>
@@ -22,18 +22,16 @@
     <SupportedOSPlatformVersion>10.0.20348.0</SupportedOSPlatformVersion>
     <TargetFramework>net6.0-windows10.0.22621.0</TargetFramework>
     <UseWPF>true</UseWPF>
-    <Version>1.3.1</Version>
+    <Version>1.3.2</Version>
     <IsPublishable>True</IsPublishable>
     <PlatformTarget>AnyCPU</PlatformTarget>
-    <PackageReleaseNotes>ZamboniLibを更新
-ZamboniLib側で例外が出力されるようになったのでNgsPacker側のZamboniの例外処理を削除。
-各種依存ライブラリを更新。
-Windows 10 21H1サポート終了に伴い、最小実行可能バージョンをWindows 10 21H2に変更。</PackageReleaseNotes>
+    <PackageReleaseNotes></PackageReleaseNotes>
   </PropertyGroup>
   <PropertyGroup>
     <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)..\StyleCop.Analyzers.ruleset</CodeAnalysisRuleSet>
     <Title>NgsPacker</Title>
     <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <AdditionalFiles Include="$(MSBuildThisFileDirectory)..\stylecop.json" Link="stylecop.json" />
@@ -53,6 +51,7 @@ Windows 10 21H1サポート終了に伴い、最小実行可能バージョン�
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="System.Data.SQLite.EF6.Migrations" Version="1.0.113" />
     <PackageReference Include="WPFLocalizeExtension" Version="3.9.4" />
   </ItemGroup>
   <ItemGroup>

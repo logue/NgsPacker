@@ -21,7 +21,7 @@ It requires the .net 6.0 runtime to work. Please download from the following sit
   - [PSO2-Modding](https://discord.com/invite/cV3QRkB) - Discord
 - [Arks-Layer](https://arks-layer.com/) - Third party launcher. Required when enabling mods.
   - [Phantasy Star Fleet](https://discord.com/invite/pso2) - Discord
-- [Checksum File](http://www.mediafire.com/file/85m6h56u5w3181g/checksum.zip/file) - Required when enabling mods.
+- [Checksum File](https://ngs.logue.dev/data/d4455ebc2bef618f29106da7692ebc1a) - Required when activating mods. Replace the file in `pso2_bin/data/win32`. (by Aida Enna of [ArksLayer](https://arks-layer.com/))
 - [PSO2 Modding Database](https://pso2mod.com/)
   - [PSO2 Mod Manager](https://github.com/PolCPP/PSO2-Mod-Manager) - Official PSO2 Modding Database Client, But not maintained.
 - [PSO2NGS @ Nexus Mods](https://www.nexusmods.com/phantasystaronline2newgenesis)
@@ -38,7 +38,7 @@ In particular, the dissemination of private internal data in a community that ca
 The authors are not responsible for any damage caused by that.
 Please use it with common sense, and USE AT YOUR OWN RISK.
 
-[^1] For details, please see [Regarding Copyright Infringement and Illicit Activities](https://pso2.com/players/news/780/) on the official website.
+[^1]: For details, please see [Regarding Copyright Infringement and Illicit Activities](https://pso2.com/players/news/780/) on the official website.
 
 ## License
 

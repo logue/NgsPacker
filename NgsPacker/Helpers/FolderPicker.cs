@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------------
 // <copyright file="FolderPicker.cs" company="Logue">
-// Copyright (c) 2021-2022 Masashi Yoshikawa All rights reserved.
+// Copyright (c) 2021-2023 Masashi Yoshikawa All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 // </copyright>
 // -----------------------------------------------------------------------
@@ -59,7 +59,7 @@ namespace NgsPacker.Helpers
         /// オプションを設定
         /// </summary>
         /// <param name="options">オプション</param>
-        /// <returns>オプション</returns>
+        /// <returns>上書きしたオプション</returns>
         protected virtual int SetOptions(int options)
         {
             if (ForceFileSystem)

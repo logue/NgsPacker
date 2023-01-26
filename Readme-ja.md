@@ -19,7 +19,7 @@
   - [PSO2-Modding](https://discord.com/invite/cV3QRkB) - Discord ※日本語情報あり
 - [Arks-Layer](https://arks-layer.com/) - サードパーティー製ランチャーです。日本語や英語以外でプレイしたい場合や Mod を使用する場合必須です。
   - [Phantasy Star Fleet](https://discord.com/invite/pso2) - Discord
-- [チェックサムファイル](http://www.mediafire.com/file/85m6h56u5w3181g/checksum.zip/file) - Required when enabling mods
+- [チェックサムファイル](https://ngs.logue.dev/data/d4455ebc2bef618f29106da7692ebc1a) - Mod を有効化するときに必要です。`pso2_bin/data/win32`にあるファイルと差し替えてください。（ArksLayer の Aida Enna 氏によるものです）
 - [PSO2 Modding Database](https://pso2mod.com/)
   - [PSO2 Mod Manager](https://github.com/PolCPP/PSO2-Mod-Manager) - PSO2Mods.com 公式 Mod マネージャーですが長らくメンテナンスされていません。
 - [PSO2NGS @ Nexus Mods](https://www.nexusmods.com/phantasystaronline2newgenesis)
@@ -36,7 +36,7 @@
 その事によって生じたいかなる損害について、作者一同は一切の責任を負いかねます。
 良識を持って利用し、起きうる損害については自己責任でお願いします。
 
-[^1] 詳細につきましては、公式サイトの[著作権侵害および不正行為について](https://pso2.jp/players/news/29881/)をご覧になってください。
+[^1]: 詳細につきましては、公式サイトの[著作権侵害および不正行為について](https://pso2.jp/players/news/29881/)をご覧になってください。
 
 ## ライセンス
 

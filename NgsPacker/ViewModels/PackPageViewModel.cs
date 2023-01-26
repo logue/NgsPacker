@@ -1,14 +1,15 @@
 // -----------------------------------------------------------------------
 // <copyright file="PackPageViewModel.cs" company="Logue">
-// Copyright (c) 2021-2022 Masashi Yoshikawa All rights reserved.
+// Copyright (c) 2021-2023 Masashi Yoshikawa All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 // </copyright>
 // -----------------------------------------------------------------------
 
 using System;
 using System.IO;
-using System.Windows.Forms;
+
 using Microsoft.Toolkit.Uwp.Notifications;
+using Microsoft.Win32;
 using NgsPacker.Helpers;
 using NgsPacker.Interfaces;
 using Prism.Commands;
@@ -97,7 +98,7 @@ namespace NgsPacker.ViewModels
             }
 
             // ファイル保存ダイアログ
-            using SaveFileDialog saveFileDialog = new ()
+            SaveFileDialog saveFileDialog = new ()
             {
                 Title = localizerService.GetLocalizedString("SaveAsDialogText"),
                 Filter = localizerService.GetLocalizedString("IceFileFilterText"),
@@ -106,8 +107,7 @@ namespace NgsPacker.ViewModels
             };
 
             // ダイアログを表示
-            DialogResult dialogResult = saveFileDialog.ShowDialog();
-            if (dialogResult != DialogResult.OK)
+            if (saveFileDialog.ShowDialog() != true)
             {
                 // キャンセルされたので終了
                 return;
@@ -121,14 +121,12 @@ namespace NgsPacker.ViewModels
             if (Properties.Settings.Default.NotifyComplete)
             {
                 // トースト通知
-                new ToastContentBuilder()
+                _ = new ToastContentBuilder()
                     .AddText(localizerService.GetLocalizedString("PackText"))
-                    .AddText(localizerService.GetLocalizedString("CompleteText"))
-                    .Show();
+                    .AddText(localizerService.GetLocalizedString("CompleteText"));
             }
             else
             {
-                // _ = AcrylicMessageBox.Show(System.Windows.Application.Current.MainWindow,
                 _ = ModernWpf.MessageBox.Show(
                     localizerService.GetLocalizedString("PackText"), localizerService.GetLocalizedString("CompleteText"));
             }
