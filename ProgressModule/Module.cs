@@ -32,7 +32,7 @@ namespace ProgressModule
         /// <param name="containerRegistry"></param>
         public void RegisterTypes(IContainerRegistry containerRegistry)
         {
-            containerRegistry.RegisterSingleton<ProgressModel>();
+            _ = containerRegistry.RegisterSingleton<ProgressModel>();
             containerRegistry.RegisterDialog<ProgressModal>();
         }
     }

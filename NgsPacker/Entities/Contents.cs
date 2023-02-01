@@ -5,6 +5,7 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace NgsPacker.Entities
@@ -17,10 +18,11 @@ namespace NgsPacker.Entities
         /// <summary>
         /// ID
         /// </summary>
-        public string Id { get; set; }
+        [Key]
+        public Guid Id { get; set; }
 
         /// <summary>
-        /// ファイルのID
+        /// 親レコードのID
         /// </summary>
         [Required]
         public string FileId { get; set; }
@@ -29,6 +31,6 @@ namespace NgsPacker.Entities
         /// 内容物のファイル名
         /// </summary>
         [Required]
-        public string name { get; set; }
+        public string Name { get; set; }
     }
 }

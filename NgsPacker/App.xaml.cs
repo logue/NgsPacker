@@ -11,6 +11,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows;
+using NgsPacker.Helpers;
 using NgsPacker.Interfaces;
 using NgsPacker.Services;
 using NgsPacker.Views;
@@ -25,6 +26,11 @@ namespace NgsPacker
     /// </summary>
     public partial class App : PrismApplication
     {
+        /// <summary>
+        /// データベースのコンテキスト
+        /// </summary>
+        private readonly DbContext context = new ();
+
         /// <summary>
         /// 外部プロセスのメイン・ウィンドウを起動するためのWin32 API.
         /// </summary>
@@ -51,7 +57,7 @@ namespace NgsPacker
         private static extern bool IsIconic(IntPtr hwnd);
 
         /// <summary>
-        /// ShowWindowAsync関数のパラメータに渡す定義値(画面を元の大きさに戻す)..
+        /// ShowWindowAsync関数のパラメータに渡す定義値(画面を元の大きさに戻す).
         /// </summary>
         private const int SW_RESTORE = 9;
 
@@ -67,6 +73,7 @@ namespace NgsPacker
             // まだアプリが起動してなければ
             if (createdNew)
             {
+                context.Database.EnsureCreated();
                 return Container.Resolve<ShellWindow>();
             }
 
@@ -121,6 +128,29 @@ namespace NgsPacker
         protected override void ConfigureModuleCatalog(IModuleCatalog moduleCatalog)
         {
             _ = moduleCatalog.AddModule<ProgressModule.Module>();
+        }
+
+        /// <summary>
+        /// アプリケーションが開始される時のイベント。
+        /// </summary>
+        /// <param name="e">イベント データ。</param>
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            // DB接続
+            context.Database.EnsureCreated();
+            base.OnStartup(e);
+        }
+
+
+        /// <summary>
+        /// アプリケーションが終了する時のイベント。
+        /// </summary>
+        /// <param name="e">イベント データ。</param>
+        protected override void OnExit(ExitEventArgs e)
+        {
+            // DBを開放
+            context.Dispose();
+            base.OnExit(e);
         }
     }
 }

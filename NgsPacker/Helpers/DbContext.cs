@@ -1,21 +1,22 @@
 // -----------------------------------------------------------------------
-// <copyright file="NgsPackerDbContext.cs" company="Logue">
+// <copyright file="DbContext.cs" company="Logue">
 // Copyright (c) 2021-2023 Masashi Yoshikawa All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 // </copyright>
 // -----------------------------------------------------------------------
 
+using System;
 using System.IO;
 using System.Windows.Forms;
 using Microsoft.EntityFrameworkCore;
 using NgsPacker.Entities;
 
-namespace NgsPacker
+namespace NgsPacker.Helpers
 {
     /// <summary>
     /// DBの橋渡しを行うコンテキストクラス
     /// </summary>
-    internal class NgsPackerDbContext : DbContext
+    internal class DbContext : Microsoft.EntityFrameworkCore.DbContext
     {
         /// <summary>
         /// ファイルレコード
@@ -33,12 +34,12 @@ namespace NgsPacker
         public string DbPath { get; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="NgsPackerDbContext"/> class.
+        /// Initializes a new instance of the <see cref="DbContext"/> class.
         /// </summary>
-        public NgsPackerDbContext()
+        public DbContext()
         {
-            // DBファイルの保存先とDBファイル名
-            DbPath = $"{Path.GetDirectoryName(Application.ExecutablePath)}NgsPacker.sqlite";
+            var path = Path.GetDirectoryName(Application.ExecutablePath);
+            DbPath = Path.Join(path, "NgsPacker.sqlite");
         }
 
         /// <summary>
@@ -47,7 +48,7 @@ namespace NgsPacker
         /// <param name="options">オプション</param>
         protected override void OnConfiguring(DbContextOptionsBuilder options)
         {
-            options.UseSqlite($"Data Source={DbPath}");
+            _ = options.UseSqlite("Data Source=" + DbPath);
         }
     }
 }

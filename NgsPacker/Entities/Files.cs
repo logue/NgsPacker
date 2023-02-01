@@ -5,9 +5,10 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Data.SqlTypes;
+using System.Diagnostics.CodeAnalysis;
 
 namespace NgsPacker.Entities
 {
@@ -19,7 +20,8 @@ namespace NgsPacker.Entities
         /// <summary>
         /// ID
         /// </summary>
-        public string Id { get; set; }
+        [Key]
+        public Guid Id { get; set; }
 
         /// <summary>
         /// ファイル名
@@ -30,13 +32,13 @@ namespace NgsPacker.Entities
         /// <summary>
         /// ファイルのハッシュ
         /// </summary>
-        public string? Hash { get; set; }
+        [AllowNull]
+        public string Hash { get; set; }
 
         /// <summary>
-        /// このレコードの更新日時
+        /// ファイルの更新日時
         /// </summary>
-        public SqlDateTime UpdatedAt { get; set; }
-
+        public DateTime UpdatedAt { get; set; }
 
         /// <summary>
         /// ファイルの内容物

@@ -44,16 +44,16 @@ namespace ProgressModule.Models
         {
             Progress = 0;
 
-            eventAggregator
+            _ = eventAggregator
                 .GetEvent<SetTitle>()
                 .Subscribe(x => Title = x);
-            eventAggregator
+            _ = eventAggregator
                .GetEvent<SetMessage>()
                .Subscribe(x => Message = x);
-            eventAggregator
+            _ = eventAggregator
               .GetEvent<SetIntermediate>()
               .Subscribe(x => IsIntermediate = x);
-            eventAggregator
+            _ = eventAggregator
                 .GetEvent<SetProgress>()
                 .Subscribe(x => Progress = x);
         }
