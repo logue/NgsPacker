@@ -20,8 +20,6 @@
     prism:ViewModelLocator.AutoWireViewModel="True"
     ui:ThemeManager.IsThemeAware="True"
     ui:WindowHelper.UseModernWindowStyle="True"
-    Foreground="{DynamicResource SystemControlPageTextBaseHighBrush}"
-    Loaded="Window_Loaded"
     mc:Ignorable="d">
     <WindowChrome.WindowChrome>
         <WindowChrome
@@ -58,12 +56,10 @@
                 Name="Pack"
                 Content="{lex:Loc PackText}"
                 Icon="BackToWindow" />
-            <!--
-                ui:NavigationViewItem
-                Name="Tool"
-                Content="{lex:Loc ToolText}"
-                Icon="Repair" /
-            -->
+            <ui:NavigationViewItem
+                Name="Tools"
+                Content="{lex:Loc ToolsText}"
+                Icon="Repair" />
         </ui:NavigationView.MenuItems>
         <ui:NavigationView.FooterMenuItems>
             <ui:NavigationViewItem

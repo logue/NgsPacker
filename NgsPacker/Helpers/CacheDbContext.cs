@@ -1,11 +1,10 @@
 // -----------------------------------------------------------------------
-// <copyright file="DbContext.cs" company="Logue">
+// <copyright file="CacheDbContext.cs" company="Logue">
 // Copyright (c) 2021-2023 Masashi Yoshikawa All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 // </copyright>
 // -----------------------------------------------------------------------
 
-using System;
 using System.IO;
 using System.Windows.Forms;
 using Microsoft.EntityFrameworkCore;
@@ -16,7 +15,7 @@ namespace NgsPacker.Helpers
     /// <summary>
     /// DBの橋渡しを行うコンテキストクラス
     /// </summary>
-    internal class DbContext : Microsoft.EntityFrameworkCore.DbContext
+    internal class CacheDbContext : DbContext
     {
         /// <summary>
         /// ファイルレコード
@@ -34,11 +33,11 @@ namespace NgsPacker.Helpers
         public string DbPath { get; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DbContext"/> class.
+        /// Initializes a new instance of the <see cref="CacheDbContext"/> class.
         /// </summary>
-        public DbContext()
+        public CacheDbContext()
         {
-            var path = Path.GetDirectoryName(Application.ExecutablePath);
+            string path = Path.GetDirectoryName(Application.ExecutablePath);
             DbPath = Path.Join(path, "NgsPacker.sqlite");
         }
 

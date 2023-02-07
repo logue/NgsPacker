@@ -251,4 +251,13 @@
   <data name="ProgressDialogText" xml:space="preserve">
     <value>しばらくお待ち下さい…</value>
   </data>
+  <data name="SettingsText" xml:space="preserve">
+    <value>設定</value>
+  </data>
+  <data name="ToolsText" xml:space="preserve">
+    <value>ツール</value>
+  </data>
+  <data name="GenerateCacheInfomation" xml:space="preserve">
+    <value>PSO2のデータディレクトリを走査し、ファイルのハッシュと内容物をキャッシュとしてSQLiteデータベースに保存します。</value>
+  </data>
 </root>

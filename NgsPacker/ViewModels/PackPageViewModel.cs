@@ -7,7 +7,6 @@
 
 using System;
 using System.IO;
-
 using Microsoft.Toolkit.Uwp.Notifications;
 using Microsoft.Win32;
 using NgsPacker.Helpers;
@@ -87,7 +86,7 @@ namespace NgsPacker.ViewModels
         private async void ExecutePackCommand()
         {
             // フォルダ選択ダイアログ
-            FolderPicker picker = new ();
+            FolderPicker picker = new();
             picker.Title = localizerService.GetLocalizedString("PackInputPathText");
             picker.InputPath = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
 
@@ -98,7 +97,7 @@ namespace NgsPacker.ViewModels
             }
 
             // ファイル保存ダイアログ
-            SaveFileDialog saveFileDialog = new ()
+            SaveFileDialog saveFileDialog = new()
             {
                 Title = localizerService.GetLocalizedString("SaveAsDialogText"),
                 Filter = localizerService.GetLocalizedString("IceFileFilterText"),

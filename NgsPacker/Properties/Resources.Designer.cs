@@ -143,6 +143,15 @@ namespace NgsPacker.Properties {
         }
         
         /// <summary>
+        ///   Traverses PSO2&apos;s data directory, storing file hashes and contents as a cache in a SQLite database. に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string GenerateCacheInfomation {
+            get {
+                return ResourceManager.GetString("GenerateCacheInfomation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Home に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string HomeText {
@@ -337,6 +346,15 @@ namespace NgsPacker.Properties {
         }
         
         /// <summary>
+        ///   Settings に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string SettingsText {
+            get {
+                return ResourceManager.GetString("SettingsText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Toggle dark theme に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string ToggleDarkThemeTooltip {
@@ -351,6 +369,15 @@ namespace NgsPacker.Properties {
         public static string ToggleThemeText {
             get {
                 return ResourceManager.GetString("ToggleThemeText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Tools に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string ToolsText {
+            get {
+                return ResourceManager.GetString("ToolsText", resourceCulture);
             }
         }
         

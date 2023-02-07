@@ -105,7 +105,7 @@ namespace NgsPacker.ViewModels
         private void ExecuteUnpackCommand()
         {
             // ファイルを開くダイアログ
-            using System.Windows.Forms.OpenFileDialog openFileDialog = new ()
+            using System.Windows.Forms.OpenFileDialog openFileDialog = new()
             {
                 Title = localizerService.GetLocalizedString("UnpackDialogText"),
                 InitialDirectory = Properties.Settings.Default.Pso2BinPath,
@@ -120,7 +120,7 @@ namespace NgsPacker.ViewModels
             }
 
             // フォルダ選択ダイアログ
-            FolderPicker picker = new ();
+            FolderPicker picker = new();
             picker.Title = localizerService.GetLocalizedString("UnpackOutputPathText");
             picker.InputPath = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
 
@@ -155,7 +155,7 @@ namespace NgsPacker.ViewModels
         private async void ExecuteExportFilelistCommand()
         {
             // フォルダ選択ダイアログ
-            FolderPicker picker = new ();
+            FolderPicker picker = new();
             picker.InputPath = Properties.Settings.Default.Pso2BinPath;
 
             // 出力先ファイルダイアログを表示
@@ -165,7 +165,7 @@ namespace NgsPacker.ViewModels
             }
 
             // ファイル保存ダイアログ
-            using System.Windows.Forms.SaveFileDialog saveFileDialog = new ()
+            using System.Windows.Forms.SaveFileDialog saveFileDialog = new()
             {
                 Title = localizerService.GetLocalizedString("SaveAsDialogText"),
                 InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal),
@@ -181,7 +181,7 @@ namespace NgsPacker.ViewModels
             }
 
             // 出力処理
-            List<string> list = new (await zamboniService.Filelist(picker.ResultPath));
+            List<string> list = new(await zamboniService.Filelist(picker.ResultPath));
             await File.WriteAllTextAsync(saveFileDialog.FileName, string.Join("\r\n", list));
 
             // 完了通知
@@ -206,7 +206,7 @@ namespace NgsPacker.ViewModels
         private async void ExecuteUnpackByFilelistCommand()
         {
             // ファイルを開くダイアログ
-            using System.Windows.Forms.OpenFileDialog openFileDialog = new ()
+            using System.Windows.Forms.OpenFileDialog openFileDialog = new()
             {
                 Title = localizerService.GetLocalizedString("UnpackByFileListDialogText"),
                 InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal),
@@ -221,7 +221,7 @@ namespace NgsPacker.ViewModels
             }
 
             // フォルダ選択ダイアログ
-            FolderPicker picker = new ();
+            FolderPicker picker = new();
             picker.Title = localizerService.GetLocalizedString("UnpackDirectoryDialogText");
             picker.InputPath = Properties.Settings.Default.Pso2BinPath;
 
@@ -232,7 +232,7 @@ namespace NgsPacker.ViewModels
             }
 
             // ファイル一覧を読み込む
-            List<string> fileList = new (await File.ReadAllLinesAsync(openFileDialog.FileName));
+            List<string> fileList = new(await File.ReadAllLinesAsync(openFileDialog.FileName));
 
             // 出力先ディレクトリ
             string outputPath = Path.GetDirectoryName(openFileDialog.FileName) + Path.DirectorySeparatorChar + Path.GetFileNameWithoutExtension(openFileDialog.FileName);
@@ -242,7 +242,7 @@ namespace NgsPacker.ViewModels
                 _ = Directory.CreateDirectory(outputPath);
             }
 
-            ProgressDialog progressDialog = new ();
+            ProgressDialog progressDialog = new();
             _ = progressDialog.ShowAsync();
             foreach (string file in fileList)
             {

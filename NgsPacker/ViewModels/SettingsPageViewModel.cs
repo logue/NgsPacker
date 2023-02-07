@@ -112,7 +112,7 @@ namespace NgsPacker.ViewModels
         private void ExecuteBrowseCommand()
         {
             // フォルダ選択ダイアログ
-            FolderPicker picker = new ();
+            FolderPicker picker = new();
             picker.Title = localizerService.GetLocalizedString("SelectPso2BinPathText");
             picker.InputPath = Pso2BinPath;
 

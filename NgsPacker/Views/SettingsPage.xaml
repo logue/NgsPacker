@@ -8,6 +8,7 @@
     xmlns:prism="http://prismlibrary.com/"
     xmlns:ui="http://schemas.modernwpf.com/2019"
     xmlns:viewmodels="clr-namespace:NgsPacker.ViewModels"
+    Title="{lex:Loc SettingsText}"
     d:Background="White"
     d:DataContext="{d:DesignInstance Type=viewmodels:SettingsPageViewModel}"
     d:DesignHeight="384"

@@ -8,6 +8,7 @@
     xmlns:prism="http://prismlibrary.com/"
     xmlns:ui="http://schemas.modernwpf.com/2019"
     xmlns:viewmodels="clr-namespace:NgsPacker.ViewModels"
+    Title="{lex:Loc AboutText}"
     d:Background="White"
     d:DataContext="{d:DesignInstance Type=viewmodels:AboutPageViewModel}"
     d:DesignHeight="384"
@@ -17,6 +18,7 @@
     lex:ResxLocalizationProvider.DefaultDictionary="Resources"
     prism:ViewModelLocator.AutoWireViewModel="True"
     mc:Ignorable="d">
+
     <ui:SimpleStackPanel Spacing="12">
         <ui:SimpleStackPanel Orientation="Horizontal">
             <Image

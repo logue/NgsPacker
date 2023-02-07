@@ -18,7 +18,6 @@ using NgsPacker.Models;
 using Prism.Events;
 using Zamboni;
 using Zamboni.IceFileFormats;
-
 using static Zamboni.IceFileFormats.IceHeaderStructures;
 
 namespace NgsPacker.Services
@@ -56,7 +55,7 @@ namespace NgsPacker.Services
         /// <returns>グループ別ファイルリスト</returns>
         public static List<IceEntryModel> IceToFilelist(byte[][] data, bool isGroupOne = false)
         {
-            List<IceEntryModel> fileList = new ();
+            List<IceEntryModel> fileList = new();
             for (int index = 0; index < data.Length; ++index)
             {
                 int int32 = BitConverter.ToInt32(data[index], 16);
@@ -90,7 +89,7 @@ namespace NgsPacker.Services
         /// <returns>IceEntryModel</returns>
         public List<IceEntryModel> FilelistToIce(string[] files)
         {
-            List<IceEntryModel> ret = new ();
+            List<IceEntryModel> ret = new();
 
             // 入力ディレクトリ内のファイルを走査
             foreach (string fileName in files)
@@ -114,7 +113,7 @@ namespace NgsPacker.Services
         /// <returns>IceEntryModel</returns>
         public async Task<List<IceEntryModel>> FilelistToIceAsync(string[] files)
         {
-            List<IceEntryModel> ret = new ();
+            List<IceEntryModel> ret = new();
 
             // 入力ディレクトリ内のファイルを走査
             foreach (string fileName in files)
@@ -170,10 +169,10 @@ namespace NgsPacker.Services
             string[] files = recursive ? Directory.EnumerateFiles(inputPath, "*.*", SearchOption.AllDirectories).ToArray() : Directory.GetFiles(inputPath);
 
             // グループ1に書き込むバイナリデータ
-            List<byte[]> group1Binaries = new ();
+            List<byte[]> group1Binaries = new();
 
             // グループ2に書き込むバイナリデータ
-            List<byte[]> group2Binaries = new ();
+            List<byte[]> group2Binaries = new();
 
             // LocalizerService.GetLocalizedString("PackingText"),
 
@@ -188,7 +187,7 @@ namespace NgsPacker.Services
                 // int index = files.IndexOf(currentFile);
 
                 // ファイルをバイト配列として読み込む
-                List<byte> file = new (await File.ReadAllBytesAsync(currentFile));
+                List<byte> file = new(await File.ReadAllBytesAsync(currentFile));
 
                 // ヘッダを書き込む
                 file.InsertRange(0, new IceFileHeader(currentFile, (uint)file.Count).GetBytes());
@@ -213,10 +212,10 @@ namespace NgsPacker.Services
             }
 
             // ヘッダ
-            IceArchiveHeader header = new ();
+            IceArchiveHeader header = new();
 
             // Iceファイルとして書き出す
-            IceV4File ice = new (header.GetBytes(), group1Binaries.ToArray(), group2Binaries.ToArray());
+            IceV4File ice = new(header.GetBytes(), group1Binaries.ToArray(), group2Binaries.ToArray());
             ret = ice.getRawData(compress, forceUnencrypted);
 
             progressDialog.Hide();
@@ -311,8 +310,8 @@ namespace NgsPacker.Services
         public async Task<List<string>> Filelist(string inputPath)
         {
             _ = progressDialog.ShowAsync();
-            List<string> ret = new ();
-            List<string> entries = new (Directory.EnumerateFiles(inputPath, "*.*", SearchOption.AllDirectories));
+            List<string> ret = new();
+            List<string> entries = new(Directory.EnumerateFiles(inputPath, "*.*", SearchOption.AllDirectories));
             Debug.WriteLine("Entries: ", entries.Count);
 
             // CSVのヘッダ
@@ -338,14 +337,14 @@ namespace NgsPacker.Services
                 }
 
                 // メモリーストリームを生成
-                using MemoryStream ms = new (buffer);
+                using MemoryStream ms = new(buffer);
 
                 // ヘッダを確認
                 _ = ms.Seek(8L, SeekOrigin.Begin);
                 int num = ms.ReadByte();
                 _ = ms.Seek(0L, SeekOrigin.Begin);
 
-                FileInfo fileInfo = new (path);
+                FileInfo fileInfo = new(path);
 
                 // NGSのデータファイルの場合、親ディレクトリのパスも含める
                 string ice =
@@ -428,7 +427,7 @@ namespace NgsPacker.Services
             }
 
             // メモリーストリームを生成
-            using MemoryStream ms = new (buffer);
+            using MemoryStream ms = new(buffer);
 
             // Iceファイルを読み込む
             IceFile iceFile = IceFile.LoadIceFile(ms);
@@ -448,7 +447,7 @@ namespace NgsPacker.Services
             }
 
             // メモリーストリームを生成
-            using MemoryStream ms = new (buffer);
+            using MemoryStream ms = new(buffer);
 
             // Iceファイルを読み込む
             IceFile iceFile = IceFile.LoadIceFile(ms);

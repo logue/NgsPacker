@@ -208,4 +208,6 @@ dotnet_naming_style.begins_with_i.word_separator =
 dotnet_naming_style.begins_with_i.capitalization = pascal_case
 
 [*.xaml]
+charset = utf-8
+end_of_line = crlf
 indent_size = 4

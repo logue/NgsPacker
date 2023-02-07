@@ -82,13 +82,13 @@ namespace NgsPacker.Helpers
             return ShowDialog(owner != null ? new WindowInteropHelper(owner).Handle : IntPtr.Zero, throwOnError);
         }
 
-        // for all .NET
+        /// for all .NET
         public virtual bool? ShowDialog(IntPtr owner, bool throwOnError = false)
         {
             IFileOpenDialog dialog = (IFileOpenDialog)new FileOpenDialog();
             if (!string.IsNullOrEmpty(InputPath))
             {
-                if (CheckHr(SHCreateItemFromParsingName(InputPath, null, typeof(IShellItem).GUID, out var item), throwOnError) != 0)
+                if (CheckHr(SHCreateItemFromParsingName(InputPath, null, typeof(IShellItem).GUID, out IShellItem item), throwOnError) != 0)
                 {
                     return null;
                 }
@@ -140,7 +140,7 @@ namespace NgsPacker.Helpers
                 return null;
             }
 
-            if (CheckHr(result.GetDisplayName(SIGDN.SIGDN_DESKTOPABSOLUTEPARSING, out var path), throwOnError) != 0)
+            if (CheckHr(result.GetDisplayName(SIGDN.SIGDN_DESKTOPABSOLUTEPARSING, out string path), throwOnError) != 0)
             {
                 return null;
             }
@@ -182,7 +182,7 @@ namespace NgsPacker.Helpers
         /// <summary>
         /// CLSID_FileOpenDialog
         /// </summary>
-        [ComImport, Guid("DC1C5A9C-E88A-4dde-A5A1-60F82A20AEF7")] 
+        [ComImport, Guid("DC1C5A9C-E88A-4dde-A5A1-60F82A20AEF7")]
         private class FileOpenDialog
         {
         }

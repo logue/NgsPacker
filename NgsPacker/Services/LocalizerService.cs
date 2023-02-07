@@ -75,7 +75,7 @@ namespace NgsPacker.Services
         /// <returns>.</returns>
         public string GetLocalizedString(string key)
         {
-            LocExtension locExtension = new (key);
+            LocExtension locExtension = new(key);
             _ = locExtension.ResolveLocalizedValue(out string uiString);
             return uiString;
         }

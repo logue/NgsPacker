@@ -1,0 +1,60 @@
+<Page
+    x:Class="NgsPacker.Views.ToolsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:lex="http://wpflocalizeextension.codeplex.com"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:prism="http://prismlibrary.com/"
+    xmlns:ui="http://schemas.modernwpf.com/2019"
+    xmlns:viewmodels="clr-namespace:NgsPacker.ViewModels"
+    Title="{lex:Loc ToolsPage}"
+    d:Background="White"
+    d:DataContext="{d:DesignInstance Type=viewmodels:ToolsPageViewModel}"
+    d:DesignHeight="384"
+    d:DesignWidth="512"
+    lex:LocalizeDictionary.DesignCulture="en"
+    lex:ResxLocalizationProvider.DefaultAssembly="NgsPacker"
+    lex:ResxLocalizationProvider.DefaultDictionary="Resources"
+    prism:ViewModelLocator.AutoWireViewModel="True"
+    mc:Ignorable="d">
+
+    <ui:SimpleStackPanel Spacing="12">
+        <TextBlock Text="{lex:Loc GenerateCacheInfomation}" TextWrapping="Wrap" />
+        <ui:SimpleStackPanel VerticalAlignment="Center" Orientation="Horizontal">
+            <TextBlock
+                Margin="0,0,10,0"
+                VerticalAlignment="Center"
+                Text="Target directory:" />
+            <CheckBox Content="PSO2" IsChecked="{Binding IsPso2, Mode=TwoWay}" />
+            <CheckBox Content="PSO2NGS" IsChecked="{Binding IsPso2Ngs, Mode=TwoWay}" />
+        </ui:SimpleStackPanel>
+        <ui:SimpleStackPanel
+            HorizontalAlignment="Right"
+            Orientation="Horizontal"
+            Spacing="12">
+            <Button
+                Padding="10,5"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Center"
+                Command="{Binding ScanCommand}"
+                CommandParameter="False">
+                <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                    <ui:FontIcon Margin="0,0,5,0" Glyph="&#xE721;" />
+                    <TextBlock VerticalAlignment="Center" Text="{lex:Loc ScanQuickButton}" />
+                </StackPanel>
+            </Button>
+            <Button
+                Padding="10,5"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Center"
+                Command="{Binding FullScanCommand}"
+                CommandParameter="True">
+                <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                    <ui:FontIcon Margin="0,0,5,0" Glyph="&#xE773;" />
+                    <TextBlock VerticalAlignment="Center" Text="{lex:Loc ScanFullButton}" />
+                </StackPanel>
+            </Button>
+        </ui:SimpleStackPanel>
+    </ui:SimpleStackPanel>
+</Page>

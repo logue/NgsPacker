@@ -66,6 +66,7 @@ namespace NgsPacker.ViewModels
             { "Pack",  new Uri("PackPage", UriKind.Relative) },
             { "Unpack",  new Uri("UnpackPage", UriKind.Relative) },
             { "About",  new Uri("AboutPage", UriKind.Relative) },
+            { "Tools",  new Uri("ToolsPage", UriKind.Relative) },
             { "SettingsItem",  new Uri("SettingsPage", UriKind.Relative) },
         };
 
