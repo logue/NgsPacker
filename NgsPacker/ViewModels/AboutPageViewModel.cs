@@ -9,6 +9,7 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Windows.Media;
 using NgsPacker.Helper;
+using NgsPacker.Interfaces;
 using NgsPacker.Models;
 using Prism.Commands;
 using Prism.Mvvm;
@@ -21,6 +22,11 @@ namespace NgsPacker.ViewModels
     public class AboutPageViewModel : BindableBase
     {
         /// <summary>
+        /// 多言語化サービス
+        /// </summary>
+        private readonly ILocalizeService localizeService;
+
+        /// <summary>
         /// プロジェクトサイト閲覧ボタンのコマンド.
         /// </summary>
         public DelegateCommand VisitCommand { get; }
@@ -29,6 +35,11 @@ namespace NgsPacker.ViewModels
         /// NexusModsサイト閲覧ボタンのコマンド.
         /// </summary>
         public DelegateCommand VisitNexusModsCommand { get; }
+
+        /// <summary>
+        /// 著作権侵害および不正行為についてボタンのコマンド.
+        /// </summary>
+        public DelegateCommand VisitSegaCopyrightWarningCommand { get; }
 
         /// <summary>
         /// ロゴ画像.
@@ -78,10 +89,13 @@ namespace NgsPacker.ViewModels
         /// <summary>
         /// Initializes a new instance of the <see cref="AboutPageViewModel"/> class.
         /// </summary>
-        public AboutPageViewModel()
+        /// <param name="localizeService">多言語化サービス</param>
+        public AboutPageViewModel(ILocalizeService localizeService)
         {
+            this.localizeService = localizeService;
             VisitCommand = new DelegateCommand(ExecuteVisitCommand);
             VisitNexusModsCommand = new DelegateCommand(ExecuteVisitNexusModsCommand);
+            VisitSegaCopyrightWarningCommand = new DelegateCommand(ExecuteVisitSegaCopyrightWarningCommand);
             Assembly = new AppAssemblyModel();
 
             Logo = BitmapToImageSource.Convert(Properties.Resources.AppIcon);
@@ -101,6 +115,14 @@ namespace NgsPacker.ViewModels
         private void ExecuteVisitNexusModsCommand()
         {
             Go("https://www.nexusmods.com/phantasystaronline2newgenesis/mods/26");
+        }
+
+        /// <summary>
+        /// 著作権侵害および不正行為についてのページを開く
+        /// </summary>
+        private void ExecuteVisitSegaCopyrightWarningCommand()
+        {
+            Go(localizeService.GetLocalizedString("SegaCopyrightWarningLinkUrl"));
         }
     }
 }

@@ -17,7 +17,7 @@ namespace NgsPacker.Helpers
     public class DwmApi
     {
         /// <summary>
-        /// デスクトップ ウィンドウ マネージャーのP/in Voke
+        /// デスクトップ ウィンドウ マネージャーのP/invoke
         /// </summary>
         /// <param name="hwnd">ハンドラ</param>
         /// <param name="dwAttribute">DWMWINDOWATTRIBUTE 列挙型の値として指定された、設定する値を示すフラグ。</param>
@@ -249,7 +249,7 @@ namespace NgsPacker.Helpers
                 _ = DwmSetWindowAttribute(source.Handle, DWMWINDOWATTRIBUTE.DWMWA_USE_IMMERSIVE_DARK_MODE, ref falseValue, Marshal.SizeOf(typeof(int)));
             }
 
-            DwmSetWindowAttribute(source.Handle, DWMWINDOWATTRIBUTE.DWMWA_SYSTEMBACKDROP_TYPE, ref trueValue, Marshal.SizeOf(typeof(int)));
+            _ = DwmSetWindowAttribute(source.Handle, DWMWINDOWATTRIBUTE.DWMWA_SYSTEMBACKDROP_TYPE, ref trueValue, Marshal.SizeOf(typeof(int)));
         }
     }
 }

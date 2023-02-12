@@ -134,7 +134,7 @@ namespace NgsPacker.Properties {
         }
         
         /// <summary>
-        ///   Export Filelist に類似しているローカライズされた文字列を検索します。
+        ///   Export File List to csv に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string ExportFileListText {
             get {
@@ -145,9 +145,9 @@ namespace NgsPacker.Properties {
         /// <summary>
         ///   Traverses PSO2&apos;s data directory, storing file hashes and contents as a cache in a SQLite database. に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        public static string GenerateCacheInfomation {
+        public static string GenerateCacheInformation {
             get {
-                return ResourceManager.GetString("GenerateCacheInfomation", resourceCulture);
+                return ResourceManager.GetString("GenerateCacheInformation", resourceCulture);
             }
         }
         
@@ -310,6 +310,24 @@ namespace NgsPacker.Properties {
         }
         
         /// <summary>
+        ///   Regarding Copyright Infringement and Illicit Activities に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string SegaCopyrightWarningLinkText {
+            get {
+                return ResourceManager.GetString("SegaCopyrightWarningLinkText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   https://pso2.com/players/news/780/ に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string SegaCopyrightWarningLinkUrl {
+            get {
+                return ResourceManager.GetString("SegaCopyrightWarningLinkUrl", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Select the pso2_bin directory (the directory where pso2.exe resides). に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string SelectPso2BinPathText {
@@ -321,18 +339,18 @@ namespace NgsPacker.Properties {
         /// <summary>
         ///   Separate output directories by group に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        public static string SepareteByGroupCheckBoxText {
+        public static string SeparateByGroupCheckBoxText {
             get {
-                return ResourceManager.GetString("SepareteByGroupCheckBoxText", resourceCulture);
+                return ResourceManager.GetString("SeparateByGroupCheckBoxText", resourceCulture);
             }
         }
         
         /// <summary>
         ///   PSO2 data files are divided into two groups according to extension and file name. If you check this checkbox, subdirectories &quot;group1&quot; and &quot;group2&quot; will be created at the time of unpacking and sorted according to the file affiliation. に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        public static string SepareteByGroupCheckBoxToolTip {
+        public static string SeparateByGroupCheckBoxToolTip {
             get {
-                return ResourceManager.GetString("SepareteByGroupCheckBoxToolTip", resourceCulture);
+                return ResourceManager.GetString("SeparateByGroupCheckBoxToolTip", resourceCulture);
             }
         }
         

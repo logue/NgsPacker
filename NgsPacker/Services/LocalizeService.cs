@@ -1,5 +1,5 @@
 // -----------------------------------------------------------------------
-// <copyright file="LocalizerService.cs" company="Logue">
+// <copyright file="LocalizeService.cs" company="Logue">
 // Copyright (c) 2021-2023 Masashi Yoshikawa All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 // </copyright>
@@ -16,7 +16,7 @@ namespace NgsPacker.Services
     /// <summary>
     /// 多言語化サービス.
     /// </summary>
-    public class LocalizerService : ILocalizerService
+    public class LocalizeService : ILocalizeService
     {
         /// <summary>
         /// サポートされている言語.
@@ -29,15 +29,12 @@ namespace NgsPacker.Services
         public CultureInfo SelectedLanguage { get => LocalizeDictionary.Instance.Culture; set => SetLocale(value); }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="LocalizerService"/> class.
+        /// Initializes a new instance of the <see cref="LocalizeService"/> class.
         /// </summary>
         /// <param name="locale">The locale<see cref="string"/>.</param>
-        public LocalizerService(string locale = null)
+        public LocalizeService(string locale = null)
         {
-            if (locale == null)
-            {
-                locale = CultureInfo.CurrentCulture.ToString();
-            }
+            locale ??= CultureInfo.CurrentCulture.ToString();
 
             System.Diagnostics.Debug.WriteLine(CultureInfo.GetCultures(CultureTypes.AllCultures));
 
@@ -60,22 +57,22 @@ namespace NgsPacker.Services
         }
 
         /// <summary>
-        /// Set localization.
+        /// ロケールを設定
         /// </summary>
-        /// <param name="culture">.</param>
+        /// <param name="culture">ロケール</param>
         public void SetLocale(CultureInfo culture)
         {
             LocalizeDictionary.Instance.Culture = culture;
         }
 
         /// <summary>
-        /// Get localized string from resource dictionary.
+        /// 翻訳
         /// </summary>
-        /// <param name="key">.</param>
-        /// <returns>.</returns>
+        /// <param name="key">翻訳キー</param>
+        /// <returns>翻訳されたテキストを取得</returns>
         public string GetLocalizedString(string key)
         {
-            LocExtension locExtension = new(key);
+            LocExtension locExtension = new (key);
             _ = locExtension.ResolveLocalizedValue(out string uiString);
             return uiString;
         }

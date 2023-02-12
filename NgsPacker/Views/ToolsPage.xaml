@@ -7,10 +7,10 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:prism="http://prismlibrary.com/"
     xmlns:ui="http://schemas.modernwpf.com/2019"
-    xmlns:viewmodels="clr-namespace:NgsPacker.ViewModels"
+    xmlns:vm="clr-namespace:NgsPacker.ViewModels"
     Title="{lex:Loc ToolsPage}"
     d:Background="White"
-    d:DataContext="{d:DesignInstance Type=viewmodels:ToolsPageViewModel}"
+    d:DataContext="{d:DesignInstance Type=vm:ToolsPageViewModel}"
     d:DesignHeight="384"
     d:DesignWidth="512"
     lex:LocalizeDictionary.DesignCulture="en"
@@ -20,7 +20,7 @@
     mc:Ignorable="d">
 
     <ui:SimpleStackPanel Spacing="12">
-        <TextBlock Text="{lex:Loc GenerateCacheInfomation}" TextWrapping="Wrap" />
+        <TextBlock Text="{lex:Loc GenerateCacheInformation}" TextWrapping="Wrap" />
         <ui:SimpleStackPanel VerticalAlignment="Center" Orientation="Horizontal">
             <TextBlock
                 Margin="0,0,10,0"

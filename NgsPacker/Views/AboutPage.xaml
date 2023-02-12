@@ -7,12 +7,12 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:prism="http://prismlibrary.com/"
     xmlns:ui="http://schemas.modernwpf.com/2019"
-    xmlns:viewmodels="clr-namespace:NgsPacker.ViewModels"
+    xmlns:vm="clr-namespace:NgsPacker.ViewModels"
     Title="{lex:Loc AboutText}"
     d:Background="White"
-    d:DataContext="{d:DesignInstance Type=viewmodels:AboutPageViewModel}"
-    d:DesignHeight="384"
-    d:DesignWidth="512"
+    d:DataContext="{d:DesignInstance Type=vm:AboutPageViewModel}"
+    d:DesignHeight="512"
+    d:DesignWidth="640"
     lex:LocalizeDictionary.DesignCulture="en"
     lex:ResxLocalizationProvider.DefaultAssembly="NgsPacker"
     lex:ResxLocalizationProvider.DefaultDictionary="Resources"
@@ -27,38 +27,49 @@
                 Margin="10,0,10,0"
                 Source="{Binding Logo}" />
             <!--  ui:FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" FontSize="96" Margin="10,0,10,0" Glyph="&#xecaa;"/  -->
-            <StackPanel Orientation="Vertical">
+            <ui:SimpleStackPanel Orientation="Vertical">
                 <TextBlock FontSize="24" Text="{Binding Assembly.Title}" />
                 <TextBlock Text="{Binding Assembly.Description}" />
                 <TextBlock Text="{Binding Assembly.Version}" />
                 <TextBlock Text="{Binding Assembly.Copyright}" />
-            </StackPanel>
+            </ui:SimpleStackPanel>
         </ui:SimpleStackPanel>
-        <Separator />
         <TextBlock
             FontSize="11"
             Text="{lex:Loc ModdingWarningText}"
             TextWrapping="Wrap" />
         <Separator />
+
         <TextBlock Text="{lex:Loc SegaCopyrightNotice}" TextWrapping="Wrap" />
-        <ui:SimpleStackPanel
-            HorizontalAlignment="Right"
-            Orientation="Horizontal"
-            Spacing="24">
-            <Button Padding="10,5" Command="{Binding VisitNexusModsCommand}">
-                <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-                    <TextBlock VerticalAlignment="Center" Text="Nexus Mods" />
-                </StackPanel>
+
+        <Grid>
+            <Button
+                Grid.Column="0"
+                Padding="10,5"
+                HorizontalAlignment="Left"
+                Command="{Binding VisitSegaCopyrightWarningCommand}">
+                <TextBlock VerticalAlignment="Center" Text="{lex:Loc SegaCopyrightWarningLinkText}" />
             </Button>
-            <Button Padding="10,5" Command="{Binding VisitCommand}">
-                <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-                    <ui:FontIcon
-                        Margin="0,0,5,0"
-                        FontFamily="{StaticResource SymbolThemeFontFamily}"
-                        Glyph="&#xE774;" />
-                    <TextBlock VerticalAlignment="Center" Text="{lex:Loc VisitText}" />
-                </StackPanel>
-            </Button>
-        </ui:SimpleStackPanel>
+            <ui:SimpleStackPanel
+                Grid.Column="1"
+                HorizontalAlignment="Right"
+                Orientation="Horizontal"
+                Spacing="6">
+                <Button Padding="10,5" Command="{Binding VisitNexusModsCommand}">
+                    <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                        <TextBlock VerticalAlignment="Center" Text="Nexus Mods" />
+                    </StackPanel>
+                </Button>
+                <Button Padding="10,5" Command="{Binding VisitCommand}">
+                    <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                        <ui:FontIcon
+                            Margin="0,0,5,0"
+                            FontFamily="{StaticResource SymbolThemeFontFamily}"
+                            Glyph="&#xE774;" />
+                        <TextBlock VerticalAlignment="Center" Text="{lex:Loc VisitText}" />
+                    </StackPanel>
+                </Button>
+            </ui:SimpleStackPanel>
+        </Grid>
     </ui:SimpleStackPanel>
 </Page>

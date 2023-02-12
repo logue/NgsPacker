@@ -38,7 +38,7 @@ namespace NgsPacker.ViewModels
         /// <summary>
         /// 多言語化サービス
         /// </summary>
-        private readonly ILocalizerService localizerService;
+        private readonly ILocalizeService localizeService;
 
         /// <summary>
         /// 終了コマンド.
@@ -51,12 +51,12 @@ namespace NgsPacker.ViewModels
         /// <summary>
         /// ナビゲーション変更
         /// </summary>
-        public DelegateCommand OnLoadedCommand { get; private set; }
+        public DelegateCommand OnLoadedCommand { get; }
 
         /// <summary>
         /// 読み込まれた
         /// </summary>
-        public DelegateCommand<NavigationViewSelectionChangedEventArgs> SelectionChangedCommand { get; private set; }
+        public DelegateCommand<NavigationViewSelectionChangedEventArgs> SelectionChangedCommand { get; }
 
         /// <summary>
         /// ページ名とビューの対応表
@@ -74,8 +74,8 @@ namespace NgsPacker.ViewModels
         /// Initializes a new instance of the <see cref="ShellWindowViewModel"/> class.
         /// </summary>
         /// <param name="regionManager">インジェクションするIRegionManager。.</param>
-        /// <param name="localizerService">多言語化サービス.</param>
-        public ShellWindowViewModel(IRegionManager regionManager, ILocalizerService localizerService)
+        /// <param name="localizeService">多言語化サービス.</param>
+        public ShellWindowViewModel(IRegionManager regionManager, ILocalizeService localizeService)
         {
             // アプリ名はアセンブリ名
             Title = AppAssemblyModel.Title;
@@ -97,7 +97,7 @@ namespace NgsPacker.ViewModels
             this.regionManager = regionManager;
 
             // 多言語サービスをインジェクション
-            this.localizerService = localizerService;
+            this.localizeService = localizeService;
         }
 
         /// <summary>
@@ -109,7 +109,8 @@ namespace NgsPacker.ViewModels
             {
                 // pso.exe存在確認チェック
                 _ = ModernWpf.MessageBox.Show(
-                   this.localizerService.GetLocalizedString("Pso2ExeNotFoundErrorText"), this.localizerService.GetLocalizedString("ErrorTitleText"));
+                   this.localizeService.GetLocalizedString("Pso2ExeNotFoundErrorText"),
+                   this.localizeService.GetLocalizedString("ErrorTitleText"));
 
                 // 設定ページに遷移
                 this.regionManager.RequestNavigate("ContentRegion", Pages["SettingsItem"]);
@@ -131,8 +132,8 @@ namespace NgsPacker.ViewModels
             }
             catch (Exception ex)
             {
-                // _ = AcrylicMessageBox.Show(Application.Current.MainWindow, ex.Message, LocalizerService.GetLocalizedString("ErrorTitleText"));
-                _ = ModernWpf.MessageBox.Show(ex.Message, localizerService.GetLocalizedString("ErrorTitleText"));
+                // _ = AcrylicMessageBox.Show(Application.Current.MainWindow, ex.Message, LocalizeService.GetLocalizedString("ErrorTitleText"));
+                _ = ModernWpf.MessageBox.Show(ex.Message, localizeService.GetLocalizedString("ErrorTitleText"));
             }
         }
     }

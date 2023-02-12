@@ -31,16 +31,16 @@ namespace NgsPacker.Interfaces
         /// </summary>
         /// <param name="inputPath">入力ファイルのパス</param>
         /// <param name="outputPath">出力先のパス</param>
-        /// <param name="subdir">サブディレクトリを作成する</param>
-        /// <param name="sepalate">グループ1と2で分ける</param>
-        public void Unpack(string inputPath, string outputPath = null, bool subdir = true, bool sepalate = false);
+        /// <param name="createSubDirectory">サブディレクトリを作成する</param>
+        /// <param name="separate">グループ1と2で分ける</param>
+        public void Unpack(string inputPath, string outputPath = null, bool createSubDirectory = true, bool separate = false);
 
         /// <summary>
         /// ファイル一覧を取得
         /// </summary>
         /// <param name="inputPath">解析するdataディレクトリ</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public Task<List<string>> Filelist(string inputPath);
+        public Task<List<string>> FileList(string inputPath);
 
         /// <summary>
         /// Iceファイルを読み込む.
@@ -57,5 +57,7 @@ namespace NgsPacker.Interfaces
         /// <returns>Iceファイルのオブジェクト</returns>
         /// <exception cref="ZamboniException">パースできなかった場合</exception>
         public Task<IceFile> LoadIceFileAsync(string inputPath);
+
+
     }
 }

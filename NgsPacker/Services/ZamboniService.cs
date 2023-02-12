@@ -35,7 +35,7 @@ namespace NgsPacker.Services
         /// <summary>
         /// 多言語化サービス
         /// </summary>
-        private readonly ILocalizerService localizerService;
+        private readonly ILocalizeService localizeService;
 
         /// <summary>
         /// 進捗ダイアログ.
@@ -48,14 +48,24 @@ namespace NgsPacker.Services
         private readonly IEventAggregator eventAggregator;
 
         /// <summary>
+        /// Iceファイルヘッダー簡易チェック
+        /// </summary>
+        /// <param name="buffer">データのバイト</param>
+        /// <returns>Iceファイルである場合false、Ice出ない場合true</returns>
+        public static bool IsNotIce(byte[] buffer)
+        {
+            return buffer.Length <= 127 || buffer[0] != 73 || buffer[1] != 67 || buffer[2] != 69 || buffer[3] != 0;
+        }
+
+        /// <summary>
         /// グループをファイルと内容の辞書型にする
         /// </summary>
         /// <param name="data">解凍済みのIceのデータストリーム</param>
         /// <param name="isGroupOne">グループ１のファイルか</param>
         /// <returns>グループ別ファイルリスト</returns>
-        public static List<IceEntryModel> IceToFilelist(byte[][] data, bool isGroupOne = false)
+        public static List<IceEntryModel> IceToFileList(byte[][] data, bool isGroupOne = false)
         {
-            List<IceEntryModel> fileList = new();
+            List<IceEntryModel> fileList = new ();
             for (int index = 0; index < data.Length; ++index)
             {
                 int int32 = BitConverter.ToInt32(data[index], 16);
@@ -87,9 +97,9 @@ namespace NgsPacker.Services
         /// </summary>
         /// <param name="files">ファイル一覧</param>
         /// <returns>IceEntryModel</returns>
-        public List<IceEntryModel> FilelistToIce(string[] files)
+        public List<IceEntryModel> FileListToIce(string[] files)
         {
-            List<IceEntryModel> ret = new();
+            List<IceEntryModel> ret = new ();
 
             // 入力ディレクトリ内のファイルを走査
             foreach (string fileName in files)
@@ -111,9 +121,9 @@ namespace NgsPacker.Services
         /// </summary>
         /// <param name="files">ファイル一覧</param>
         /// <returns>IceEntryModel</returns>
-        public async Task<List<IceEntryModel>> FilelistToIceAsync(string[] files)
+        public async Task<List<IceEntryModel>> FileListToIceAsync(string[] files)
         {
-            List<IceEntryModel> ret = new();
+            List<IceEntryModel> ret = new ();
 
             // 入力ディレクトリ内のファイルを走査
             foreach (string fileName in files)
@@ -133,15 +143,14 @@ namespace NgsPacker.Services
         /// <summary>
         /// Initializes a new instance of the <see cref="ZamboniService"/> class.
         /// </summary>
-        /// <param name="localizerService">多言語化サービス</param>
+        /// <param name="localizeService">多言語化サービス</param>
         /// <param name="eventAggregator">イベントサービス</param>
-        public ZamboniService(ILocalizerService localizerService, IEventAggregator eventAggregator)
+        public ZamboniService(ILocalizeService localizeService, IEventAggregator eventAggregator)
         {
             // 設定からホワイトリストを読み込む
-            string[] whiteList = Properties.Settings.Default.WhiteList.Replace("\r\n", "\n").Split(new[] { '\n', '\r' });
-            this.whiteList = new List<string>(whiteList);
+            this.whiteList = new List<string>(Properties.Settings.Default.WhiteList.Replace("\r\n", "\n").Split(new[] { '\n', '\r' }));
 
-            this.localizerService = localizerService;
+            this.localizeService = localizeService;
             this.eventAggregator = eventAggregator;
 
             progressDialog = new Views.ProgressDialog();
@@ -169,12 +178,12 @@ namespace NgsPacker.Services
             string[] files = recursive ? Directory.EnumerateFiles(inputPath, "*.*", SearchOption.AllDirectories).ToArray() : Directory.GetFiles(inputPath);
 
             // グループ1に書き込むバイナリデータ
-            List<byte[]> group1Binaries = new();
+            List<byte[]> group1Binaries = new ();
 
             // グループ2に書き込むバイナリデータ
-            List<byte[]> group2Binaries = new();
+            List<byte[]> group2Binaries = new ();
 
-            // LocalizerService.GetLocalizedString("PackingText"),
+            // LocalizeService.GetLocalizedString("PackingText"),
 
             byte[] ret;
 
@@ -187,7 +196,7 @@ namespace NgsPacker.Services
                 // int index = files.IndexOf(currentFile);
 
                 // ファイルをバイト配列として読み込む
-                List<byte> file = new(await File.ReadAllBytesAsync(currentFile));
+                List<byte> file = new (await File.ReadAllBytesAsync(currentFile));
 
                 // ヘッダを書き込む
                 file.InsertRange(0, new IceFileHeader(currentFile, (uint)file.Count).GetBytes());
@@ -212,10 +221,10 @@ namespace NgsPacker.Services
             }
 
             // ヘッダ
-            IceArchiveHeader header = new();
+            IceArchiveHeader header = new ();
 
             // Iceファイルとして書き出す
-            IceV4File ice = new(header.GetBytes(), group1Binaries.ToArray(), group2Binaries.ToArray());
+            IceV4File ice = new (header.GetBytes(), group1Binaries.ToArray(), group2Binaries.ToArray());
             ret = ice.getRawData(compress, forceUnencrypted);
 
             progressDialog.Hide();
@@ -224,7 +233,7 @@ namespace NgsPacker.Services
         }
 
         /// <inheritdoc/>
-        public async void Unpack(string inputPath, string outputPath = null, bool subdir = true, bool sepalate = false)
+        public async void Unpack(string inputPath, string outputPath = null, bool createSubDirectory = true, bool separate = false)
         {
 
             _ = progressDialog.ShowAsync();
@@ -239,13 +248,13 @@ namespace NgsPacker.Services
             IceFile iceFile = LoadIceFile(inputPath);
 
             // 出力先のディレクトリ（ファイル名_ext）　※repack_ice.exeと同じ仕様
-            string destinaton = outputPath + (subdir ? Path.DirectorySeparatorChar + Path.GetFileName(inputPath) + "_ext" : string.Empty) + Path.DirectorySeparatorChar;
+            string destination = outputPath + (createSubDirectory ? Path.DirectorySeparatorChar + Path.GetFileName(inputPath) + "_ext" : string.Empty) + Path.DirectorySeparatorChar;
 
             // グループ1
-            List<IceEntryModel> groupOneFiles = IceToFilelist(iceFile.groupOneFiles, true);
+            List<IceEntryModel> groupOneFiles = IceToFileList(iceFile.groupOneFiles, true);
 
             // グループ2
-            List<IceEntryModel> groupTwoFiles = IceToFilelist(iceFile.groupTwoFiles);
+            List<IceEntryModel> groupTwoFiles = IceToFileList(iceFile.groupTwoFiles);
 
             // 結合
             groupOneFiles.AddRange(groupTwoFiles);
@@ -256,24 +265,24 @@ namespace NgsPacker.Services
                 throw new Exception($"Neither group1 nor group2 was dumped from {Path.GetFileName(inputPath)}.");
             }
 
-            if (subdir)
+            if (createSubDirectory)
             {
                 // 出力先のディレクトリ作成
-                if (!Directory.Exists(destinaton))
+                if (!Directory.Exists(destination))
                 {
-                    _ = Directory.CreateDirectory(destinaton);
+                    _ = Directory.CreateDirectory(destination);
                 }
 
-                if (sepalate)
+                if (separate)
                 {
-                    if (!Directory.Exists(destinaton + Path.DirectorySeparatorChar + "group1"))
+                    if (!Directory.Exists(destination + Path.DirectorySeparatorChar + "group1"))
                     {
-                        _ = Directory.CreateDirectory(destinaton + Path.DirectorySeparatorChar + "group1");
+                        _ = Directory.CreateDirectory(destination + Path.DirectorySeparatorChar + "group1");
                     }
 
-                    if (!Directory.Exists(destinaton + Path.DirectorySeparatorChar + "group2"))
+                    if (!Directory.Exists(destination + Path.DirectorySeparatorChar + "group2"))
                     {
-                        _ = Directory.CreateDirectory(destinaton + Path.DirectorySeparatorChar + "group2");
+                        _ = Directory.CreateDirectory(destination + Path.DirectorySeparatorChar + "group2");
                     }
                 }
             }
@@ -283,9 +292,9 @@ namespace NgsPacker.Services
                 // int index = groupOneFiles.IndexOf(model);
 
                 // ファイル名（ひどい可読性だ）
-                string fileName = destinaton + (sepalate ?
-                    (model.Group == IceGroupEnum.GROUP1 ? "group1" : "group2") + Path.DirectorySeparatorChar : string.Empty)
-                    + model.FileName;
+                string fileName = destination + (separate ?
+                                                  (model.Group == IceGroupEnum.GROUP1 ? "group1" : "group2") + Path.DirectorySeparatorChar : string.Empty)
+                                              + model.FileName;
 
                 try
                 {
@@ -307,11 +316,11 @@ namespace NgsPacker.Services
         }
 
         /// <inheritdoc/>
-        public async Task<List<string>> Filelist(string inputPath)
+        public async Task<List<string>> FileList(string inputPath)
         {
             _ = progressDialog.ShowAsync();
-            List<string> ret = new();
-            List<string> entries = new(Directory.EnumerateFiles(inputPath, "*.*", SearchOption.AllDirectories));
+            List<string> ret = new ();
+            List<string> entries = new (Directory.EnumerateFiles(inputPath, "*.*", SearchOption.AllDirectories));
             Debug.WriteLine("Entries: ", entries.Count);
 
             // CSVのヘッダ
@@ -322,7 +331,7 @@ namespace NgsPacker.Services
 
                 // int index = entries.IndexOf(path);
 
-                if (path.Contains("."))
+                if (path.Contains('.'))
                 {
                     continue;
                 }
@@ -331,20 +340,20 @@ namespace NgsPacker.Services
                 byte[] buffer = await File.ReadAllBytesAsync(path);
 
                 // Iceファイルのヘッダチェック
-                if (buffer.Length <= 127 || buffer[0] != 73 || buffer[1] != 67 || buffer[2] != 69 || buffer[3] != 0)
+                if (IsNotIce(buffer))
                 {
                     continue;
                 }
 
                 // メモリーストリームを生成
-                using MemoryStream ms = new(buffer);
+                using MemoryStream ms = new (buffer);
 
                 // ヘッダを確認
                 _ = ms.Seek(8L, SeekOrigin.Begin);
                 int num = ms.ReadByte();
                 _ = ms.Seek(0L, SeekOrigin.Begin);
 
-                FileInfo fileInfo = new(path);
+                FileInfo fileInfo = new (path);
 
                 // NGSのデータファイルの場合、親ディレクトリのパスも含める
                 string ice =
@@ -374,13 +383,12 @@ namespace NgsPacker.Services
                 {
                     try
                     {
-                        byte[][] groupOneFiles = iceFile.groupOneFiles;
-                        for (int f = 0; f < groupOneFiles.Length; ++f)
+                        iceFile.groupOneFiles.ForEach(bytes =>
                         {
-                            int int32 = BitConverter.ToInt32(groupOneFiles[f], 16);
-                            string str2 = Encoding.ASCII.GetString(groupOneFiles[f], 64, int32).TrimEnd(new char[1]);
+                            int int32 = BitConverter.ToInt32(bytes, 16);
+                            string str2 = Encoding.ASCII.GetString(bytes, 64, int32).TrimEnd(new char[1]);
                             ret.Add(ice + "1," + str2);
-                        }
+                        });
                     }
                     catch
                     {
@@ -393,13 +401,12 @@ namespace NgsPacker.Services
                 {
                     try
                     {
-                        byte[][] groupTwoFiles = iceFile.groupTwoFiles;
-                        for (int f = 0; f < groupTwoFiles.Length; ++f)
+                        iceFile.groupTwoFiles.ForEach(bytes =>
                         {
-                            int int32 = BitConverter.ToInt32(groupTwoFiles[f], 16);
-                            string str2 = Encoding.ASCII.GetString(groupTwoFiles[f], 64, int32).TrimEnd(new char[1]);
+                            int int32 = BitConverter.ToInt32(bytes, 16);
+                            string str2 = Encoding.ASCII.GetString(bytes, 64, int32).TrimEnd(new char[1]);
                             ret.Add(ice + "2," + str2);
-                        }
+                        });
                     }
                     catch
                     {
@@ -421,13 +428,13 @@ namespace NgsPacker.Services
             // IceFile.LoadIceFile(fs).header;
 
             // Iceファイルのヘッダチェック
-            if (buffer.Length <= 127 || buffer[0] != 73 || buffer[1] != 67 || buffer[2] != 69 || buffer[3] != 0)
+            if (IsNotIce(buffer))
             {
                 throw new Exception("Not ice file.");
             }
 
             // メモリーストリームを生成
-            using MemoryStream ms = new(buffer);
+            using MemoryStream ms = new (buffer);
 
             // Iceファイルを読み込む
             IceFile iceFile = IceFile.LoadIceFile(ms);
@@ -441,13 +448,13 @@ namespace NgsPacker.Services
             byte[] buffer = await File.ReadAllBytesAsync(inputPath);
 
             // Iceファイルのヘッダチェック
-            if (buffer.Length <= 127 || buffer[0] != 73 || buffer[1] != 67 || buffer[2] != 69 || buffer[3] != 0)
+            if (IsNotIce(buffer))
             {
                 throw new Exception("Not ice file.");
             }
 
             // メモリーストリームを生成
-            using MemoryStream ms = new(buffer);
+            using MemoryStream ms = new (buffer);
 
             // Iceファイルを読み込む
             IceFile iceFile = IceFile.LoadIceFile(ms);

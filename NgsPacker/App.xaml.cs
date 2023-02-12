@@ -104,7 +104,7 @@ namespace NgsPacker
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
             // 多言語化
-            _ = containerRegistry.RegisterInstance<ILocalizerService>(Container.Resolve<LocalizerService>());
+            _ = containerRegistry.RegisterInstance<ILocalizeService>(Container.Resolve<LocalizeService>());
 
             // Zamboni
             _ = containerRegistry.RegisterInstance<IZamboniService>(Container.Resolve<ZamboniService>());

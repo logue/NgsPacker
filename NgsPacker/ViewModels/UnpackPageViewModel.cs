@@ -10,7 +10,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Reactive.Disposables;
-using System.Reactive.Linq;
 using System.Windows;
 using Microsoft.Toolkit.Uwp.Notifications;
 using NgsPacker.Helpers;
@@ -31,7 +30,7 @@ namespace NgsPacker.ViewModels
         /// <summary>
         /// 多言語化サービス
         /// </summary>
-        private readonly ILocalizerService localizerService;
+        private readonly ILocalizeService localizeService;
 
         /// <summary>
         /// Zamboniサービス
@@ -41,22 +40,22 @@ namespace NgsPacker.ViewModels
         /// <summary>
         /// アンパック
         /// </summary>
-        public DelegateCommand UnpackCommand { get; private set; }
+        public DelegateCommand UnpackCommand { get; }
 
         /// <summary>
         /// アンパック時にグループによってディレクトリを分ける
         /// </summary>
-        public bool IsSepareteByGroup { get; set; }
+        public bool IsSeparateByGroup { get; set; }
 
         /// <summary>
         /// ファイル一覧を出力
         /// </summary>
-        public DelegateCommand ExportFilelistCommand { get; private set; }
+        public DelegateCommand ExportFileListCommand { get; }
 
         /// <summary>
         /// ファイル一覧を出力
         /// </summary>
-        public DelegateCommand UnpackByFilelistCommand { get; private set; }
+        public DelegateCommand UnpackByFileListCommand { get; }
 
         /// <summary>
         /// 表示するイメージのファイル名.
@@ -82,20 +81,20 @@ namespace NgsPacker.ViewModels
         /// Initializes a new instance of the <see cref="UnpackPageViewModel"/> class.
         /// コンストラクタ
         /// </summary>
-        /// <param name="localizerService">多言語化サービス</param>
+        /// <param name="localizeService">多言語化サービス</param>
         /// <param name="zamboniService">Zamboniサービス</param>
-        public UnpackPageViewModel(ILocalizerService localizerService, IZamboniService zamboniService)
+        public UnpackPageViewModel(ILocalizeService localizeService, IZamboniService zamboniService)
         {
             UnpackCommand = new DelegateCommand(ExecuteUnpackCommand);
-            ExportFilelistCommand = new DelegateCommand(ExecuteExportFilelistCommand);
-            UnpackByFilelistCommand = new DelegateCommand(ExecuteUnpackByFilelistCommand);
+            ExportFileListCommand = new DelegateCommand(ExecuteExportFileListCommand);
+            UnpackByFileListCommand = new DelegateCommand(ExecuteUnpackByFileListCommand);
 
             // ドラッグアンドドロップハンドラ
             _ = PreviewDragOverCommand.Subscribe(OnPreviewDragOver).AddTo(Disposable);
             _ = DropCommand.Subscribe(OnDrop).AddTo(Disposable);
 
             // サービスのインジェクション
-            this.localizerService = localizerService;
+            this.localizeService = localizeService;
             this.zamboniService = zamboniService;
         }
 
@@ -105,9 +104,9 @@ namespace NgsPacker.ViewModels
         private void ExecuteUnpackCommand()
         {
             // ファイルを開くダイアログ
-            using System.Windows.Forms.OpenFileDialog openFileDialog = new()
+            using System.Windows.Forms.OpenFileDialog openFileDialog = new ()
             {
-                Title = localizerService.GetLocalizedString("UnpackDialogText"),
+                Title = localizeService.GetLocalizedString("UnpackDialogText"),
                 InitialDirectory = Properties.Settings.Default.Pso2BinPath,
             };
 
@@ -120,9 +119,11 @@ namespace NgsPacker.ViewModels
             }
 
             // フォルダ選択ダイアログ
-            FolderPicker picker = new();
-            picker.Title = localizerService.GetLocalizedString("UnpackOutputPathText");
-            picker.InputPath = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+            FolderPicker picker = new ()
+            {
+                Title = localizeService.GetLocalizedString("UnpackOutputPathText"),
+                InputPath = Environment.GetFolderPath(Environment.SpecialFolder.Personal),
+            };
 
             // 出力先ファイルダイアログを表示
             if (picker.ShowDialog() != true)
@@ -131,32 +132,34 @@ namespace NgsPacker.ViewModels
             }
 
             // アンパック
-            zamboniService.Unpack(openFileDialog.FileName, picker.ResultPath, true, IsSepareteByGroup);
+            zamboniService.Unpack(openFileDialog.FileName, picker.ResultPath, true, IsSeparateByGroup);
 
             // 完了通知
             if (Properties.Settings.Default.NotifyComplete)
             {
                 // トースト通知
                 new ToastContentBuilder()
-                    .AddText(localizerService.GetLocalizedString("UnpackText"))
-                    .AddText(localizerService.GetLocalizedString("CompleteText"))
+                    .AddText(localizeService.GetLocalizedString("UnpackText"))
+                    .AddText(localizeService.GetLocalizedString("CompleteText"))
                     .Show();
             }
             else
             {
                 _ = ModernWpf.MessageBox.Show(
-                    localizerService.GetLocalizedString("UnpackText"), localizerService.GetLocalizedString("CompleteText"));
+                    localizeService.GetLocalizedString("UnpackText"), localizeService.GetLocalizedString("CompleteText"));
             }
         }
 
         /// <summary>
         /// ファイル一覧を出力
         /// </summary>
-        private async void ExecuteExportFilelistCommand()
+        private async void ExecuteExportFileListCommand()
         {
             // フォルダ選択ダイアログ
-            FolderPicker picker = new();
-            picker.InputPath = Properties.Settings.Default.Pso2BinPath;
+            FolderPicker picker = new ()
+            {
+                InputPath = Properties.Settings.Default.Pso2BinPath,
+            };
 
             // 出力先ファイルダイアログを表示
             if (picker.ShowDialog() != true)
@@ -165,9 +168,9 @@ namespace NgsPacker.ViewModels
             }
 
             // ファイル保存ダイアログ
-            using System.Windows.Forms.SaveFileDialog saveFileDialog = new()
+            using System.Windows.Forms.SaveFileDialog saveFileDialog = new ()
             {
-                Title = localizerService.GetLocalizedString("SaveAsDialogText"),
+                Title = localizeService.GetLocalizedString("SaveAsDialogText"),
                 InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal),
                 FileName = "list.csv",
             };
@@ -181,7 +184,7 @@ namespace NgsPacker.ViewModels
             }
 
             // 出力処理
-            List<string> list = new(await zamboniService.Filelist(picker.ResultPath));
+            List<string> list = new (await zamboniService.FileList(picker.ResultPath));
             await File.WriteAllTextAsync(saveFileDialog.FileName, string.Join("\r\n", list));
 
             // 完了通知
@@ -189,26 +192,26 @@ namespace NgsPacker.ViewModels
             {
                 // トースト通知
                 new ToastContentBuilder()
-                    .AddText(localizerService.GetLocalizedString("ExportFileListText"))
-                    .AddText(localizerService.GetLocalizedString("CompleteText"))
+                    .AddText(localizeService.GetLocalizedString("ExportFileListText"))
+                    .AddText(localizeService.GetLocalizedString("CompleteText"))
                     .Show();
             }
             else
             {
                 _ = ModernWpf.MessageBox.Show(
-                    localizerService.GetLocalizedString("ExportFileListText"), localizerService.GetLocalizedString("CompleteText"));
+                    localizeService.GetLocalizedString("ExportFileListText"), localizeService.GetLocalizedString("CompleteText"));
             }
         }
 
         /// <summary>
         /// ファイルリストからアンパックする
         /// </summary>
-        private async void ExecuteUnpackByFilelistCommand()
+        private async void ExecuteUnpackByFileListCommand()
         {
             // ファイルを開くダイアログ
-            using System.Windows.Forms.OpenFileDialog openFileDialog = new()
+            using System.Windows.Forms.OpenFileDialog openFileDialog = new ()
             {
-                Title = localizerService.GetLocalizedString("UnpackByFileListDialogText"),
+                Title = localizeService.GetLocalizedString("UnpackByFileListDialogText"),
                 InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal),
             };
 
@@ -221,9 +224,11 @@ namespace NgsPacker.ViewModels
             }
 
             // フォルダ選択ダイアログ
-            FolderPicker picker = new();
-            picker.Title = localizerService.GetLocalizedString("UnpackDirectoryDialogText");
-            picker.InputPath = Properties.Settings.Default.Pso2BinPath;
+            FolderPicker picker = new ()
+            {
+                Title = localizeService.GetLocalizedString("UnpackDirectoryDialogText"),
+                InputPath = Properties.Settings.Default.Pso2BinPath,
+            };
 
             // 出力先ファイルダイアログを表示
             if (picker.ShowDialog() != true)
@@ -232,7 +237,7 @@ namespace NgsPacker.ViewModels
             }
 
             // ファイル一覧を読み込む
-            List<string> fileList = new(await File.ReadAllLinesAsync(openFileDialog.FileName));
+            List<string> fileList = new (await File.ReadAllLinesAsync(openFileDialog.FileName));
 
             // 出力先ディレクトリ
             string outputPath = Path.GetDirectoryName(openFileDialog.FileName) + Path.DirectorySeparatorChar + Path.GetFileNameWithoutExtension(openFileDialog.FileName);
@@ -242,20 +247,20 @@ namespace NgsPacker.ViewModels
                 _ = Directory.CreateDirectory(outputPath);
             }
 
-            ProgressDialog progressDialog = new();
+            ProgressDialog progressDialog = new ();
             _ = progressDialog.ShowAsync();
-            foreach (string file in fileList)
+
+            fileList.ForEach(file =>
             {
                 string path = picker.ResultPath + Path.DirectorySeparatorChar + file;
-                if (!File.Exists(path))
-                {
-                    // ファイルが存在しないときスキップ
-                    continue;
-                }
 
-                // アンパック
-                zamboniService.Unpack(path, outputPath, false);
-            }
+                if (File.Exists(path))
+                {
+                    // アンパック
+                    zamboniService.Unpack(path, outputPath, false);
+                }
+            });
+
 
             progressDialog.Hide();
 
@@ -264,14 +269,14 @@ namespace NgsPacker.ViewModels
             {
                 // トースト通知
                 new ToastContentBuilder()
-                    .AddText(localizerService.GetLocalizedString("UnpackByFileListText"))
-                    .AddText(localizerService.GetLocalizedString("CompleteText"))
+                    .AddText(localizeService.GetLocalizedString("UnpackByFileListText"))
+                    .AddText(localizeService.GetLocalizedString("CompleteText"))
                     .Show();
             }
             else
             {
                 _ = ModernWpf.MessageBox.Show(
-                    localizerService.GetLocalizedString("UnpackByFileListText"), localizerService.GetLocalizedString("CompleteText"));
+                    localizeService.GetLocalizedString("UnpackByFileListText"), localizeService.GetLocalizedString("CompleteText"));
             }
         }
 
@@ -295,9 +300,11 @@ namespace NgsPacker.ViewModels
         private void OnDrop(DragEventArgs e)
         {
             // フォルダ選択ダイアログ
-            FolderPicker picker = new();
-            picker.Title = localizerService.GetLocalizedString("UnpackDirectoryDialogText");
-            picker.InputPath = Properties.Settings.Default.Pso2BinPath;
+            FolderPicker picker = new ()
+            {
+                Title = localizeService.GetLocalizedString("UnpackDirectoryDialogText"),
+                InputPath = Properties.Settings.Default.Pso2BinPath,
+            };
 
             // 出力先ファイルダイアログを表示
             if (picker.ShowDialog() != true)
@@ -306,7 +313,7 @@ namespace NgsPacker.ViewModels
             }
 
             // ドロップされたものがFileDrop形式の場合は、各ファイルのパス文字列を文字列配列に格納する。
-            List<string> fileList = new((string[])e.Data.GetData(DataFormats.FileDrop));
+            List<string> fileList = new ((string[])e.Data.GetData(DataFormats.FileDrop));
 
             // 出力先ディレクトリ
             string outputPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
@@ -316,20 +323,18 @@ namespace NgsPacker.ViewModels
                 _ = Directory.CreateDirectory(outputPath);
             }
 
-            ProgressDialog progressDialog = new();
+            ProgressDialog progressDialog = new ();
             _ = progressDialog.ShowAsync();
-            foreach (string file in fileList)
+
+            fileList.ForEach(file =>
             {
                 string path = picker.ResultPath + Path.DirectorySeparatorChar + file;
-                if (!File.Exists(path))
+                if (File.Exists(path))
                 {
-                    // ファイルが存在しないときスキップ
-                    continue;
+                    // アンパック
+                    zamboniService.Unpack(path, outputPath, false);
                 }
-
-                // アンパック
-                zamboniService.Unpack(path, outputPath, false);
-            }
+            });
 
             progressDialog.Hide();
 
@@ -338,14 +343,14 @@ namespace NgsPacker.ViewModels
             {
                 // トースト通知
                 new ToastContentBuilder()
-                    .AddText(localizerService.GetLocalizedString("UnpackByFileListText"))
-                    .AddText(localizerService.GetLocalizedString("CompleteText"))
+                    .AddText(localizeService.GetLocalizedString("UnpackByFileListText"))
+                    .AddText(localizeService.GetLocalizedString("CompleteText"))
                     .Show();
             }
             else
             {
                 _ = ModernWpf.MessageBox.Show(
-                    localizerService.GetLocalizedString("UnpackByFileListText"), localizerService.GetLocalizedString("CompleteText"));
+                    localizeService.GetLocalizedString("UnpackByFileListText"), localizeService.GetLocalizedString("CompleteText"));
             }
         }
     }

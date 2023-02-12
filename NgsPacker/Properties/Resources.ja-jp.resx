@@ -177,8 +177,7 @@
 しかしながら、Modding は潜在的にゲーム環境に損害を与える可能性がある行為であり、バンされる可能性があるということについて留意ください。
 特に非公開の内部データの不特定多数の閲覧できるコミュニティでの流布や他作品への流用（モデルデータを変換して流用するなど）は、上記の法律から明確に逸脱する行為であり、損害賠償を伴う訴訟になる場合があります。
 
-その事によって生じたいかなる損害について、作者一同は一切の責任を負いかねます。
-良識を持って利用し、自己責任で使用してください。</value>
+その事によって生じたいかなる損害について、作者一同は一切の責任を負いかねます。良識を持って利用し、自己責任で使用してください。</value>
   </data>
   <data name="PackInformationText" xml:space="preserve">
     <value>PSO2のModを作成する場合は「パック」をクリックしてディレクトリを選択してください。既存のファイルと同じ構成で改変したデータを作成することでModを作成できます。
@@ -193,10 +192,10 @@
   <data name="SegaCopyrightNotice" xml:space="preserve">
     <value>『PSO2』で使用している著作物（画像、データ、音声、テキスト等）の一切の権利は、株式会社セガまたはそのライセンサーが保有しております。</value>
   </data>
-  <data name="SepareteByGroupCheckBoxText" xml:space="preserve">
+  <data name="SeparateByGroupCheckBoxText" xml:space="preserve">
     <value>グループによって出力先ディレクトリを分ける</value>
   </data>
-  <data name="SepareteByGroupCheckBoxToolTip" xml:space="preserve">
+  <data name="SeparateByGroupCheckBoxToolTip" xml:space="preserve">
     <value>PSO2のデータファイルは、拡張子やファイル名によって2つのグループに別れています。このチェックボックスをチェックすると、アンパック時に「group1」と「group2」というサブディレクトリが作成され、ファイルの所属先によって振り分けられます。</value>
   </data>
   <data name="CompressCheckboxText" xml:space="preserve">
@@ -206,7 +205,7 @@
     <value>暗号化（非推奨）</value>
   </data>
   <data name="ExportFileListText" xml:space="preserve">
-    <value>ファイル一覧を出力</value>
+    <value>ファイル一覧をCSVとして出力</value>
   </data>
   <data name="ExportFileListInformationText" xml:space="preserve">
     <value>データファイルに含まれるファイル一覧をCSV型式で出力します。PSO2のdataディレクトリ内にあるwin32（PSO2のデータ）か、win32_reboot（PSO2NGSのデータ）ディレクトリを選択してください。</value>
@@ -257,7 +256,13 @@
   <data name="ToolsText" xml:space="preserve">
     <value>ツール</value>
   </data>
-  <data name="GenerateCacheInfomation" xml:space="preserve">
+  <data name="GenerateCacheInformation" xml:space="preserve">
     <value>PSO2のデータディレクトリを走査し、ファイルのハッシュと内容物をキャッシュとしてSQLiteデータベースに保存します。</value>
+  </data>
+  <data name="SegaCopyrightWarningLinkText" xml:space="preserve">
+    <value>著作権侵害および不正行為について</value>
+  </data>
+  <data name="SegaCopyrightWarningLinkUrl" xml:space="preserve">
+    <value>https://pso2.jp/players/news/29881/</value>
   </data>
 </root>

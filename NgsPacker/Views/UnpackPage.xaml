@@ -7,8 +7,9 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:prism="http://prismlibrary.com/"
     xmlns:ui="http://schemas.modernwpf.com/2019"
-    xmlns:viewmodels="clr-namespace:NgsPacker.ViewModels"
+    xmlns:vm="clr-namespace:NgsPacker.ViewModels"
     d:Background="White"
+    d:DataContext="{d:DesignInstance Type=vm:UnpackPageViewModel}"
     d:DesignHeight="384"
     d:DesignWidth="512"
     lex:LocalizeDictionary.DesignCulture="en"
@@ -26,12 +27,12 @@
             </StackPanel>
         </Button>
         <CheckBox
-            Content="{lex:Loc SepareteByGroupCheckBoxText}"
-            IsChecked="{Binding IsSepareteByGroup, Mode=TwoWay}"
-            ToolTip="{lex:Loc SepareteByGroupCheckBoxToolTip}" />
+            Content="{lex:Loc SeparateByGroupCheckBoxText}"
+            IsChecked="{Binding IsSeparateByGroup, Mode=TwoWay}"
+            ToolTip="{lex:Loc SeparateByGroupCheckBoxToolTip}" />
         <Separator />
         <TextBlock Text="{lex:Loc ExportFileListInformationText}" TextWrapping="Wrap" />
-        <Button Padding="10,5" Command="{Binding ExportFilelistCommand}">
+        <Button Padding="10,5" Command="{Binding ExportFileListCommand}">
             <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
                 <ui:FontIcon Margin="0,0,5,0" Glyph="&#xe7bc;" />
                 <TextBlock VerticalAlignment="Center" Text="{lex:Loc ExportFileListText}" />
@@ -39,7 +40,7 @@
         </Button>
         <Separator />
         <TextBlock Text="{lex:Loc UnpackByFileListInformationText}" TextWrapping="Wrap" />
-        <Button Padding="10,5" Command="{Binding UnpackByFilelistCommand}">
+        <Button Padding="10,5" Command="{Binding UnpackByFileListCommand}">
             <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
                 <ui:FontIcon Margin="0,0,5,0" Glyph="&#xe8e5;" />
                 <TextBlock VerticalAlignment="Center" Text="{lex:Loc UnpackByFileListText}" />

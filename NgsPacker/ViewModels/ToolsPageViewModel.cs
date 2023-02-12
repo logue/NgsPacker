@@ -19,7 +19,7 @@ namespace NgsPacker.ViewModels
         /// <summary>
         /// 多言語化サービス.
         /// </summary>
-        private readonly ILocalizerService localizerService;
+        private readonly ILocalizeService localizeService;
 
 
         /// <summary>
@@ -47,20 +47,20 @@ namespace NgsPacker.ViewModels
         /// <summary>
         /// スキャンボタンが押された
         /// </summary>
-        public DelegateCommand<string> ScanCommand { get; private set; }
+        public DelegateCommand<string> ScanCommand { get; }
 
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ToolsPageViewModel"/> class.
         /// コンストラクタ
         /// </summary>
-        /// <param name="localizerService">多言語化サービス</param>
+        /// <param name="localizeService">多言語化サービス</param>
         /// <param name="zamboniService">Zamboniサービス</param>
         /// <param name="cacheDbService">ファイルキャッシュサービス</param>
-        public ToolsPageViewModel(ILocalizerService localizerService, IZamboniService zamboniService, ICacheDbService cacheDbService)
+        public ToolsPageViewModel(ILocalizeService localizeService, IZamboniService zamboniService, ICacheDbService cacheDbService)
         {
             // サービスのインジェクション
-            this.localizerService = localizerService;
+            this.localizeService = localizeService;
             this.zamboniService = zamboniService;
             this.cacheDbService = cacheDbService;
 

@@ -24,7 +24,7 @@ namespace NgsPacker.ViewModels
         /// <summary>
         /// 多言語化サービス
         /// </summary>
-        private readonly ILocalizerService localizerService;
+        private readonly ILocalizeService localizeService;
 
         /// <summary>
         /// Zamboniサービス
@@ -63,9 +63,9 @@ namespace NgsPacker.ViewModels
         /// <summary>
         /// Initializes a new instance of the <see cref="PackPageViewModel"/> class.
         /// </summary>
-        /// <param name="localizerService">多言語化サービス</param>
+        /// <param name="localizeService">多言語化サービス</param>
         /// <param name="zamboniService">Zamboniサービス</param>
-        public PackPageViewModel(ILocalizerService localizerService, IZamboniService zamboniService)
+        public PackPageViewModel(ILocalizeService localizeService, IZamboniService zamboniService)
         {
             // パックのイベント割当
             PackCommand = new DelegateCommand(ExecutePackCommand);
@@ -76,7 +76,7 @@ namespace NgsPacker.ViewModels
             IsCompress = true;
 
             // サービスのインジェクション
-            this.localizerService = localizerService;
+            this.localizeService = localizeService;
             this.zamboniService = zamboniService;
         }
 
@@ -86,8 +86,8 @@ namespace NgsPacker.ViewModels
         private async void ExecutePackCommand()
         {
             // フォルダ選択ダイアログ
-            FolderPicker picker = new();
-            picker.Title = localizerService.GetLocalizedString("PackInputPathText");
+            FolderPicker picker = new ();
+            picker.Title = localizeService.GetLocalizedString("PackInputPathText");
             picker.InputPath = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
 
             // ファイルダイアログを表示
@@ -97,10 +97,10 @@ namespace NgsPacker.ViewModels
             }
 
             // ファイル保存ダイアログ
-            SaveFileDialog saveFileDialog = new()
+            SaveFileDialog saveFileDialog = new ()
             {
-                Title = localizerService.GetLocalizedString("SaveAsDialogText"),
-                Filter = localizerService.GetLocalizedString("IceFileFilterText"),
+                Title = localizeService.GetLocalizedString("SaveAsDialogText"),
+                Filter = localizeService.GetLocalizedString("IceFileFilterText"),
                 InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal),
                 FileName = "pso2data.ice",
             };
@@ -121,13 +121,13 @@ namespace NgsPacker.ViewModels
             {
                 // トースト通知
                 _ = new ToastContentBuilder()
-                    .AddText(localizerService.GetLocalizedString("PackText"))
-                    .AddText(localizerService.GetLocalizedString("CompleteText"));
+                    .AddText(localizeService.GetLocalizedString("PackText"))
+                    .AddText(localizeService.GetLocalizedString("CompleteText"));
             }
             else
             {
                 _ = ModernWpf.MessageBox.Show(
-                    localizerService.GetLocalizedString("PackText"), localizerService.GetLocalizedString("CompleteText"));
+                    localizeService.GetLocalizedString("PackText"), localizeService.GetLocalizedString("CompleteText"));
             }
         }
 

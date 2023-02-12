@@ -24,7 +24,7 @@ namespace NgsPacker.ViewModels
         /// <summary>
         /// 多言語化サービス.
         /// </summary>
-        private readonly ILocalizerService localizerService;
+        private readonly ILocalizeService localizeService;
 
         /// <summary>
         /// Pso2のバイナリディレクト
@@ -69,24 +69,24 @@ namespace NgsPacker.ViewModels
         /// <summary>
         /// pso2_binのディレクトリ選択
         /// </summary>
-        public DelegateCommand BrowseCommand { get; private set; }
+        public DelegateCommand BrowseCommand { get; }
 
         /// <summary>
         /// 対応言語.
         /// </summary>
-        public IList<CultureInfo> SupportedLanguages => localizerService.SupportedLanguages;
+        public IList<CultureInfo> SupportedLanguages => localizeService.SupportedLanguages;
 
         /// <summary>
         /// 選択されている言語.
         /// </summary>
         public CultureInfo SelectedLanguage
         {
-            get => localizerService?.SelectedLanguage;
+            get => localizeService?.SelectedLanguage;
             set
             {
-                if (localizerService != null && value != null && value != localizerService.SelectedLanguage)
+                if (localizeService != null && value != null && !value.Equals(localizeService.SelectedLanguage))
                 {
-                    localizerService.SelectedLanguage = value;
+                    localizeService.SelectedLanguage = value;
                     Properties.Settings.Default.Language = value.ToString();
                     Properties.Settings.Default.Save();
                 }
@@ -96,14 +96,14 @@ namespace NgsPacker.ViewModels
         /// <summary>
         /// Initializes a new instance of the <see cref="SettingsPageViewModel"/> class.
         /// </summary>
-        /// <param name="localizerService">多言語化サービス.</param>
-        public SettingsPageViewModel(ILocalizerService localizerService)
+        /// <param name="localizeService">多言語化サービス.</param>
+        public SettingsPageViewModel(ILocalizeService localizeService)
         {
             // 設定保存のイベント割当
             BrowseCommand = new DelegateCommand(ExecuteBrowseCommand);
 
             // 多言語化サービスのインジェクション
-            this.localizerService = localizerService;
+            this.localizeService = localizeService;
         }
 
         /// <summary>
@@ -112,9 +112,11 @@ namespace NgsPacker.ViewModels
         private void ExecuteBrowseCommand()
         {
             // フォルダ選択ダイアログ
-            FolderPicker picker = new();
-            picker.Title = localizerService.GetLocalizedString("SelectPso2BinPathText");
-            picker.InputPath = Pso2BinPath;
+            FolderPicker picker = new ()
+            {
+                Title = localizeService.GetLocalizedString("SelectPso2BinPathText"),
+                InputPath = Pso2BinPath,
+            };
 
             // 出力先ファイルダイアログを表示
             if (picker.ShowDialog() != true)
@@ -125,7 +127,7 @@ namespace NgsPacker.ViewModels
             if (!File.Exists(picker.ResultPath + Path.DirectorySeparatorChar + "pso2.exe"))
             {
                 _ = ModernWpf.MessageBox.Show(
-                   localizerService.GetLocalizedString("Pso2ExeNotFoundErrorText"), localizerService.GetLocalizedString("ErrorTitleText"));
+                   localizeService.GetLocalizedString("Pso2ExeNotFoundErrorText"), localizeService.GetLocalizedString("ErrorTitleText"));
                 return;
             }
 
