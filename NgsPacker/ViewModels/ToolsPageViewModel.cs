@@ -5,6 +5,7 @@
 // </copyright>
 // -----------------------------------------------------------------------
 using System.Diagnostics;
+using NgsPacker.Helpers;
 using NgsPacker.Interfaces;
 using Prism.Commands;
 using Prism.Mvvm;
@@ -34,20 +35,14 @@ namespace NgsPacker.ViewModels
         private readonly ICacheDbService cacheDbService;
 
         /// <summary>
-        /// PSO2ディレクトリを対象
+        /// 対象ディレクトリ
         /// </summary>
-        public bool IsPso2 { get; set; }
-
-        /// <summary>
-        /// PSO2NGSディレクトリを対象
-        /// </summary>
-        public bool IsPso2Ngs { get; set; }
-
+        public DataDirectoryType Target { get; set; } = DataDirectoryType.Ngs;
 
         /// <summary>
         /// スキャンボタンが押された
         /// </summary>
-        public DelegateCommand<string> ScanCommand { get; }
+        public DelegateCommand ScanCommand { get; }
 
 
         /// <summary>
@@ -64,17 +59,16 @@ namespace NgsPacker.ViewModels
             this.zamboniService = zamboniService;
             this.cacheDbService = cacheDbService;
 
-            ScanCommand = new DelegateCommand<string>(ExecuteScanCommand);
+            ScanCommand = new DelegateCommand(ExecuteScanCommand);
         }
 
 
         /// <summary>
         /// スキャン処理
         /// </summary>
-        /// <param name="isFull">ファイルの中身も対象とする</param>
-        private void ExecuteScanCommand(string isFull)
+        private void ExecuteScanCommand()
         {
-            Debug.Print(isFull.ToString());
+            Debug.Print(Target.ToString());
         }
     }
 }

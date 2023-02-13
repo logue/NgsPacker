@@ -8,14 +8,14 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Diagnostics.CodeAnalysis;
+
 
 namespace NgsPacker.Entities
 {
     /// <summary>
     /// ファイルのエンティティ
     /// </summary>
-    public class Files
+    public class IceFiles
     {
         /// <summary>
         /// ID
@@ -30,9 +30,8 @@ namespace NgsPacker.Entities
         public string Name { get; set; }
 
         /// <summary>
-        /// ファイルのハッシュ
+        /// ファイルのMD5ハッシュ
         /// </summary>
-        [AllowNull]
         public string Hash { get; set; }
 
         /// <summary>

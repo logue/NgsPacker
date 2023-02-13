@@ -22,7 +22,7 @@ namespace NgsPacker.Entities
         public Guid Id { get; set; }
 
         /// <summary>
-        /// 親レコードのID
+        /// IceファイルのID
         /// </summary>
         [Required]
         public string FileId { get; set; }
@@ -32,5 +32,11 @@ namespace NgsPacker.Entities
         /// </summary>
         [Required]
         public string Name { get; set; }
+
+        /// <summary>
+        /// グループ
+        /// </summary>
+        [Required]
+        public int Group { get; set; }
     }
 }

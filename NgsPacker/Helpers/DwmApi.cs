@@ -16,6 +16,7 @@ namespace NgsPacker.Helpers
     /// </summary>
     public class DwmApi
     {
+#pragma warning disable SA1305
         /// <summary>
         /// デスクトップ ウィンドウ マネージャーのP/invoke
         /// </summary>
@@ -26,6 +27,7 @@ namespace NgsPacker.Helpers
         /// <returns>HRESULT値</returns>
         [DllImport("dwmapi.dll")]
         public static extern int DwmSetWindowAttribute(IntPtr hwnd, DWMWINDOWATTRIBUTE dwAttribute, ref int pvAttribute, int cbAttribute);
+#pragma warning restore SA1305
 
         /// <summary>
         /// DwmGetWindowAttribute 関数と DwmSetWindowAttribute 関数で使用されるオプション。

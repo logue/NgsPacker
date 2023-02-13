@@ -183,10 +183,6 @@ namespace NgsPacker.Services
             // グループ2に書き込むバイナリデータ
             List<byte[]> group2Binaries = new ();
 
-            // LocalizeService.GetLocalizedString("PackingText"),
-
-            byte[] ret;
-
             // 入力ディレクトリ内のファイルを走査
             foreach (string currentFile in files)
             {
@@ -225,7 +221,8 @@ namespace NgsPacker.Services
 
             // Iceファイルとして書き出す
             IceV4File ice = new (header.GetBytes(), group1Binaries.ToArray(), group2Binaries.ToArray());
-            ret = ice.getRawData(compress, forceUnencrypted);
+
+            byte[] ret = ice.getRawData(compress, forceUnencrypted);
 
             progressDialog.Hide();
 
@@ -235,9 +232,7 @@ namespace NgsPacker.Services
         /// <inheritdoc/>
         public async void Unpack(string inputPath, string outputPath = null, bool createSubDirectory = true, bool separate = false)
         {
-
             _ = progressDialog.ShowAsync();
-
 
             if (string.IsNullOrEmpty(outputPath))
             {
@@ -328,8 +323,6 @@ namespace NgsPacker.Services
             foreach (string path in entries)
             {
                 Debug.WriteLine(path);
-
-                // int index = entries.IndexOf(path);
 
                 if (path.Contains('.'))
                 {

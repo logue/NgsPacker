@@ -260,7 +260,7 @@ Please select the correct directory.</value>
   <data name="ToolsText" xml:space="preserve">
     <value>Tools</value>
   </data>
-  <data name="GenerateCacheInformation" xml:space="preserve">
+  <data name="ToolsGenerateCacheInformation" xml:space="preserve">
     <value>Traverses PSO2's data directory, storing file hashes and contents as a cache in a SQLite database.</value>
   </data>
   <data name="SegaCopyrightWarningLinkText" xml:space="preserve">
@@ -268,5 +268,17 @@ Please select the correct directory.</value>
   </data>
   <data name="SegaCopyrightWarningLinkUrl" xml:space="preserve">
     <value>https://pso2.com/players/news/780/</value>
+  </data>
+  <data name="TargetDirectoryText" xml:space="preserve">
+    <value>Target Directory:</value>
+  </data>
+  <data name="TargetDirectoryItemAll" xml:space="preserve">
+    <value>All</value>
+  </data>
+  <data name="TargetDirectoryItemPso2" xml:space="preserve">
+    <value>PSO2 Only</value>
+  </data>
+  <data name="TargetDirectoryItemNgs" xml:space="preserve">
+    <value>PSO2NGS Only</value>
   </data>
 </root>

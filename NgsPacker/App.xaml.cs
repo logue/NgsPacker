@@ -25,8 +25,7 @@ namespace NgsPacker
     /// </summary>
     public partial class App : PrismApplication
     {
-
-
+#pragma warning disable SA1305
         /// <summary>
         /// 外部プロセスのメイン・ウィンドウを起動するためのWin32 API.
         /// </summary>
@@ -51,6 +50,7 @@ namespace NgsPacker
         /// <returns>The <see cref="bool"/>.</returns>
         [DllImport("user32.dll")]
         private static extern bool IsIconic(IntPtr hwnd);
+#pragma warning restore SA1305
 
         /// <summary>
         /// ShowWindowAsync関数のパラメータに渡す定義値(画面を元の大きさに戻す).

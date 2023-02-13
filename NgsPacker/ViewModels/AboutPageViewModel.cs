@@ -37,11 +37,6 @@ namespace NgsPacker.ViewModels
         public DelegateCommand VisitNexusModsCommand { get; }
 
         /// <summary>
-        /// 著作権侵害および不正行為についてボタンのコマンド.
-        /// </summary>
-        public DelegateCommand VisitSegaCopyrightWarningCommand { get; }
-
-        /// <summary>
         /// ロゴ画像.
         /// </summary>
         public ImageSource Logo { get; set; }
@@ -95,7 +90,6 @@ namespace NgsPacker.ViewModels
             this.localizeService = localizeService;
             VisitCommand = new DelegateCommand(ExecuteVisitCommand);
             VisitNexusModsCommand = new DelegateCommand(ExecuteVisitNexusModsCommand);
-            VisitSegaCopyrightWarningCommand = new DelegateCommand(ExecuteVisitSegaCopyrightWarningCommand);
             Assembly = new AppAssemblyModel();
 
             Logo = BitmapToImageSource.Convert(Properties.Resources.AppIcon);
@@ -115,14 +109,6 @@ namespace NgsPacker.ViewModels
         private void ExecuteVisitNexusModsCommand()
         {
             Go("https://www.nexusmods.com/phantasystaronline2newgenesis/mods/26");
-        }
-
-        /// <summary>
-        /// 著作権侵害および不正行為についてのページを開く
-        /// </summary>
-        private void ExecuteVisitSegaCopyrightWarningCommand()
-        {
-            Go(localizeService.GetLocalizedString("SegaCopyrightWarningLinkUrl"));
         }
     }
 }

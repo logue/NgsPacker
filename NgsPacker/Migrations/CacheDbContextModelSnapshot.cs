@@ -2,15 +2,14 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NgsPacker.Helpers;
 
 #nullable disable
 
 namespace NgsPacker.Migrations
 {
-    [DbContext(typeof(Microsoft.EntityFrameworkCore.DbContext))]
-    partial class DbContextModelSnapshot : ModelSnapshot
+    [DbContext(typeof(CacheDbContext))]
+    partial class CacheDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
@@ -27,7 +26,10 @@ namespace NgsPacker.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid?>("FilesId")
+                    b.Property<int>("Group")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<Guid?>("IceFilesId")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
@@ -36,12 +38,12 @@ namespace NgsPacker.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("FilesId");
+                    b.HasIndex("IceFilesId");
 
                     b.ToTable("Contents");
                 });
 
-            modelBuilder.Entity("NgsPacker.Entities.Files", b =>
+            modelBuilder.Entity("NgsPacker.Entities.IceFiles", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -59,17 +61,17 @@ namespace NgsPacker.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Files");
+                    b.ToTable("IceFiles");
                 });
 
             modelBuilder.Entity("NgsPacker.Entities.Contents", b =>
                 {
-                    b.HasOne("NgsPacker.Entities.Files", null)
+                    b.HasOne("NgsPacker.Entities.IceFiles", null)
                         .WithMany("Contents")
-                        .HasForeignKey("FilesId");
+                        .HasForeignKey("IceFilesId");
                 });
 
-            modelBuilder.Entity("NgsPacker.Entities.Files", b =>
+            modelBuilder.Entity("NgsPacker.Entities.IceFiles", b =>
                 {
                     b.Navigation("Contents");
                 });

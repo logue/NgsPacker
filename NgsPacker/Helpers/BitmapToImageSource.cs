@@ -36,7 +36,7 @@ namespace NgsPacker.Helper
                 _ = DeleteObject(handle);
             }
         }
-
+#pragma warning disable SA1305
         /// <summary>
         /// The DeleteObject.
         /// </summary>
@@ -45,5 +45,6 @@ namespace NgsPacker.Helper
         [DllImport("gdi32.dll", EntryPoint = "DeleteObject")]
         [return: MarshalAs(UnmanagedType.Bool)]
         private static extern bool DeleteObject([In] IntPtr hObject);
+#pragma warning restore SA1305
     }
 }

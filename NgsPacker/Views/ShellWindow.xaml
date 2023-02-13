@@ -69,7 +69,12 @@
         </ui:NavigationView.FooterMenuItems>
 
         <Border>
-            <ui:SimpleStackPanel Margin="24,32,24,0" Spacing="24">
+            <ui:SimpleStackPanel
+                Margin="24,32,24,0"
+                ScrollViewer.CanContentScroll="True"
+                ScrollViewer.VerticalScrollBarVisibility="Auto"
+                Spacing="24"
+                UseLayoutRounding="True">
                 <ScrollViewer VerticalScrollBarVisibility="Auto">
                     <ui:Frame prism:RegionManager.RegionName="ContentRegion" />
                 </ScrollViewer>

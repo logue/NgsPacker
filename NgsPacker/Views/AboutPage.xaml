@@ -26,7 +26,6 @@
                 Height="96"
                 Margin="10,0,10,0"
                 Source="{Binding Logo}" />
-            <!--  ui:FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" FontSize="96" Margin="10,0,10,0" Glyph="&#xecaa;"/  -->
             <ui:SimpleStackPanel Orientation="Vertical">
                 <TextBlock FontSize="24" Text="{Binding Assembly.Title}" />
                 <TextBlock Text="{Binding Assembly.Description}" />
@@ -39,19 +38,12 @@
             Text="{lex:Loc ModdingWarningText}"
             TextWrapping="Wrap" />
         <Separator />
-
         <TextBlock Text="{lex:Loc SegaCopyrightNotice}" TextWrapping="Wrap" />
-
         <Grid>
-            <Button
-                Grid.Column="0"
-                Padding="10,5"
-                HorizontalAlignment="Left"
-                Command="{Binding VisitSegaCopyrightWarningCommand}">
-                <TextBlock VerticalAlignment="Center" Text="{lex:Loc SegaCopyrightWarningLinkText}" />
-            </Button>
+            <ui:HyperlinkButton NavigateUri="{lex:Loc SegaCopyrightWarningLinkUrl}">
+                <TextBlock Text="{lex:Loc SegaCopyrightWarningLinkText}" />
+            </ui:HyperlinkButton>
             <ui:SimpleStackPanel
-                Grid.Column="1"
                 HorizontalAlignment="Right"
                 Orientation="Horizontal"
                 Spacing="6">
@@ -62,10 +54,7 @@
                 </Button>
                 <Button Padding="10,5" Command="{Binding VisitCommand}">
                     <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-                        <ui:FontIcon
-                            Margin="0,0,5,0"
-                            FontFamily="{StaticResource SymbolThemeFontFamily}"
-                            Glyph="&#xE774;" />
+                        <ui:FontIcon Margin="0,0,5,0" Glyph="&#xE774;" />
                         <TextBlock VerticalAlignment="Center" Text="{lex:Loc VisitText}" />
                     </StackPanel>
                 </Button>

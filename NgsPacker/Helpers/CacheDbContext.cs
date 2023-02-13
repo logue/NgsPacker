@@ -20,7 +20,7 @@ namespace NgsPacker.Helpers
         /// <summary>
         /// ファイルレコード
         /// </summary>
-        public DbSet<Files> Files { get; set; }
+        public DbSet<IceFiles> IceFiles { get; set; }
 
         /// <summary>
         /// ファイル内容物テーブル

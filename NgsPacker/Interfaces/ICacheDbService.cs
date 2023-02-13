@@ -6,30 +6,10 @@
 // -----------------------------------------------------------------------
 
 using System.Threading.Tasks;
+using NgsPacker.Helpers;
 
 namespace NgsPacker.Interfaces
 {
-    /// <summary>
-    /// ディレクトリ種別
-    /// </summary>
-    public enum DataDirectoryType
-    {
-        /// <summary>
-        /// PSO2ディレクトリ
-        /// </summary>
-        Pso2 = 0x01,
-
-        /// <summary>
-        /// NGSディレクトリ
-        /// </summary>
-        Ngs = 0x10,
-
-        /// <summary>
-        /// すべて
-        /// </summary>
-        All = 0x11,
-    };
-
     /// <summary>
     /// ファイルキャッシュサービスインターフェース
     /// </summary>
@@ -38,9 +18,10 @@ namespace NgsPacker.Interfaces
         /// <summary>
         /// 対象ディレクトリ内のファイルとハッシュをDBに保存する
         /// </summary>
+        /// <param name="target">対象</param>
         /// <param name="force">すべて書き直し</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public Task ScanFileｓ(bool force);
+        public Task ScanFileｓ(DataDirectoryType target = DataDirectoryType.Ngs, bool force = false);
 
         /// <summary>
         /// ファイルの内容物レコードを作成する

@@ -41,8 +41,7 @@ namespace NgsPacker.Services
             SupportedLanguages = CultureInfo.GetCultures(CultureTypes.AllCultures).Where(
                 c =>
                     c.IetfLanguageTag.Equals("en-US", System.StringComparison.Ordinal) ||
-                    c.IetfLanguageTag.Equals("ja-JP", System.StringComparison.Ordinal)
-            )
+                    c.IetfLanguageTag.Equals("ja-JP", System.StringComparison.Ordinal))
                 .ToList();
             SetLocale(locale);
         }
@@ -72,9 +71,11 @@ namespace NgsPacker.Services
         /// <returns>翻訳されたテキストを取得</returns>
         public string GetLocalizedString(string key)
         {
+#pragma warning disable SA1305
             LocExtension locExtension = new (key);
             _ = locExtension.ResolveLocalizedValue(out string uiString);
             return uiString;
+#pragma warning restore SA1305
         }
     }
 }

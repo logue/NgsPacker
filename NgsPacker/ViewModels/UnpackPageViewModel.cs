@@ -261,7 +261,6 @@ namespace NgsPacker.ViewModels
                 }
             });
 
-
             progressDialog.Hide();
 
             // 完了通知

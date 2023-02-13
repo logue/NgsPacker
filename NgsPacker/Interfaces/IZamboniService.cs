@@ -57,7 +57,5 @@ namespace NgsPacker.Interfaces
         /// <returns>Iceファイルのオブジェクト</returns>
         /// <exception cref="ZamboniException">パースできなかった場合</exception>
         public Task<IceFile> LoadIceFileAsync(string inputPath);
-
-
     }
 }

@@ -19,27 +19,67 @@
     prism:ViewModelLocator.AutoWireViewModel="True"
     mc:Ignorable="d">
 
-    <ui:SimpleStackPanel Spacing="12">
-        <TextBlock Text="{lex:Loc PackInformationText}" TextWrapping="Wrap" />
-        <Button Padding="10,5" Command="{Binding PackCommand}">
-            <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-                <ui:FontIcon Margin="0,0,5,0" Glyph="&#xe1d8;" />
-                <TextBlock VerticalAlignment="Center" Text="{lex:Loc PackText}" />
-            </StackPanel>
-        </Button>
-        <StackPanel Orientation="Horizontal">
-            <CheckBox Content="{lex:Loc CompressCheckBoxText}" IsChecked="{Binding IsCompress, Mode=TwoWay}" />
-            <CheckBox Content="{lex:Loc CryptCheckBoxText}" IsChecked="{Binding IsCrypt, Mode=TwoWay}" />
-        </StackPanel>
-        <Separator />
-        <Label Content="{lex:Loc WhiteListText}" />
-        <TextBox
-            Height="100"
-            AcceptsReturn="True"
-            AutomationProperties.Name="multi-line TextBox"
-            Text="{Binding WhiteList}"
-            ToolTip="{lex:Loc SepareteByGroupCheckBoxToolTip}" />
-        <ui:SimpleStackPanel>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <ui:SimpleStackPanel Grid.Row="0" Spacing="12">
+            <TextBlock Text="{lex:Loc PackInformationText}" TextWrapping="Wrap" />
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <CheckBox
+                    Grid.Column="0"
+                    Content="{lex:Loc CompressCheckBoxText}"
+                    IsChecked="{Binding IsCompress, Mode=TwoWay}" />
+                <CheckBox
+                    Grid.Column="1"
+                    Content="{lex:Loc CryptCheckBoxText}"
+                    IsChecked="{Binding IsCrypt, Mode=TwoWay}" />
+                <Button
+                    Grid.Column="2"
+                    Padding="10,5"
+                    HorizontalAlignment="Right"
+                    Command="{Binding PackCommand}">
+                    <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                        <ui:FontIcon Margin="0,0,5,0" Glyph="&#xe1d8;" />
+                        <TextBlock VerticalAlignment="Center" Text="{lex:Loc PackText}" />
+                    </StackPanel>
+                </Button>
+            </Grid>
+            <Separator />
+            <Label Content="{lex:Loc WhiteListText}" />
+        </ui:SimpleStackPanel>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <TextBox
+                Grid.Column="0"
+                Height="150"
+                HorizontalContentAlignment="Stretch"
+                VerticalContentAlignment="Stretch"
+                AcceptsReturn="True"
+                AutomationProperties.Name="multi-line TextBox"
+                Text="{Binding WhiteList}"
+                VerticalScrollBarVisibility="Visible" />
+            <TextBlock
+                Grid.Column="1"
+                Padding="12"
+                VerticalAlignment="Top"
+                Text="{lex:Loc SeparateByGroupCheckBoxToolTip}"
+                TextWrapping="Wrap" />
+        </Grid>
+        <ui:SimpleStackPanel
+            Grid.Row="2"
+            VerticalAlignment="Bottom"
+            Spacing="12">
             <Button
                 Padding="10,5"
                 HorizontalAlignment="Right"
@@ -51,5 +91,5 @@
                 </StackPanel>
             </Button>
         </ui:SimpleStackPanel>
-    </ui:SimpleStackPanel>
+    </Grid>
 </Page>

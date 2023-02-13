@@ -20,19 +20,27 @@
 
     <ui:SimpleStackPanel Spacing="12">
         <TextBlock Text="{lex:Loc UnpackInformationText}" TextWrapping="Wrap" />
-        <Button Padding="10,5" Command="{Binding UnpackCommand}">
-            <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-                <ui:FontIcon Margin="0,0,5,0" Glyph="&#xe1d9;" />
-                <TextBlock VerticalAlignment="Center" Text="{lex:Loc UnpackText}" />
-            </StackPanel>
-        </Button>
-        <CheckBox
-            Content="{lex:Loc SeparateByGroupCheckBoxText}"
-            IsChecked="{Binding IsSeparateByGroup, Mode=TwoWay}"
-            ToolTip="{lex:Loc SeparateByGroupCheckBoxToolTip}" />
+        <Grid>
+            <CheckBox
+                Content="{lex:Loc SeparateByGroupCheckBoxText}"
+                IsChecked="{Binding IsSeparateByGroup, Mode=TwoWay}"
+                ToolTip="{lex:Loc SeparateByGroupCheckBoxToolTip}" />
+            <Button
+                Padding="10,5"
+                HorizontalAlignment="Right"
+                Command="{Binding UnpackCommand}">
+                <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                    <ui:FontIcon Margin="0,0,5,0" Glyph="&#xe1d9;" />
+                    <TextBlock VerticalAlignment="Center" Text="{lex:Loc UnpackText}" />
+                </StackPanel>
+            </Button>
+        </Grid>
         <Separator />
         <TextBlock Text="{lex:Loc ExportFileListInformationText}" TextWrapping="Wrap" />
-        <Button Padding="10,5" Command="{Binding ExportFileListCommand}">
+        <Button
+            Padding="10,5"
+            HorizontalAlignment="Right"
+            Command="{Binding ExportFileListCommand}">
             <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
                 <ui:FontIcon Margin="0,0,5,0" Glyph="&#xe7bc;" />
                 <TextBlock VerticalAlignment="Center" Text="{lex:Loc ExportFileListText}" />
@@ -40,7 +48,10 @@
         </Button>
         <Separator />
         <TextBlock Text="{lex:Loc UnpackByFileListInformationText}" TextWrapping="Wrap" />
-        <Button Padding="10,5" Command="{Binding UnpackByFileListCommand}">
+        <Button
+            Padding="10,5"
+            HorizontalAlignment="Right"
+            Command="{Binding UnpackByFileListCommand}">
             <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
                 <ui:FontIcon Margin="0,0,5,0" Glyph="&#xe8e5;" />
                 <TextBlock VerticalAlignment="Center" Text="{lex:Loc UnpackByFileListText}" />

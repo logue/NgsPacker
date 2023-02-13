@@ -16,8 +16,8 @@ namespace NgsPacker.Helpers
 {
     /// <summary>
     /// フォルダピッカー
-    /// https://stackoverflow.com/a/66187224/2985857
     /// </summary>
+    /// <see href="https://stackoverflow.com/a/66187224/2985857" />
     public partial class FolderPicker
     {
         /// <summary>
@@ -56,21 +56,6 @@ namespace NgsPacker.Helpers
         public virtual string FileNameLabel { get; set; }
 
         /// <summary>
-        /// オプションを設定
-        /// </summary>
-        /// <param name="options">オプション</param>
-        /// <returns>上書きしたオプション</returns>
-        protected virtual int SetOptions(int options)
-        {
-            if (ForceFileSystem)
-            {
-                options |= (int)FOS.FOS_FORCEFILESYSTEM;
-            }
-
-            return options;
-        }
-
-        /// <summary>
         /// ダイアログを表示
         /// </summary>
         /// <param name="owner">親ウィンドウ</param>
@@ -82,13 +67,20 @@ namespace NgsPacker.Helpers
             return ShowDialog(owner != null ? new WindowInteropHelper(owner).Handle : IntPtr.Zero, throwOnError);
         }
 
-        /// for all .NET
+        /// <summary>
+        /// ダイアログを表示（すべての,net用）
+        /// </summary>
+        /// <param name="owner">親ウィンドウのハンドル</param>
+        /// <param name="throwOnError">エラー</param>
+        /// <returns>成否</returns>
         public virtual bool? ShowDialog(IntPtr owner, bool throwOnError = false)
         {
             IFileOpenDialog dialog = (IFileOpenDialog)new FileOpenDialog();
             if (!string.IsNullOrEmpty(InputPath))
             {
-                if (CheckHr(SHCreateItemFromParsingName(InputPath, null, typeof(IShellItem).GUID, out IShellItem item), throwOnError) != 0)
+                if (CheckHr(
+                    SHCreateItemFromParsingName(InputPath, null, typeof(IShellItem).GUID, out var item),
+                    throwOnError) != 0)
                 {
                     return null;
                 }
@@ -155,79 +147,132 @@ namespace NgsPacker.Helpers
             return true;
         }
 
+        /// <summary>
+        /// オプションを設定
+        /// </summary>
+        /// <param name="options">オプション</param>
+        /// <returns>上書きしたオプション</returns>
+        protected virtual int SetOptions(int options)
+        {
+            if (ForceFileSystem)
+            {
+                options |= (int)FOS.FOS_FORCEFILESYSTEM;
+            }
+
+            return options;
+        }
+
         private static int CheckHr(int hr, bool throwOnError)
         {
-            if (hr != 0)
+            if (hr != 0 && throwOnError)
             {
-                if (throwOnError)
-                {
-                    Marshal.ThrowExceptionForHR(hr);
-                }
+                Marshal.ThrowExceptionForHR(hr);
             }
 
             return hr;
         }
 
         [DllImport("shell32")]
-        private static extern int SHCreateItemFromParsingName(
-            [MarshalAs(UnmanagedType.LPWStr)] string pszPath, IBindCtx pbc,
-            [MarshalAs(UnmanagedType.LPStruct)] Guid riid, out IShellItem ppv
-        );
+        private static extern int SHCreateItemFromParsingName([MarshalAs(UnmanagedType.LPWStr)] string pszPath, IBindCtx pbc, [MarshalAs(UnmanagedType.LPStruct)] Guid riid, out IShellItem ppv);
 
         [DllImport("user32")]
         private static extern IntPtr GetDesktopWindow();
 
+#pragma warning disable IDE1006 // Naming Styles
         private const int ERROR_CANCELLED = unchecked((int)0x800704C7);
+#pragma warning restore IDE1006 // Naming Styles
 
         /// <summary>
         /// CLSID_FileOpenDialog
         /// </summary>
-        [ComImport, Guid("DC1C5A9C-E88A-4dde-A5A1-60F82A20AEF7")]
+        [ComImport]
+        [Guid("DC1C5A9C-E88A-4dde-A5A1-60F82A20AEF7")]
         private class FileOpenDialog
         {
         }
 
-        [ComImport, Guid("43826D1E-E718-42EE-BC55-A1E261C37BFE"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-        private interface IShellItem
-        {
-            [PreserveSig] int BindToHandler(); // not fully defined
-            [PreserveSig] int GetParent(); // not fully defined
-            [PreserveSig] int GetDisplayName(SIGDN sigdnName, [MarshalAs(UnmanagedType.LPWStr)] out string ppszName);
-            [PreserveSig] int GetAttributes();  // not fully defined
-            [PreserveSig] int Compare();  // not fully defined
-        }
-        [ComImport, Guid("42f85136-db7e-439c-85f1-e4075d135fc8"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+#pragma warning disable SA1600
+#pragma warning disable SA1134
+#pragma warning disable SA1305
+        [ComImport]
+        [Guid("42f85136-db7e-439c-85f1-e4075d135fc8")]
+        [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
         private interface IFileOpenDialog
         {
             [PreserveSig] int Show(IntPtr parent); // IModalWindow
+
             [PreserveSig] int SetFileTypes();  // not fully defined
+
             [PreserveSig] int SetFileTypeIndex(int iFileType);
+
             [PreserveSig] int GetFileTypeIndex(out int piFileType);
+
             [PreserveSig] int Advise(); // not fully defined
+
             [PreserveSig] int Unadvise();
+
             [PreserveSig] int SetOptions(FOS fos);
+
             [PreserveSig] int GetOptions(out FOS pfos);
+
             [PreserveSig] int SetDefaultFolder(IShellItem psi);
+
             [PreserveSig] int SetFolder(IShellItem psi);
+
             [PreserveSig] int GetFolder(out IShellItem ppsi);
+
             [PreserveSig] int GetCurrentSelection(out IShellItem ppsi);
+
             [PreserveSig] int SetFileName([MarshalAs(UnmanagedType.LPWStr)] string pszName);
+
             [PreserveSig] int GetFileName([MarshalAs(UnmanagedType.LPWStr)] out string pszName);
+
             [PreserveSig] int SetTitle([MarshalAs(UnmanagedType.LPWStr)] string pszTitle);
+
             [PreserveSig] int SetOkButtonLabel([MarshalAs(UnmanagedType.LPWStr)] string pszText);
+
             [PreserveSig] int SetFileNameLabel([MarshalAs(UnmanagedType.LPWStr)] string pszLabel);
+
             [PreserveSig] int GetResult(out IShellItem ppsi);
+
             [PreserveSig] int AddPlace(IShellItem psi, int alignment);
+
             [PreserveSig] int SetDefaultExtension([MarshalAs(UnmanagedType.LPWStr)] string pszDefaultExtension);
+
             [PreserveSig] int Close(int hr);
+
             [PreserveSig] int SetClientGuid();  // not fully defined
+
             [PreserveSig] int ClearClientData();
+
             [PreserveSig] int SetFilter([MarshalAs(UnmanagedType.IUnknown)] object pFilter);
+
             [PreserveSig] int GetResults([MarshalAs(UnmanagedType.IUnknown)] out object ppenum);
+
             [PreserveSig] int GetSelectedItems([MarshalAs(UnmanagedType.IUnknown)] out object ppsai);
         }
 
+        [ComImport]
+        [Guid("43826D1E-E718-42EE-BC55-A1E261C37BFE")]
+        [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+        private interface IShellItem
+        {
+            [PreserveSig] int BindToHandler(); // not fully defined
+
+            [PreserveSig] int GetParent(); // not fully defined
+
+            [PreserveSig] int GetDisplayName(SIGDN sigdnName, [MarshalAs(UnmanagedType.LPWStr)] out string ppszName);
+
+            [PreserveSig] int GetAttributes();  // not fully defined
+
+            [PreserveSig] int Compare();  // not fully defined
+        }
+#pragma warning restore SA1600
+#pragma warning restore SA1134
+#pragma warning restore SA1305
+
 #pragma warning disable CA1712 // Do not prefix enum values with type name
+#pragma warning disable SA1413
         private enum SIGDN : uint
         {
             SIGDN_DESKTOPABSOLUTEEDITING = 0x8004c000,
@@ -238,7 +283,7 @@ namespace NgsPacker.Helpers
             SIGDN_PARENTRELATIVEEDITING = 0x80031001,
             SIGDN_PARENTRELATIVEFORADDRESSBAR = 0x8007c001,
             SIGDN_PARENTRELATIVEPARSING = 0x80018001,
-            SIGDN_URL = 0x80068000,
+            SIGDN_URL = 0x80068000
         }
 
         [Flags]
@@ -269,5 +314,6 @@ namespace NgsPacker.Helpers
             FOS_SUPPORTSTREAMABLEITEMS = unchecked((int)0x80000000),
         }
 #pragma warning restore CA1712 // Do not prefix enum values with type name
+#pragma warning restore CA1413
     }
 }

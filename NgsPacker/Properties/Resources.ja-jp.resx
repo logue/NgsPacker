@@ -256,7 +256,7 @@
   <data name="ToolsText" xml:space="preserve">
     <value>ツール</value>
   </data>
-  <data name="GenerateCacheInformation" xml:space="preserve">
+  <data name="ToolsGenerateCacheInformation" xml:space="preserve">
     <value>PSO2のデータディレクトリを走査し、ファイルのハッシュと内容物をキャッシュとしてSQLiteデータベースに保存します。</value>
   </data>
   <data name="SegaCopyrightWarningLinkText" xml:space="preserve">
@@ -264,5 +264,17 @@
   </data>
   <data name="SegaCopyrightWarningLinkUrl" xml:space="preserve">
     <value>https://pso2.jp/players/news/29881/</value>
+  </data>
+  <data name="TargetDirectoryText" xml:space="preserve">
+    <value>対象ディレクトリ：</value>
+  </data>
+  <data name="TargetDirectoryItemAll" xml:space="preserve">
+    <value>すべて</value>
+  </data>
+  <data name="TargetDirectoryItemPso2" xml:space="preserve">
+    <value>PSO2のみ</value>
+  </data>
+  <data name="TargetDirectoryItemNgs" xml:space="preserve">
+    <value>PSO2NGSのみ</value>
   </data>
 </root>

@@ -12,6 +12,7 @@ using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using ImTools;
 using NgsPacker.Entities;
@@ -41,6 +42,40 @@ public class CacheDbService : ICacheDbService, IDisposable
     private CacheDbContext context = new ();
 
     /// <summary>
+    /// 対象のパスか
+    /// </summary>
+    /// <param name="path">対象パス</param>
+    /// <param name="target">対象ディレクトリ</param>
+    /// <returns>対象だった場合true、そうでない場合false。licenseディレクトリは常にfalse</returns>
+    private static bool IsTargetPath(string path, DataDirectoryType target = DataDirectoryType.Ngs)
+    {
+        if (path.Contains('.'))
+        {
+            // 入力パスがディレクトリの場合false
+            return false;
+        }
+
+        switch (target)
+        {
+            case DataDirectoryType.Pso:
+                // PSO2ディレクトリのみの場合
+                return Regex.IsMatch(path, "win32" + Path.DirectorySeparatorChar) ||
+                       Regex.IsMatch(path, "win32_na" + Path.DirectorySeparatorChar);
+            case DataDirectoryType.Ngs:
+                // NGSディレクトリのみの場合
+                return Regex.IsMatch(path, "win32reboot" + Path.DirectorySeparatorChar) ||
+                       Regex.IsMatch(path, "win32reboot_na" + Path.DirectorySeparatorChar);
+            default:
+            case DataDirectoryType.All:
+                // すべて対象にする場合
+                break;
+        }
+
+        // ライセンスディレクトリは対象外
+        return !Regex.IsMatch(path, "license");
+    }
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="CacheDbService" /> class.
     /// </summary>
     public CacheDbService(IZamboniService zamboniService)
@@ -59,7 +94,7 @@ public class CacheDbService : ICacheDbService, IDisposable
     }
 
     /// <inheritdoc />
-    public async Task ScanFileｓ(bool force = false)
+    public async Task ScanFileｓ(DataDirectoryType target = DataDirectoryType.Ngs, bool force = false)
     {
         List<string> entries = new (Directory.EnumerateFiles(dataPath, "*.*", SearchOption.AllDirectories));
         Debug.WriteLine("Entries: ", entries.Count);
@@ -70,11 +105,12 @@ public class CacheDbService : ICacheDbService, IDisposable
         // CSVのヘッダ
         foreach (string path in entries)
         {
-            Debug.WriteLine(path);
+            Debug.Print(path);
 
-
-            if (path.Contains('.'))
+            // ディレクトリチェック
+            if (IsTargetPath(path))
             {
+                // 除外条件だった場合スキップ
                 continue;
             }
 
@@ -104,12 +140,12 @@ public class CacheDbService : ICacheDbService, IDisposable
             string fileHash = sb.ToString();
 
             // ファイルのエントリ
-            var fileEntry = context.Files.Single(x => x.Name == path);
+            var fileEntry = context.IceFiles.Single(x => x.Name == path);
 
             if (fileEntry.List().IsEmpty)
             {
                 // 新規登録
-                await context.Files.AddAsync(new Files()
+                await context.IceFiles.AddAsync(new IceFiles()
                 {
                     Name = path,
                     Hash = fileHash,
