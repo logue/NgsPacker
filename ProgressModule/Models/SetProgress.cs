@@ -7,12 +7,11 @@
 
 using Prism.Events;
 
-namespace ProgressModule.Models
+namespace ProgressModule.Models;
+
+/// <summary>
+///     進捗の値が変化した
+/// </summary>
+public class SetProgress : PubSubEvent<int>
 {
-    /// <summary>
-    /// 進捗の値が変化した
-    /// </summary>
-    public class SetProgress : PubSubEvent<int>
-    {
-    }
 }

@@ -1,10 +1,10 @@
-using System;
-using Microsoft.EntityFrameworkCore.Migrations;
-
 #nullable disable
 
 namespace NgsPacker.Migrations
 {
+    using System;
+    using Microsoft.EntityFrameworkCore.Migrations;
+
     /// <inheritdoc />
     public partial class InitialCreate : Migration
     {
@@ -18,7 +18,7 @@ namespace NgsPacker.Migrations
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     Name = table.Column<string>(type: "TEXT", nullable: false),
                     Hash = table.Column<string>(type: "TEXT", nullable: true),
-                    UpdatedAt = table.Column<DateTime>(type: "TEXT", nullable: false)
+                    UpdatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
                 },
                 constraints: table =>
                 {
@@ -33,7 +33,7 @@ namespace NgsPacker.Migrations
                     FileId = table.Column<string>(type: "TEXT", nullable: false),
                     Name = table.Column<string>(type: "TEXT", nullable: false),
                     Group = table.Column<int>(type: "INTEGER", nullable: false),
-                    IceFilesId = table.Column<Guid>(type: "TEXT", nullable: true)
+                    IceFilesId = table.Column<Guid>(type: "TEXT", nullable: true),
                 },
                 constraints: table =>
                 {

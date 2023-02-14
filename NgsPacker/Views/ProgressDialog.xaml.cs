@@ -7,19 +7,18 @@
 
 using ModernWpf.Controls;
 
-namespace NgsPacker.Views
+namespace NgsPacker.Views;
+
+/// <summary>
+///     ProgressDialog.xaml の相互作用ロジック
+/// </summary>
+public partial class ProgressDialog : ContentDialog
 {
     /// <summary>
-    /// ProgressDialog.xaml の相互作用ロジック
+    ///     Initializes a new instance of the <see cref="ProgressDialog" /> class.
     /// </summary>
-    public partial class ProgressDialog : ContentDialog
+    public ProgressDialog()
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ProgressDialog"/> class.
-        /// </summary>
-        public ProgressDialog()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

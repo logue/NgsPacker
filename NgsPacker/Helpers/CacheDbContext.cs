@@ -5,49 +5,48 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-using System.IO;
-using System.Windows.Forms;
 using Microsoft.EntityFrameworkCore;
 using NgsPacker.Entities;
+using System.IO;
+using System.Windows.Forms;
 
-namespace NgsPacker.Helpers
+namespace NgsPacker.Helpers;
+
+/// <summary>
+///     DBの橋渡しを行うコンテキストクラス
+/// </summary>
+internal class CacheDbContext : DbContext
 {
     /// <summary>
-    /// DBの橋渡しを行うコンテキストクラス
+    ///     Initializes a new instance of the <see cref="CacheDbContext" /> class.
     /// </summary>
-    internal class CacheDbContext : DbContext
+    public CacheDbContext()
     {
-        /// <summary>
-        /// ファイルレコード
-        /// </summary>
-        public DbSet<IceFiles> IceFiles { get; set; }
+        string path = Path.GetDirectoryName(Application.ExecutablePath);
+        DbPath = Path.Join(path, "NgsPacker.sqlite");
+    }
 
-        /// <summary>
-        /// ファイル内容物テーブル
-        /// </summary>
-        public DbSet<Contents> Contents { get; set; }
+    /// <summary>
+    ///     ファイルレコード
+    /// </summary>
+    public DbSet<IceFiles> IceFiles { get; set; }
 
-        /// <summary>
-        /// DBのパス
-        /// </summary>
-        public string DbPath { get; }
+    /// <summary>
+    ///     ファイル内容物テーブル
+    /// </summary>
+    public DbSet<Contents> Contents { get; set; }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CacheDbContext"/> class.
-        /// </summary>
-        public CacheDbContext()
-        {
-            string path = Path.GetDirectoryName(Application.ExecutablePath);
-            DbPath = Path.Join(path, "NgsPacker.sqlite");
-        }
+    /// <summary>
+    ///     DBのパス
+    /// </summary>
+    public string DbPath { get; }
 
-        /// <summary>
-        /// DBファイル生成
-        /// </summary>
-        /// <param name="options">オプション</param>
-        protected override void OnConfiguring(DbContextOptionsBuilder options)
-        {
-            _ = options.UseSqlite("Data Source=" + DbPath);
-        }
+    /// <summary>
+    ///     DBファイル生成
+    /// </summary>
+    /// <param name="options">オプション</param>
+    protected override void OnConfiguring(DbContextOptionsBuilder options)
+    {
+        _ = options.UseSqlite("Data Source=" + DbPath);
     }
 }

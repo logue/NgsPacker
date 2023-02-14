@@ -7,12 +7,11 @@
 
 using Prism.Events;
 
-namespace ProgressModule.Models
+namespace ProgressModule.Models;
+
+/// <summary>
+///     中間状態に変化した
+/// </summary>
+public class SetIntermediate : PubSubEvent<bool>
 {
-    /// <summary>
-    /// 中間状態に変化した
-    /// </summary>
-    public class SetIntermediate : PubSubEvent<bool>
-    {
-    }
 }

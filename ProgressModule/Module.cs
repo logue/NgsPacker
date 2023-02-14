@@ -10,30 +10,29 @@ using Prism.Modularity;
 using ProgressModule.Models;
 using ProgressModule.Views;
 
-namespace ProgressModule
+namespace ProgressModule;
+
+/// <summary>
+///     進捗モーダルモジュール
+/// </summary>
+public class Module : IModule
 {
     /// <summary>
-    /// 進捗モーダルモジュール
+    ///     モジュール初期化時
     /// </summary>
-    public class Module : IModule
+    /// <param name="containerProvider"></param>
+    public void OnInitialized(IContainerProvider containerProvider)
     {
-        /// <summary>
-        /// モジュール初期化時
-        /// </summary>
-        /// <param name="containerProvider"></param>
-        public void OnInitialized(IContainerProvider containerProvider)
-        {
-            _ = containerProvider.Resolve<ProgressModel>();
-        }
+        _ = containerProvider.Resolve<ProgressModel>();
+    }
 
-        /// <summary>
-        /// モジュール種別登録
-        /// </summary>
-        /// <param name="containerRegistry"></param>
-        public void RegisterTypes(IContainerRegistry containerRegistry)
-        {
-            _ = containerRegistry.RegisterSingleton<ProgressModel>();
-            containerRegistry.RegisterDialog<ProgressModal>();
-        }
+    /// <summary>
+    ///     モジュール種別登録
+    /// </summary>
+    /// <param name="containerRegistry"></param>
+    public void RegisterTypes(IContainerRegistry containerRegistry)
+    {
+        _ = containerRegistry.RegisterSingleton<ProgressModel>();
+        containerRegistry.RegisterDialog<ProgressModal>();
     }
 }

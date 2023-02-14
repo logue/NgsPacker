@@ -7,19 +7,18 @@
 
 using System.Windows.Controls;
 
-namespace NgsPacker.Views
+namespace NgsPacker.Views;
+
+/// <summary>
+///     Interaction logic for SettingsPage
+/// </summary>
+public partial class SettingsPage : Page
 {
     /// <summary>
-    /// Interaction logic for SettingsPage
+    ///     Initializes a new instance of the <see cref="SettingsPage" /> class.
     /// </summary>
-    public partial class SettingsPage : Page
+    public SettingsPage()
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SettingsPage"/> class.
-        /// </summary>
-        public SettingsPage()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

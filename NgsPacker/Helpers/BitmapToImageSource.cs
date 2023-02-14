@@ -4,6 +4,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 // </copyright>
 // -----------------------------------------------------------------------
+
 using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
@@ -12,39 +13,38 @@ using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
-namespace NgsPacker.Helper
+namespace NgsPacker.Helpers;
+
+/// <summary>
+///     ビットマップをImageSourceにするクラス.
+/// </summary>
+public class BitmapToImageSource
 {
     /// <summary>
-    /// ビットマップをImageSourceにするクラス.
+    ///     BitmapをImageSourceに変換する処理.
     /// </summary>
-    public class BitmapToImageSource
+    /// <param name="bmp">ビットマップ型</param>
+    /// <returns>イメージソース型</returns>
+    public static ImageSource Convert(Bitmap bmp)
     {
-        /// <summary>
-        /// BitmapをImageSourceに変換する処理.
-        /// </summary>
-        /// <param name="bmp">ビットマップ型</param>
-        /// <returns>イメージソース型</returns>
-        public static ImageSource Convert(Bitmap bmp)
+        IntPtr handle = bmp.GetHbitmap();
+        try
         {
-            IntPtr handle = bmp.GetHbitmap();
-            try
-            {
-                return Imaging.CreateBitmapSourceFromHBitmap(handle, IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
-            }
-            finally
-            {
-                _ = DeleteObject(handle);
-            }
+            return Imaging.CreateBitmapSourceFromHBitmap(handle, IntPtr.Zero, Int32Rect.Empty,
+                BitmapSizeOptions.FromEmptyOptions());
         }
-#pragma warning disable SA1305
-        /// <summary>
-        /// The DeleteObject.
-        /// </summary>
-        /// <param name="hObject">The hObject<see cref="IntPtr"/>.</param>
-        /// <returns>The <see cref="bool"/>.</returns>
-        [DllImport("gdi32.dll", EntryPoint = "DeleteObject")]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        private static extern bool DeleteObject([In] IntPtr hObject);
-#pragma warning restore SA1305
+        finally
+        {
+            _ = DeleteObject(handle);
+        }
     }
+
+    /// <summary>
+    ///     ビットマップオブジェクトの削除
+    /// </summary>
+    /// <param name="hObject">The hObject<see cref="IntPtr" />.</param>
+    /// <returns>The <see cref="bool" />.</returns>
+    [DllImport("gdi32.dll", EntryPoint = "DeleteObject")]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static extern bool DeleteObject([In] IntPtr hObject);
 }

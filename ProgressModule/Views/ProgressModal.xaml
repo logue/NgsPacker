@@ -1,22 +1,22 @@
-<UserControl x:Class="ProgressModule.Views.ProgressModal"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:ProgressModule.Views"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:ui="http://schemas.modernwpf.com/2019"
-             xmlns:lex="http://wpflocalizeextension.codeplex.com"
-             lex:LocalizeDictionary.DesignCulture="en"
-             lex:ResxLocalizationProvider.DefaultAssembly="ProgressModule"
-             lex:ResxLocalizationProvider.DefaultDictionary="Resources"
-             mc:Ignorable="d" 
-             xmlns:prism="http://prismlibrary.com/"
-             prism:ViewModelLocator.AutoWireViewModel="True"
-             xmlns:viewModels="clr-namespace:ProgressModule.ViewModels"
-             d:DataContext="{d:DesignInstance viewModels:ProgressModalViewModel}">
+<UserControl
+    x:Class="ProgressModule.Views.ProgressModal"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:lex="http://wpflocalizeextension.codeplex.com"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:prism="http://prismlibrary.com/"
+    xmlns:ui="http://schemas.modernwpf.com/2019"
+    xmlns:viewModels="clr-namespace:ProgressModule.ViewModels"
+    d:DataContext="{d:DesignInstance viewModels:ProgressModalViewModel}"
+    lex:LocalizeDictionary.DesignCulture="en"
+    lex:ResxLocalizationProvider.DefaultAssembly="ProgressModule"
+    lex:ResxLocalizationProvider.DefaultDictionary="Resources"
+    prism:ViewModelLocator.AutoWireViewModel="True"
+    mc:Ignorable="d">
     <prism:Dialog.WindowStyle>
         <Style TargetType="ui:ContentDialog">
-            <Setter Property="Title" Value="{lex:Loc ProgressDialogText}"/>
+            <Setter Property="Title" Value="{lex:Loc ProgressDialogText}" />
         </Style>
     </prism:Dialog.WindowStyle>
     <Grid>
@@ -26,23 +26,23 @@
         </Grid.RowDefinitions>
         <StackPanel>
             <!--  プログレスバー  -->
-            <ui:ProgressBar Visibility="{Binding ProgressBarVisibility}" Margin="10,10,10,10" Value="{Binding Progress, Mode=OneWay}" />
-            <ui:ProgressRing Visibility="{Binding ProgressRingVisibility}"  />
-            <!--  進捗テキスト  -->
-            <TextBlock
+            <ui:ProgressBar
                 Margin="10,10,10,10"
-                Text="{Binding Message, Mode=OneWay}" />
+                Visibility="{Binding ProgressBarVisibility}"
+                Value="{Binding Progress, Mode=OneWay}" />
+            <ui:ProgressRing Visibility="{Binding ProgressRingVisibility}" />
+            <!--  進捗テキスト  -->
+            <TextBlock Margin="10,10,10,10" Text="{Binding Message, Mode=OneWay}" />
         </StackPanel>
         <StackPanel Grid.Row="1">
             <Button
-            Padding="10,5"
-            IsCancel="True"
-            Command="{Binding CancelCommand, Mode=OneTime}"
-            Style="{StaticResource ButtonRevealStyle}" HorizontalAlignment="Right">
+                Padding="10,5"
+                HorizontalAlignment="Right"
+                Command="{Binding CancelCommand, Mode=OneTime}"
+                IsCancel="True"
+                Style="{StaticResource ButtonRevealStyle}">
                 <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-                    <ui:FontIcon
-                    Margin="0,0,5,0"
-                    Glyph="&#xE711;" />
+                    <ui:FontIcon Margin="0,0,5,0" Glyph="&#xE711;" />
                     <TextBlock VerticalAlignment="Center" Text="{lex:Loc CancelText}" />
                 </StackPanel>
             </Button>

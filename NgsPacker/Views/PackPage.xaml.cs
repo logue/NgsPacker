@@ -7,19 +7,18 @@
 
 using System.Windows.Controls;
 
-namespace NgsPacker.Views
+namespace NgsPacker.Views;
+
+/// <summary>
+///     Interaction logic for HomePage
+/// </summary>
+public partial class PackPage : Page
 {
     /// <summary>
-    /// Interaction logic for HomePage
+    ///     Initializes a new instance of the <see cref="PackPage" /> class.
     /// </summary>
-    public partial class PackPage : Page
+    public PackPage()
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="PackPage"/> class.
-        /// </summary>
-        public PackPage()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

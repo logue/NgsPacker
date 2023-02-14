@@ -5,352 +5,356 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.IO;
-using System.Reactive.Disposables;
-using System.Windows;
 using Microsoft.Toolkit.Uwp.Notifications;
 using NgsPacker.Helpers;
 using NgsPacker.Interfaces;
+using NgsPacker.Properties;
 using NgsPacker.Views;
 using Prism.Commands;
 using Prism.Mvvm;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.IO;
+using System.Reactive.Disposables;
+using System.Windows.Forms;
+using DataFormats = System.Windows.DataFormats;
+using DragDropEffects = System.Windows.DragDropEffects;
+using DragEventArgs = System.Windows.DragEventArgs;
+using MessageBox = ModernWpf.MessageBox;
 
-namespace NgsPacker.ViewModels
+namespace NgsPacker.ViewModels;
+
+/// <summary>
+///     アンパックページビューモデル
+/// </summary>
+public class UnpackPageViewModel : BindableBase, INotifyPropertyChanged
 {
     /// <summary>
-    /// アンパックページビューモデル
+    ///     多言語化サービス
     /// </summary>
-    public class UnpackPageViewModel : BindableBase, INotifyPropertyChanged
+    private readonly ILocalizeService localizeService;
+
+    /// <summary>
+    ///     Zamboniサービス
+    /// </summary>
+    private readonly IZamboniService zamboniService;
+
+    /// <summary>
+    ///     Initializes a new instance of the <see cref="UnpackPageViewModel" /> class.
+    /// </summary>
+    /// <param name="localizeService">多言語化サービス</param>
+    /// <param name="zamboniService">Zamboniサービス</param>
+    public UnpackPageViewModel(ILocalizeService localizeService, IZamboniService zamboniService)
     {
-        /// <summary>
-        /// 多言語化サービス
-        /// </summary>
-        private readonly ILocalizeService localizeService;
+        UnpackCommand = new DelegateCommand(ExecuteUnpackCommand);
+        ExportFileListCommand = new DelegateCommand(ExecuteExportFileListCommand);
+        UnpackByFileListCommand = new DelegateCommand(ExecuteUnpackByFileListCommand);
 
-        /// <summary>
-        /// Zamboniサービス
-        /// </summary>
-        private readonly IZamboniService zamboniService;
+        // ドラッグアンドドロップハンドラ
+        _ = PreviewDragOverCommand.Subscribe(OnPreviewDragOver).AddTo(Disposable);
+        _ = DropCommand.Subscribe(OnDrop).AddTo(Disposable);
 
-        /// <summary>
-        /// アンパック
-        /// </summary>
-        public DelegateCommand UnpackCommand { get; }
+        // サービスのインジェクション
+        this.localizeService = localizeService;
+        this.zamboniService = zamboniService;
+    }
 
-        /// <summary>
-        /// アンパック時にグループによってディレクトリを分ける
-        /// </summary>
-        public bool IsSeparateByGroup { get; set; }
+    /// <summary>
+    ///     アンパック
+    /// </summary>
+    public DelegateCommand UnpackCommand { get; }
 
-        /// <summary>
-        /// ファイル一覧を出力
-        /// </summary>
-        public DelegateCommand ExportFileListCommand { get; }
+    /// <summary>
+    ///     アンパック時にグループによってディレクトリを分ける
+    /// </summary>
+    public bool IsSeparateByGroup { get; set; }
 
-        /// <summary>
-        /// ファイル一覧を出力
-        /// </summary>
-        public DelegateCommand UnpackByFileListCommand { get; }
+    /// <summary>
+    ///     ファイル一覧を出力
+    /// </summary>
+    public DelegateCommand ExportFileListCommand { get; }
 
-        /// <summary>
-        /// 表示するイメージのファイル名.
-        /// </summary>
-        public ReactivePropertySlim<string> ViewImage { get; } = new ReactivePropertySlim<string>();
+    /// <summary>
+    ///     ファイル一覧を出力
+    /// </summary>
+    public DelegateCommand UnpackByFileListCommand { get; }
 
-        /// <summary>
-        /// PreviewDragOverイベントのコマンド.
-        /// </summary>
-        public ReactiveCommand<DragEventArgs> PreviewDragOverCommand { get; } = new ReactiveCommand<DragEventArgs>();
+    /// <summary>
+    ///     表示するイメージのファイル名.
+    /// </summary>
+    public ReactivePropertySlim<string> ViewImage { get; } = new();
 
-        /// <summary>
-        /// Dropイベントのコマンド.
-        /// </summary>
-        public ReactiveCommand<DragEventArgs> DropCommand { get; } = new ReactiveCommand<DragEventArgs>();
+    /// <summary>
+    ///     PreviewDragOverイベントのコマンド.
+    /// </summary>
+    public ReactiveCommand<DragEventArgs> PreviewDragOverCommand { get; } = new();
 
-        /// <summary>
-        /// Disposeが必要な処理をまとめてやる.
-        /// </summary>
-        private CompositeDisposable Disposable { get; } = new CompositeDisposable();
+    /// <summary>
+    ///     Dropイベントのコマンド.
+    /// </summary>
+    public ReactiveCommand<DragEventArgs> DropCommand { get; } = new();
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="UnpackPageViewModel"/> class.
-        /// コンストラクタ
-        /// </summary>
-        /// <param name="localizeService">多言語化サービス</param>
-        /// <param name="zamboniService">Zamboniサービス</param>
-        public UnpackPageViewModel(ILocalizeService localizeService, IZamboniService zamboniService)
+    /// <summary>
+    ///     Disposeが必要な処理をまとめてやる.
+    /// </summary>
+    private CompositeDisposable Disposable { get; } = new();
+
+    /// <summary>
+    ///     アンパック処理
+    /// </summary>
+    private void ExecuteUnpackCommand()
+    {
+        // ファイルを開くダイアログ
+        using OpenFileDialog openFileDialog = new()
         {
-            UnpackCommand = new DelegateCommand(ExecuteUnpackCommand);
-            ExportFileListCommand = new DelegateCommand(ExecuteExportFileListCommand);
-            UnpackByFileListCommand = new DelegateCommand(ExecuteUnpackByFileListCommand);
+            Title = localizeService.GetLocalizedString("UnpackDialogText"),
+            InitialDirectory = Settings.Default.Pso2BinPath
+        };
 
-            // ドラッグアンドドロップハンドラ
-            _ = PreviewDragOverCommand.Subscribe(OnPreviewDragOver).AddTo(Disposable);
-            _ = DropCommand.Subscribe(OnDrop).AddTo(Disposable);
-
-            // サービスのインジェクション
-            this.localizeService = localizeService;
-            this.zamboniService = zamboniService;
+        // ダイアログを表示
+        DialogResult dialogResult = openFileDialog.ShowDialog();
+        if (dialogResult != DialogResult.OK)
+        {
+            // キャンセルされたので終了
+            return;
         }
 
-        /// <summary>
-        /// アンパック処理
-        /// </summary>
-        private void ExecuteUnpackCommand()
+        // フォルダ選択ダイアログ
+        FolderPicker picker = new()
         {
-            // ファイルを開くダイアログ
-            using System.Windows.Forms.OpenFileDialog openFileDialog = new ()
-            {
-                Title = localizeService.GetLocalizedString("UnpackDialogText"),
-                InitialDirectory = Properties.Settings.Default.Pso2BinPath,
-            };
+            Title = localizeService.GetLocalizedString("UnpackOutputPathText"),
+            InputPath = Environment.GetFolderPath(Environment.SpecialFolder.Personal)
+        };
 
-            // ダイアログを表示
-            System.Windows.Forms.DialogResult dialogResult = openFileDialog.ShowDialog();
-            if (dialogResult != System.Windows.Forms.DialogResult.OK)
-            {
-                // キャンセルされたので終了
-                return;
-            }
-
-            // フォルダ選択ダイアログ
-            FolderPicker picker = new ()
-            {
-                Title = localizeService.GetLocalizedString("UnpackOutputPathText"),
-                InputPath = Environment.GetFolderPath(Environment.SpecialFolder.Personal),
-            };
-
-            // 出力先ファイルダイアログを表示
-            if (picker.ShowDialog() != true)
-            {
-                return;
-            }
-
-            // アンパック
-            zamboniService.Unpack(openFileDialog.FileName, picker.ResultPath, true, IsSeparateByGroup);
-
-            // 完了通知
-            if (Properties.Settings.Default.NotifyComplete)
-            {
-                // トースト通知
-                new ToastContentBuilder()
-                    .AddText(localizeService.GetLocalizedString("UnpackText"))
-                    .AddText(localizeService.GetLocalizedString("CompleteText"))
-                    .Show();
-            }
-            else
-            {
-                _ = ModernWpf.MessageBox.Show(
-                    localizeService.GetLocalizedString("UnpackText"), localizeService.GetLocalizedString("CompleteText"));
-            }
+        // 出力先ファイルダイアログを表示
+        if (picker.ShowDialog() != true)
+        {
+            return;
         }
 
-        /// <summary>
-        /// ファイル一覧を出力
-        /// </summary>
-        private async void ExecuteExportFileListCommand()
+        // アンパック
+        zamboniService.Unpack(openFileDialog.FileName, picker.ResultPath, true, IsSeparateByGroup);
+
+        // 完了通知
+        if (Settings.Default.NotifyComplete)
         {
-            // フォルダ選択ダイアログ
-            FolderPicker picker = new ()
-            {
-                InputPath = Properties.Settings.Default.Pso2BinPath,
-            };
+            // トースト通知
+            new ToastContentBuilder()
+                .AddText(localizeService.GetLocalizedString("UnpackText"))
+                .AddText(localizeService.GetLocalizedString("CompleteText"))
+                .Show();
+        }
+        else
+        {
+            _ = MessageBox.Show(
+                localizeService.GetLocalizedString("UnpackText"), localizeService.GetLocalizedString("CompleteText"));
+        }
+    }
 
-            // 出力先ファイルダイアログを表示
-            if (picker.ShowDialog() != true)
-            {
-                return;
-            }
+    /// <summary>
+    ///     ファイル一覧を出力
+    /// </summary>
+    private async void ExecuteExportFileListCommand()
+    {
+        // フォルダ選択ダイアログ
+        FolderPicker picker = new() { InputPath = Settings.Default.Pso2BinPath };
 
-            // ファイル保存ダイアログ
-            using System.Windows.Forms.SaveFileDialog saveFileDialog = new ()
-            {
-                Title = localizeService.GetLocalizedString("SaveAsDialogText"),
-                InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal),
-                FileName = "list.csv",
-            };
-
-            // ダイアログを表示
-            System.Windows.Forms.DialogResult dialogResult = saveFileDialog.ShowDialog();
-            if (dialogResult != System.Windows.Forms.DialogResult.OK)
-            {
-                // キャンセルされたので終了
-                return;
-            }
-
-            // 出力処理
-            List<string> list = new (await zamboniService.FileList(picker.ResultPath));
-            await File.WriteAllTextAsync(saveFileDialog.FileName, string.Join("\r\n", list));
-
-            // 完了通知
-            if (Properties.Settings.Default.NotifyComplete)
-            {
-                // トースト通知
-                new ToastContentBuilder()
-                    .AddText(localizeService.GetLocalizedString("ExportFileListText"))
-                    .AddText(localizeService.GetLocalizedString("CompleteText"))
-                    .Show();
-            }
-            else
-            {
-                _ = ModernWpf.MessageBox.Show(
-                    localizeService.GetLocalizedString("ExportFileListText"), localizeService.GetLocalizedString("CompleteText"));
-            }
+        // 出力先ファイルダイアログを表示
+        if (picker.ShowDialog() != true)
+        {
+            return;
         }
 
-        /// <summary>
-        /// ファイルリストからアンパックする
-        /// </summary>
-        private async void ExecuteUnpackByFileListCommand()
+        // ファイル保存ダイアログ
+        using SaveFileDialog saveFileDialog = new()
         {
-            // ファイルを開くダイアログ
-            using System.Windows.Forms.OpenFileDialog openFileDialog = new ()
-            {
-                Title = localizeService.GetLocalizedString("UnpackByFileListDialogText"),
-                InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal),
-            };
+            Title = localizeService.GetLocalizedString("SaveAsDialogText"),
+            InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal),
+            FileName = "list.csv"
+        };
 
-            // ダイアログを表示
-            System.Windows.Forms.DialogResult dialogResult = openFileDialog.ShowDialog();
-            if (dialogResult != System.Windows.Forms.DialogResult.OK)
-            {
-                // キャンセルされたので終了
-                return;
-            }
-
-            // フォルダ選択ダイアログ
-            FolderPicker picker = new ()
-            {
-                Title = localizeService.GetLocalizedString("UnpackDirectoryDialogText"),
-                InputPath = Properties.Settings.Default.Pso2BinPath,
-            };
-
-            // 出力先ファイルダイアログを表示
-            if (picker.ShowDialog() != true)
-            {
-                return;
-            }
-
-            // ファイル一覧を読み込む
-            List<string> fileList = new (await File.ReadAllLinesAsync(openFileDialog.FileName));
-
-            // 出力先ディレクトリ
-            string outputPath = Path.GetDirectoryName(openFileDialog.FileName) + Path.DirectorySeparatorChar + Path.GetFileNameWithoutExtension(openFileDialog.FileName);
-
-            if (!Directory.Exists(outputPath))
-            {
-                _ = Directory.CreateDirectory(outputPath);
-            }
-
-            ProgressDialog progressDialog = new ();
-            _ = progressDialog.ShowAsync();
-
-            fileList.ForEach(file =>
-            {
-                string path = picker.ResultPath + Path.DirectorySeparatorChar + file;
-
-                if (File.Exists(path))
-                {
-                    // アンパック
-                    zamboniService.Unpack(path, outputPath, false);
-                }
-            });
-
-            progressDialog.Hide();
-
-            // 完了通知
-            if (Properties.Settings.Default.NotifyComplete)
-            {
-                // トースト通知
-                new ToastContentBuilder()
-                    .AddText(localizeService.GetLocalizedString("UnpackByFileListText"))
-                    .AddText(localizeService.GetLocalizedString("CompleteText"))
-                    .Show();
-            }
-            else
-            {
-                _ = ModernWpf.MessageBox.Show(
-                    localizeService.GetLocalizedString("UnpackByFileListText"), localizeService.GetLocalizedString("CompleteText"));
-            }
+        // ダイアログを表示
+        DialogResult dialogResult = saveFileDialog.ShowDialog();
+        if (dialogResult != DialogResult.OK)
+        {
+            // キャンセルされたので終了
+            return;
         }
 
-        /// <summary>
-        /// ImageのPreviewDragOverイベントに対する処理.
-        /// </summary>
-        /// <param name="e">.</param>
-        private void OnPreviewDragOver(DragEventArgs e)
-        {
-            // マウスカーソルをコピーにする。
-            e.Effects = DragDropEffects.Copy;
+        // 出力処理
+        List<string> list = new(await zamboniService.FileList(picker.ResultPath));
+        await File.WriteAllTextAsync(saveFileDialog.FileName, string.Join("\r\n", list));
 
-            // ドラッグされてきたものがFileDrop形式の場合だけ、このイベントを処理済みにする。
-            e.Handled = e.Data.GetDataPresent(DataFormats.FileDrop);
+        // 完了通知
+        if (Settings.Default.NotifyComplete)
+        {
+            // トースト通知
+            new ToastContentBuilder()
+                .AddText(localizeService.GetLocalizedString("ExportFileListText"))
+                .AddText(localizeService.GetLocalizedString("CompleteText"))
+                .Show();
+        }
+        else
+        {
+            _ = MessageBox.Show(
+                localizeService.GetLocalizedString("ExportFileListText"),
+                localizeService.GetLocalizedString("CompleteText"));
+        }
+    }
+
+    /// <summary>
+    ///     ファイルリストからアンパックする
+    /// </summary>
+    private async void ExecuteUnpackByFileListCommand()
+    {
+        // ファイルを開くダイアログ
+        using OpenFileDialog openFileDialog = new()
+        {
+            Title = localizeService.GetLocalizedString("UnpackByFileListDialogText"),
+            InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal)
+        };
+
+        // ダイアログを表示
+        DialogResult dialogResult = openFileDialog.ShowDialog();
+        if (dialogResult != DialogResult.OK)
+        {
+            // キャンセルされたので終了
+            return;
         }
 
-        /// <summary>
-        /// ImageのDropイベントに対する処理.
-        /// </summary>
-        /// <param name="e">.</param>
-        private void OnDrop(DragEventArgs e)
+        // フォルダ選択ダイアログ
+        FolderPicker picker = new()
         {
-            // フォルダ選択ダイアログ
-            FolderPicker picker = new ()
-            {
-                Title = localizeService.GetLocalizedString("UnpackDirectoryDialogText"),
-                InputPath = Properties.Settings.Default.Pso2BinPath,
-            };
+            Title = localizeService.GetLocalizedString("UnpackDirectoryDialogText"),
+            InputPath = Settings.Default.Pso2BinPath
+        };
 
-            // 出力先ファイルダイアログを表示
-            if (picker.ShowDialog() != true)
+        // 出力先ファイルダイアログを表示
+        if (picker.ShowDialog() != true)
+        {
+            return;
+        }
+
+        // ファイル一覧を読み込む
+        List<string> fileList = new(await File.ReadAllLinesAsync(openFileDialog.FileName));
+
+        // 出力先ディレクトリ
+        string outputPath = Path.GetDirectoryName(openFileDialog.FileName) + Path.DirectorySeparatorChar +
+                            Path.GetFileNameWithoutExtension(openFileDialog.FileName);
+
+        if (!Directory.Exists(outputPath))
+        {
+            _ = Directory.CreateDirectory(outputPath);
+        }
+
+        ProgressDialog progressDialog = new();
+        _ = progressDialog.ShowAsync();
+
+        fileList.ForEach(file =>
+        {
+            string path = picker.ResultPath + Path.DirectorySeparatorChar + file;
+
+            if (File.Exists(path))
             {
-                return;
+                // アンパック
+                zamboniService.Unpack(path, outputPath, false);
             }
+        });
 
-            // ドロップされたものがFileDrop形式の場合は、各ファイルのパス文字列を文字列配列に格納する。
-            List<string> fileList = new ((string[])e.Data.GetData(DataFormats.FileDrop));
+        progressDialog.Hide();
 
-            // 出力先ディレクトリ
-            string outputPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+        // 完了通知
+        if (Settings.Default.NotifyComplete)
+        {
+            // トースト通知
+            new ToastContentBuilder()
+                .AddText(localizeService.GetLocalizedString("UnpackByFileListText"))
+                .AddText(localizeService.GetLocalizedString("CompleteText"))
+                .Show();
+        }
+        else
+        {
+            _ = MessageBox.Show(
+                localizeService.GetLocalizedString("UnpackByFileListText"),
+                localizeService.GetLocalizedString("CompleteText"));
+        }
+    }
 
-            if (!Directory.Exists(outputPath))
+    /// <summary>
+    ///     ImageのPreviewDragOverイベントに対する処理.
+    /// </summary>
+    /// <param name="e">.</param>
+    private void OnPreviewDragOver(DragEventArgs e)
+    {
+        // マウスカーソルをコピーにする。
+        e.Effects = DragDropEffects.Copy;
+
+        // ドラッグされてきたものがFileDrop形式の場合だけ、このイベントを処理済みにする。
+        e.Handled = e.Data.GetDataPresent(DataFormats.FileDrop);
+    }
+
+    /// <summary>
+    ///     ImageのDropイベントに対する処理.
+    /// </summary>
+    /// <param name="e">.</param>
+    private void OnDrop(DragEventArgs e)
+    {
+        // フォルダ選択ダイアログ
+        FolderPicker picker = new()
+        {
+            Title = localizeService.GetLocalizedString("UnpackDirectoryDialogText"),
+            InputPath = Settings.Default.Pso2BinPath
+        };
+
+        // 出力先ファイルダイアログを表示
+        if (picker.ShowDialog() != true)
+        {
+            return;
+        }
+
+        // ドロップされたものがFileDrop形式の場合は、各ファイルのパス文字列を文字列配列に格納する。
+        List<string> fileList = new((string[])e.Data.GetData(DataFormats.FileDrop));
+
+        // 出力先ディレクトリ
+        string outputPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+
+        if (!Directory.Exists(outputPath))
+        {
+            _ = Directory.CreateDirectory(outputPath);
+        }
+
+        ProgressDialog progressDialog = new();
+        _ = progressDialog.ShowAsync();
+
+        fileList.ForEach(file =>
+        {
+            string path = picker.ResultPath + Path.DirectorySeparatorChar + file;
+            if (File.Exists(path))
             {
-                _ = Directory.CreateDirectory(outputPath);
+                // アンパック
+                zamboniService.Unpack(path, outputPath, false);
             }
+        });
 
-            ProgressDialog progressDialog = new ();
-            _ = progressDialog.ShowAsync();
+        progressDialog.Hide();
 
-            fileList.ForEach(file =>
-            {
-                string path = picker.ResultPath + Path.DirectorySeparatorChar + file;
-                if (File.Exists(path))
-                {
-                    // アンパック
-                    zamboniService.Unpack(path, outputPath, false);
-                }
-            });
-
-            progressDialog.Hide();
-
-            // 完了通知
-            if (Properties.Settings.Default.NotifyComplete)
-            {
-                // トースト通知
-                new ToastContentBuilder()
-                    .AddText(localizeService.GetLocalizedString("UnpackByFileListText"))
-                    .AddText(localizeService.GetLocalizedString("CompleteText"))
-                    .Show();
-            }
-            else
-            {
-                _ = ModernWpf.MessageBox.Show(
-                    localizeService.GetLocalizedString("UnpackByFileListText"), localizeService.GetLocalizedString("CompleteText"));
-            }
+        // 完了通知
+        if (Settings.Default.NotifyComplete)
+        {
+            // トースト通知
+            new ToastContentBuilder()
+                .AddText(localizeService.GetLocalizedString("UnpackByFileListText"))
+                .AddText(localizeService.GetLocalizedString("CompleteText"))
+                .Show();
+        }
+        else
+        {
+            _ = MessageBox.Show(
+                localizeService.GetLocalizedString("UnpackByFileListText"),
+                localizeService.GetLocalizedString("CompleteText"));
         }
     }
 }

@@ -8,54 +8,53 @@
 using Prism.Events;
 using Prism.Mvvm;
 
-namespace ProgressModule.Models
+namespace ProgressModule.Models;
+
+/// <summary>
+///     進捗モデル
+/// </summary>
+public class ProgressModel : BindableBase
 {
     /// <summary>
-    /// 進捗モデル
+    ///     Initializes a new instance of the <see cref="ProgressModel" /> class.
+    ///     コンストラクタ
     /// </summary>
-    public class ProgressModel : BindableBase
+    /// <param name="eventAggregator">イベント</param>
+    public ProgressModel(IEventAggregator eventAggregator)
     {
-        /// <summary>
-        /// タイトル
-        /// </summary>
-        public string Title { get; set; }
+        Progress = 0;
 
-        /// <summary>
-        ///  メッセージ
-        /// </summary>
-        public string Message { get; set; }
-
-        /// <summary>
-        /// 進捗
-        /// </summary>
-        public int Progress { get; set; }
-
-        /// <summary>
-        /// 中間状態（リンクを表示）
-        /// </summary>
-        public bool IsIntermediate { get; set; }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ProgressModel"/> class.
-        /// コンストラクタ
-        /// </summary>
-        /// <param name="eventAggregator">イベント</param>
-        public ProgressModel(IEventAggregator eventAggregator)
-        {
-            Progress = 0;
-
-            _ = eventAggregator
-                .GetEvent<SetTitle>()
-                .Subscribe(x => Title = x);
-            _ = eventAggregator
-               .GetEvent<SetMessage>()
-               .Subscribe(x => Message = x);
-            _ = eventAggregator
-              .GetEvent<SetIntermediate>()
-              .Subscribe(x => IsIntermediate = x);
-            _ = eventAggregator
-                .GetEvent<SetProgress>()
-                .Subscribe(x => Progress = x);
-        }
+        _ = eventAggregator
+            .GetEvent<SetTitle>()
+            .Subscribe(x => Title = x);
+        _ = eventAggregator
+            .GetEvent<SetMessage>()
+            .Subscribe(x => Message = x);
+        _ = eventAggregator
+            .GetEvent<SetIntermediate>()
+            .Subscribe(x => IsIntermediate = x);
+        _ = eventAggregator
+            .GetEvent<SetProgress>()
+            .Subscribe(x => Progress = x);
     }
+
+    /// <summary>
+    ///     タイトル
+    /// </summary>
+    public string Title { get; set; }
+
+    /// <summary>
+    ///     メッセージ
+    /// </summary>
+    public string Message { get; set; }
+
+    /// <summary>
+    ///     進捗
+    /// </summary>
+    public int Progress { get; set; }
+
+    /// <summary>
+    ///     中間状態（リンクを表示）
+    /// </summary>
+    public bool IsIntermediate { get; set; }
 }

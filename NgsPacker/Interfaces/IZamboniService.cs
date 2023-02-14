@@ -5,57 +5,73 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using NgsPacker.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Zamboni;
 
-namespace NgsPacker.Interfaces
+namespace NgsPacker.Interfaces;
+
+/// <summary>
+///     Zamboniサービスのインターフェース
+/// </summary>
+public interface IZamboniService
 {
     /// <summary>
-    /// Zamboniサービスのインターフェース
+    ///     指定されたディレクトリをパックする
     /// </summary>
-    public interface IZamboniService
-    {
-        /// <summary>
-        /// 指定されたディレクトリをパックする
-        /// </summary>
-        /// <param name="inputPath">パックしたいファイルのディレクトリ</param>
-        /// <param name="recursive">サブディレクトリを再帰的に含めるか</param>
-        /// <param name="compress">圧縮する</param>
-        /// <param name="forceUnencrypted">暗号化する（非推奨）</param>
-        /// <returns>パックしたファイルのバイナリ</returns>
-        public Task<byte[]> Pack(string inputPath, bool recursive = true, bool compress = false, bool forceUnencrypted = false);
+    /// <param name="inputPath">パックしたいファイルのディレクトリ</param>
+    /// <param name="recursive">サブディレクトリを再帰的に含めるか</param>
+    /// <param name="compress">圧縮する</param>
+    /// <param name="forceUnencrypted">暗号化する（非推奨）</param>
+    /// <returns>パックしたファイルのバイナリ</returns>
+    public Task<byte[]> Pack(string inputPath, bool recursive = true, bool compress = false,
+        bool forceUnencrypted = false);
 
-        /// <summary>
-        /// 指定されたファイルをアンパックする
-        /// </summary>
-        /// <param name="inputPath">入力ファイルのパス</param>
-        /// <param name="outputPath">出力先のパス</param>
-        /// <param name="createSubDirectory">サブディレクトリを作成する</param>
-        /// <param name="separate">グループ1と2で分ける</param>
-        public void Unpack(string inputPath, string outputPath = null, bool createSubDirectory = true, bool separate = false);
+    /// <summary>
+    ///     指定されたファイルをアンパックする
+    /// </summary>
+    /// <param name="inputPath">入力ファイルのパス</param>
+    /// <param name="outputPath">出力先のパス</param>
+    /// <param name="createSubDirectory">サブディレクトリを作成する</param>
+    /// <param name="separate">グループ1と2で分ける</param>
+    public void Unpack(string inputPath, string outputPath = null, bool createSubDirectory = true,
+        bool separate = false);
 
-        /// <summary>
-        /// ファイル一覧を取得
-        /// </summary>
-        /// <param name="inputPath">解析するdataディレクトリ</param>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public Task<List<string>> FileList(string inputPath);
+    /// <summary>
+    ///     ファイル一覧を取得
+    /// </summary>
+    /// <param name="inputPath">解析するdataディレクトリ</param>
+    /// <returns>A <see cref="Task" /> representing the asynchronous operation.</returns>
+    public Task<List<string>> FileList(string inputPath);
 
-        /// <summary>
-        /// Iceファイルを読み込む.
-        /// </summary>
-        /// <param name="inputPath">Iceファイルへのパス</param>
-        /// <returns>Iceファイルのオブジェクト</returns>
-        /// <exception cref="ZamboniException">パースできなかった場合</exception>
-        public IceFile LoadIceFile(string inputPath);
+    /// <summary>
+    ///     Iceファイルを読み込む.
+    /// </summary>
+    /// <param name="inputPath">Iceファイルへのパス</param>
+    /// <returns>Iceファイルのオブジェクト</returns>
+    /// <exception cref="ZamboniException">パースできなかった場合</exception>
+    public IceFile LoadIceFile(string inputPath);
 
-        /// <summary>
-        /// Iceファイルを読み込む（非同期版）.
-        /// </summary>
-        /// <param name="inputPath">Iceファイルへのパス</param>
-        /// <returns>Iceファイルのオブジェクト</returns>
-        /// <exception cref="ZamboniException">パースできなかった場合</exception>
-        public Task<IceFile> LoadIceFileAsync(string inputPath);
-    }
+    /// <summary>
+    ///     Iceファイルを読み込む（非同期版）.
+    /// </summary>
+    /// <param name="inputPath">Iceファイルへのパス</param>
+    /// <returns>Iceファイルのオブジェクト</returns>
+    /// <exception cref="ZamboniException">パースできなかった場合</exception>
+    public Task<IceFile> LoadIceFileAsync(string inputPath);
+
+    /// <summary>
+    ///     ファイルリストをIceEntryModelにする
+    /// </summary>
+    /// <param name="files">ファイル一覧</param>
+    /// <returns>IceEntryModel</returns>
+    public List<IceEntryModel> FileListToIce(string[] files);
+
+    /// <summary>
+    ///     ファイルリストをIceEntryModelにする（非同期）
+    /// </summary>
+    /// <param name="files">ファイル一覧</param>
+    /// <returns>IceEntryModel</returns>
+    public Task<List<IceEntryModel>> FileListToIceAsync(string[] files);
 }

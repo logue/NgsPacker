@@ -4,78 +4,66 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 // </copyright>
 // -----------------------------------------------------------------------
+
+using NgsPacker.Interfaces;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
-using NgsPacker.Interfaces;
 using WPFLocalizeExtension.Engine;
 using WPFLocalizeExtension.Extensions;
 
-namespace NgsPacker.Services
+namespace NgsPacker.Services;
+
+/// <summary>
+///     多言語化サービス
+/// </summary>
+public class LocalizeService : ILocalizeService
 {
     /// <summary>
-    /// 多言語化サービス.
+    ///     Initializes a new instance of the <see cref="LocalizeService" /> class.
     /// </summary>
-    public class LocalizeService : ILocalizeService
+    /// <param name="locale">The locale<see cref="string" />.</param>
+    public LocalizeService(string locale = null)
     {
-        /// <summary>
-        /// サポートされている言語.
-        /// </summary>
-        public IList<CultureInfo> SupportedLanguages { get; private set; }
+        locale ??= CultureInfo.CurrentCulture.ToString();
 
-        /// <summary>
-        /// 現在選択されている言語.
-        /// </summary>
-        public CultureInfo SelectedLanguage { get => LocalizeDictionary.Instance.Culture; set => SetLocale(value); }
+        Debug.WriteLine(CultureInfo.GetCultures(CultureTypes.AllCultures));
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="LocalizeService"/> class.
-        /// </summary>
-        /// <param name="locale">The locale<see cref="string"/>.</param>
-        public LocalizeService(string locale = null)
-        {
-            locale ??= CultureInfo.CurrentCulture.ToString();
-
-            System.Diagnostics.Debug.WriteLine(CultureInfo.GetCultures(CultureTypes.AllCultures));
-
-            SupportedLanguages = CultureInfo.GetCultures(CultureTypes.AllCultures).Where(
+        SupportedLanguages = CultureInfo.GetCultures(CultureTypes.AllCultures).Where(
                 c =>
-                    c.IetfLanguageTag.Equals("en-US", System.StringComparison.Ordinal) ||
-                    c.IetfLanguageTag.Equals("ja-JP", System.StringComparison.Ordinal))
-                .ToList();
-            SetLocale(locale);
-        }
+                    c.IetfLanguageTag.Equals("en-US", StringComparison.Ordinal) ||
+                    c.IetfLanguageTag.Equals("ja-JP", StringComparison.Ordinal))
+            .ToList();
+        SetLocale(locale);
+    }
 
-        /// <summary>
-        /// Set localization.
-        /// </summary>
-        /// <param name="locale">.</param>
-        public void SetLocale(string locale)
-        {
-            LocalizeDictionary.Instance.Culture = CultureInfo.GetCultureInfo(locale);
-        }
+    /// <inheritdoc />
+    public IList<CultureInfo> SupportedLanguages { get; }
 
-        /// <summary>
-        /// ロケールを設定
-        /// </summary>
-        /// <param name="culture">ロケール</param>
-        public void SetLocale(CultureInfo culture)
-        {
-            LocalizeDictionary.Instance.Culture = culture;
-        }
+    /// <inheritdoc />
+    public CultureInfo SelectedLanguage { get => LocalizeDictionary.Instance.Culture; set => SetLocale(value); }
 
-        /// <summary>
-        /// 翻訳
-        /// </summary>
-        /// <param name="key">翻訳キー</param>
-        /// <returns>翻訳されたテキストを取得</returns>
-        public string GetLocalizedString(string key)
-        {
+    /// <inheritdoc />
+    public void SetLocale(string locale)
+    {
+        LocalizeDictionary.Instance.Culture = CultureInfo.GetCultureInfo(locale);
+    }
+
+    /// <inheritdoc />
+    public void SetLocale(CultureInfo culture)
+    {
+        LocalizeDictionary.Instance.Culture = culture;
+    }
+
+    /// <inheritdoc />
+    public string GetLocalizedString(string key)
+    {
 #pragma warning disable SA1305
-            LocExtension locExtension = new (key);
-            _ = locExtension.ResolveLocalizedValue(out string uiString);
-            return uiString;
+        LocExtension locExtension = new(key);
+        _ = locExtension.ResolveLocalizedValue(out string uiString);
+        return uiString;
 #pragma warning restore SA1305
-        }
     }
 }

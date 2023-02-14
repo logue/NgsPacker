@@ -5,42 +5,41 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-namespace NgsPacker.Models
+namespace NgsPacker.Models;
+
+/// <summary>
+///     グループ列挙体
+/// </summary>
+public enum IceGroup
 {
     /// <summary>
-    /// Iceをやり取りするときのモデル
+    ///     グループ１のファイル
     /// </summary>
-    public class IceEntryModel
-    {
-        /// <summary>
-        /// ファイル名
-        /// </summary>
-        public string FileName { get; set; }
-
-        /// <summary>
-        /// データ
-        /// </summary>
-        public byte[] Content { get; set; }
-
-        /// <summary>
-        /// グループ
-        /// </summary>
-        public IceGroupEnum Group { get; set; }
-    }
+    Group1,
 
     /// <summary>
-    /// グループ
+    ///     グループ２のファイル
     /// </summary>
-    public enum IceGroupEnum
-    {
-        /// <summary>
-        /// グループ１のファイル
-        /// </summary>
-        GROUP1,
+    Group2
+}
 
-        /// <summary>
-        /// グループ２のファイル
-        /// </summary>
-        GROUP2,
-    }
+/// <summary>
+///     Iceファイルをやり取りするときの構造体モデル
+/// </summary>
+public class IceEntryModel
+{
+    /// <summary>
+    ///     ファイル名
+    /// </summary>
+    public string FileName { get; set; }
+
+    /// <summary>
+    ///     データ
+    /// </summary>
+    public byte[] Content { get; set; }
+
+    /// <summary>
+    ///     グループ
+    /// </summary>
+    public IceGroup Group { get; set; }
 }

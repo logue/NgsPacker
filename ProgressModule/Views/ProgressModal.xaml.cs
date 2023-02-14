@@ -7,16 +7,15 @@
 
 using System.Windows.Controls;
 
-namespace ProgressModule.Views
+namespace ProgressModule.Views;
+
+/// <summary>
+///     Interaction logic for ViewA.xaml
+/// </summary>
+public partial class ProgressModal : UserControl
 {
-    /// <summary>
-    /// Interaction logic for ViewA.xaml
-    /// </summary>
-    public partial class ProgressModal : UserControl
+    public ProgressModal()
     {
-        public ProgressModal()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

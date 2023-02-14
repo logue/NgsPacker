@@ -20,6 +20,7 @@
     prism:ViewModelLocator.AutoWireViewModel="True"
     ui:ThemeManager.IsThemeAware="True"
     ui:WindowHelper.UseModernWindowStyle="True"
+    Loaded="Window_Loaded"
     mc:Ignorable="d">
     <WindowChrome.WindowChrome>
         <WindowChrome

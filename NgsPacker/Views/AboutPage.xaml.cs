@@ -7,19 +7,18 @@
 
 using System.Windows.Controls;
 
-namespace NgsPacker.Views
+namespace NgsPacker.Views;
+
+/// <summary>
+///     Interaction logic for PrismUserControl1
+/// </summary>
+public partial class AboutPage : Page
 {
     /// <summary>
-    /// Interaction logic for PrismUserControl1
+    ///     Initializes a new instance of the <see cref="AboutPage" /> class.
     /// </summary>
-    public partial class AboutPage : Page
+    public AboutPage()
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="AboutPage"/> class.
-        /// </summary>
-        public AboutPage()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

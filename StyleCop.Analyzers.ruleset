@@ -2,18 +2,21 @@
 <RuleSet Name="Rules for StyleCop.Analyzers internal-only projects" Description="Code analysis rules for StyleCop.Analyzers internal-only projects." ToolsVersion="17.0">
   <Include Path="stylecop.analyzers.ruleset" Action="Default" />
   <Rules AnalyzerId="StyleCop.Analyzers" RuleNamespace="StyleCop.Analyzers">
-    <Rule Id="SA1101" Action="None" />
-    <Rule Id="SA1200" Action="None" />
-    <Rule Id="SA1201" Action="None" />
-    <Rule Id="SA1215" Action="None" />
-    <Rule Id="SA1305" Action="Warning" />
-    <Rule Id="SA1623" Action="None" />
-    <Rule Id="SA1628" Action="Warning" />
-    <Rule Id="SA1629" Action="None" />
-    <Rule Id="SA1630" Action="Warning" />
-    <Rule Id="SA1631" Action="Warning" />
-    <Rule Id="SA1632" Action="Warning" />
-    <Rule Id="SA1644" Action="Error" />
-    <Rule Id="SA1652" Action="None" />
+    <Rule Id="SA1000" Action="Hidden" />
+    <Rule Id="SA1101" Action="Hidden" />
+    <Rule Id="SA1117" Action="Hidden" />
+    <Rule Id="SA1200" Action="Hidden" />
+    <Rule Id="SA1201" Action="Hidden" />
+    <Rule Id="SA1208" Action="Hidden" />
+    <Rule Id="SA1305" Action="Hidden" />
+    <Rule Id="SA1412" Action="Hidden" />
+    <Rule Id="SA1413" Action="Hidden" />
+    <Rule Id="SA1609" Action="Hidden" />
+    <Rule Id="SA1623" Action="Hidden" />
+    <Rule Id="SA1629" Action="Hidden" />
+    <Rule Id="SA1639" Action="Hidden" />
+    <Rule Id="SX1101" Action="Hidden" />
+    <Rule Id="SX1309" Action="Hidden" />
+    <Rule Id="SX1309S" Action="Hidden" />
   </Rules>
 </RuleSet>

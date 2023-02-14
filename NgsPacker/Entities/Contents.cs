@@ -8,35 +8,33 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace NgsPacker.Entities
+namespace NgsPacker.Entities;
+
+/// <summary>
+///     ファイル内容物のエンティティ
+/// </summary>
+public class Contents
 {
     /// <summary>
-    /// ファイル内容物のエンティティ
+    ///     ID
     /// </summary>
-    public class Contents
-    {
-        /// <summary>
-        /// ID
-        /// </summary>
-        [Key]
-        public Guid Id { get; set; }
+    [Key]
+    public Guid Id { get; set; }
 
-        /// <summary>
-        /// IceファイルのID
-        /// </summary>
-        [Required]
-        public string FileId { get; set; }
+    /// <summary>
+    ///     IceファイルのID
+    /// </summary>
+    public string IceFileId { get; set; }
 
-        /// <summary>
-        /// 内容物のファイル名
-        /// </summary>
-        [Required]
-        public string Name { get; set; }
+    /// <summary>
+    ///     内容物のファイル名
+    /// </summary>
+    [Required]
+    public string Name { get; set; }
 
-        /// <summary>
-        /// グループ
-        /// </summary>
-        [Required]
-        public int Group { get; set; }
-    }
+    /// <summary>
+    ///     グループ
+    /// </summary>
+    [Required]
+    public int Group { get; set; }
 }

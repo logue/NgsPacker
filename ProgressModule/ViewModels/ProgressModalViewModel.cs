@@ -5,128 +5,127 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-using System;
-using System.Windows;
 using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Services.Dialogs;
 using ProgressModule.Models;
+using System;
+using System.Windows;
 
-namespace ProgressModule.ViewModels
+namespace ProgressModule.ViewModels;
+
+/// <summary>
+///     進捗モーダルのビューモデル
+/// </summary>
+public class ProgressModalViewModel : BindableBase, IDialogAware
 {
     /// <summary>
-    /// 進捗モーダルのビューモデル
+    ///     Initializes a new instance of the <see cref="ProgressModalViewModel" /> class.
     /// </summary>
-    public class ProgressModalViewModel : BindableBase, IDialogAware
+    /// <param name="model">進捗モデル</param>
+    public ProgressModalViewModel(ProgressModel model)
     {
-        /// <summary>
-        /// タイトル
-        /// </summary>
-        public string Title { get; set; }
+        Progress = model.Progress;
 
-        /// <summary>
-        ///  メッセージ
-        /// </summary>
-        public string Message { get; set; }
-
-        /// <summary>
-        /// 進捗
-        /// </summary>
-        public int Progress { get; set; }
-
-        /// <summary>
-        /// 進捗リングの表示制御
-        /// </summary>
-        public Visibility ProgressRingVisibility { get; set; }
-
-        /// <summary>
-        /// 進捗バーの表示制御
-        /// </summary>
-        public Visibility ProgressBarVisibility { get; set; }
-
-        /// <summary>
-        /// 閉じる
-        /// </summary>
-        public DelegateCommand CloseCommand { get; }
-
-        /// <summary>
-        /// 閉じるボタンが押された
-        /// </summary>
-        public event Action<IDialogResult> RequestClose;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ProgressModalViewModel"/> class.
-        /// </summary>
-        /// <param name="model">進捗モデル</param>
-        public ProgressModalViewModel(ProgressModel model)
+        model.PropertyChanged += (_, e) =>
         {
-            Progress = model.Progress;
-
-            model.PropertyChanged += (_, e) =>
+            switch (e.PropertyName)
             {
-                switch (e.PropertyName)
-                {
-                    case "Progress":
-                        Progress = model.Progress;
-                        break;
-                    case "Title":
-                        Title = model.Title;
-                        break;
-                    case "Message":
-                        Message = model.Message;
-                        break;
-                    case "isIntermediate":
-                        // 中間状態のときはプログレスリングを表示
-                        if (model.IsIntermediate)
-                        {
-                            ProgressRingVisibility = Visibility.Visible;
-                            ProgressBarVisibility = Visibility.Collapsed;
-                        }
-                        else
-                        {
-                            ProgressRingVisibility = Visibility.Collapsed;
-                            ProgressBarVisibility = Visibility.Visible;
-                        }
+                case "Progress":
+                    Progress = model.Progress;
+                    break;
+                case "Title":
+                    Title = model.Title;
+                    break;
+                case "Message":
+                    Message = model.Message;
+                    break;
+                case "isIntermediate":
+                    // 中間状態のときはプログレスリングを表示
+                    if (model.IsIntermediate)
+                    {
+                        ProgressRingVisibility = Visibility.Visible;
+                        ProgressBarVisibility = Visibility.Collapsed;
+                    }
+                    else
+                    {
+                        ProgressRingVisibility = Visibility.Collapsed;
+                        ProgressBarVisibility = Visibility.Visible;
+                    }
 
-                        break;
-                }
-            };
+                    break;
+            }
+        };
 
-            CloseCommand =
-                new DelegateCommand(() => CloseDialog(), () => Progress >= 100).ObservesProperty(() => Progress);
-        }
+        CloseCommand =
+            new DelegateCommand(() => CloseDialog(), () => Progress >= 100).ObservesProperty(() => Progress);
+    }
 
-        /// <summary>
-        /// ダイアログを閉じることができるか
-        /// </summary>
-        /// <returns>可否</returns>
-        public bool CanCloseDialog()
-        {
-            return true;
-        }
+    /// <summary>
+    ///     メッセージ
+    /// </summary>
+    public string Message { get; set; }
 
-        /// <summary>
-        /// ダイアログが閉じたとき
-        /// </summary>
-        public void OnDialogClosed()
-        {
-            Progress = 0;
-        }
+    /// <summary>
+    ///     進捗
+    /// </summary>
+    public int Progress { get; set; }
 
-        /// <summary>
-        /// ダイアログを開いたとき
-        /// </summary>
-        /// <param name="parameters">ダイアログに送信するパラメータ</param>
-        public void OnDialogOpened(IDialogParameters parameters)
-        {
-        }
+    /// <summary>
+    ///     進捗リングの表示制御
+    /// </summary>
+    public Visibility ProgressRingVisibility { get; set; }
 
-        /// <summary>
-        /// ダイアログを閉じるボタンが押されたとき
-        /// </summary>
-        private void CloseDialog()
-        {
-            RequestClose?.Invoke(new DialogResult(ButtonResult.OK));
-        }
+    /// <summary>
+    ///     進捗バーの表示制御
+    /// </summary>
+    public Visibility ProgressBarVisibility { get; set; }
+
+    /// <summary>
+    ///     閉じる
+    /// </summary>
+    public DelegateCommand CloseCommand { get; }
+
+    /// <summary>
+    ///     タイトル
+    /// </summary>
+    public string Title { get; set; }
+
+    /// <summary>
+    ///     閉じるボタンが押された
+    /// </summary>
+    public event Action<IDialogResult> RequestClose;
+
+    /// <summary>
+    ///     ダイアログを閉じることができるか
+    /// </summary>
+    /// <returns>可否</returns>
+    public bool CanCloseDialog()
+    {
+        return true;
+    }
+
+    /// <summary>
+    ///     ダイアログが閉じたとき
+    /// </summary>
+    public void OnDialogClosed()
+    {
+        Progress = 0;
+    }
+
+    /// <summary>
+    ///     ダイアログを開いたとき
+    /// </summary>
+    /// <param name="parameters">ダイアログに送信するパラメータ</param>
+    public void OnDialogOpened(IDialogParameters parameters)
+    {
+    }
+
+    /// <summary>
+    ///     ダイアログを閉じるボタンが押されたとき
+    /// </summary>
+    private void CloseDialog()
+    {
+        RequestClose?.Invoke(new DialogResult(ButtonResult.OK));
     }
 }

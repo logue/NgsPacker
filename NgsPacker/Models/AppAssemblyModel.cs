@@ -5,107 +5,96 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using System.IO;
 using System.Reflection;
 
-namespace NgsPacker.Models
+namespace NgsPacker.Models;
+
+/// <summary>
+///     バージョン情報.
+/// </summary>
+public class AppAssemblyModel
 {
     /// <summary>
-    /// バージョン情報.
+    ///     アセンブリのタイトル
     /// </summary>
-    public class AppAssemblyModel
+    public static string Title
     {
-        /// <summary>
-        /// Gets the Title.
-        /// </summary>
-        public static string Title
+        get
         {
-            get
+            object[] attributes = Assembly.GetExecutingAssembly()
+                .GetCustomAttributes(typeof(AssemblyTitleAttribute), false);
+            if (attributes.Length > 0)
             {
-                object[] attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyTitleAttribute), false);
-                if (attributes.Length > 0)
+                AssemblyTitleAttribute titleAttribute = (AssemblyTitleAttribute)attributes[0];
+                if (titleAttribute.Title != string.Empty)
                 {
-                    AssemblyTitleAttribute titleAttribute = (AssemblyTitleAttribute)attributes[0];
-                    if (titleAttribute.Title != string.Empty)
-                    {
-                        return titleAttribute.Title;
-                    }
+                    return titleAttribute.Title;
                 }
-
-                return System.IO.Path.GetFileNameWithoutExtension(Assembly.GetExecutingAssembly().Location);
             }
+
+            return Path.GetFileNameWithoutExtension(Assembly.GetExecutingAssembly().Location);
         }
+    }
 
-        /// <summary>
-        /// Gets the Version.
-        /// </summary>
-        public static string Version => Assembly.GetExecutingAssembly().GetName().Version.ToString();
+    /// <summary>
+    ///     アセンブリのバージョン
+    /// </summary>
+    public static string Version => Assembly.GetExecutingAssembly().GetName().Version.ToString();
 
-        /// <summary>
-        /// Gets the Description.
-        /// </summary>
-        public static string Description
+    /// <summary>
+    ///     アセンブリの説明文
+    /// </summary>
+    public static string Description
+    {
+        get
         {
-            get
-            {
-                object[] attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyDescriptionAttribute), false);
-                if (attributes.Length == 0)
-                {
-                    return string.Empty;
-                }
+            object[] attributes = Assembly.GetExecutingAssembly()
+                .GetCustomAttributes(typeof(AssemblyDescriptionAttribute), false);
 
-                return ((AssemblyDescriptionAttribute)attributes[0]).Description;
-            }
+            return attributes.Length == 0 ? string.Empty : ((AssemblyDescriptionAttribute)attributes[0]).Description;
         }
+    }
 
-        /// <summary>
-        /// Gets the Product.
-        /// </summary>
-        public static string Product
+    /// <summary>
+    ///     アセンブリの製品名
+    /// </summary>
+    public static string Product
+    {
+        get
         {
-            get
-            {
-                object[] attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyProductAttribute), false);
-                if (attributes.Length == 0)
-                {
-                    return string.Empty;
-                }
+            object[] attributes = Assembly.GetExecutingAssembly()
+                .GetCustomAttributes(typeof(AssemblyProductAttribute), false);
 
-                return ((AssemblyProductAttribute)attributes[0]).Product;
-            }
+            return attributes.Length == 0 ? string.Empty : ((AssemblyProductAttribute)attributes[0]).Product;
         }
+    }
 
-        /// <summary>
-        /// Gets the Copyright.
-        /// </summary>
-        public static string Copyright
+    /// <summary>
+    ///     アセンブリの著作権表記
+    /// </summary>
+    public static string Copyright
+    {
+        get
         {
-            get
-            {
-                object[] attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyCopyrightAttribute), false);
-                if (attributes.Length == 0)
-                {
-                    return string.Empty;
-                }
+            object[] attributes = Assembly.GetExecutingAssembly()
+                .GetCustomAttributes(typeof(AssemblyCopyrightAttribute), false);
 
-                return ((AssemblyCopyrightAttribute)attributes[0]).Copyright;
-            }
+            return attributes.Length == 0 ? string.Empty : ((AssemblyCopyrightAttribute)attributes[0]).Copyright;
         }
+    }
 
-        /// <summary>
-        /// Gets the Company.
-        /// </summary>
-        public static string Company
+    /// <summary>
+    ///     アセンブリの会社名
+    /// </summary>
+    public static string Company
+    {
+        get
         {
-            get
-            {
-                object[] attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyCompanyAttribute), false);
-                if (attributes.Length == 0)
-                {
-                    return string.Empty;
-                }
+            object[] attributes = Assembly.GetExecutingAssembly()
+                .GetCustomAttributes(typeof(AssemblyCompanyAttribute), false);
 
-                return ((AssemblyCompanyAttribute)attributes[0]).Company;
-            }
+            return attributes.Length == 0 ? string.Empty : ((AssemblyCompanyAttribute)attributes[0]).Company;
         }
     }
 }

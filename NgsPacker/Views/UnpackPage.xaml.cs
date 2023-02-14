@@ -7,19 +7,18 @@
 
 using System.Windows.Controls;
 
-namespace NgsPacker.Views
+namespace NgsPacker.Views;
+
+/// <summary>
+///     UnpackPage.xaml の相互作用ロジック
+/// </summary>
+public partial class UnpackPage : Page
 {
     /// <summary>
-    /// UnpackPage.xaml の相互作用ロジック
+    ///     Initializes a new instance of the <see cref="UnpackPage" /> class.
     /// </summary>
-    public partial class UnpackPage : Page
+    public UnpackPage()
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="UnpackPage"/> class.
-        /// </summary>
-        public UnpackPage()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }
