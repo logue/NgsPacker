@@ -20,6 +20,8 @@
     prism:ViewModelLocator.AutoWireViewModel="True"
     ui:ThemeManager.IsThemeAware="True"
     ui:WindowHelper.UseModernWindowStyle="True"
+    Background="Transparent"
+    Foreground="{DynamicResource SystemControlPageTextBaseHighBrush}"
     Loaded="Window_Loaded"
     mc:Ignorable="d">
     <WindowChrome.WindowChrome>

@@ -2,54 +2,43 @@
 
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
+    <Title>NgsPacker</Title>
+    <Version>1.4.0-alpha1</Version>
     <ApplicationIcon>ice-cubes.ico</ApplicationIcon>
     <AssemblyName>NgsPacker</AssemblyName>
     <Authors>Masashi Yoshikawa</Authors>
+    <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)..\StyleCop.Analyzers.ruleset</CodeAnalysisRuleSet>
     <Company>Logue</Company>
     <Copyright>(c) 2021-2023 Logue All rights reserved.</Copyright>
     <Description>Data packer and unpacker for Phantasy Star Online 2 New Genesis.</Description>
-    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <OutputType>WinExe</OutputType>
     <PackageIcon>ice-cubes.png</PackageIcon>
     <PackageLicenseFile>..\LICENSE</PackageLicenseFile>
     <PackageProjectUrl>https://ngs.logue.dev/NgsPacker</PackageProjectUrl>
     <PackageReadmeFile>..\Readme.md</PackageReadmeFile>
-    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageTags>PSO2;Phantasy Star Online2;Phantasy Star Online New Genesis;PSO2NGS;Packer;Unpacker</PackageTags>
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/logue/NgsPacker.git</RepositoryUrl>
     <RootNamespace>NgsPacker</RootNamespace>
     <StartupObject>NgsPacker.App</StartupObject>
     <SupportedOSPlatformVersion>10.0.20348.0</SupportedOSPlatformVersion>
     <TargetFramework>net6.0-windows10.0.22621.0</TargetFramework>
-    <UseWPF>true</UseWPF>
-    <Version>1.4.0-alpha.0</Version>
-    <IsPublishable>True</IsPublishable>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <PackageReleaseNotes></PackageReleaseNotes>
-  </PropertyGroup>
-  <PropertyGroup>
-    <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)..\StyleCop.Analyzers.ruleset</CodeAnalysisRuleSet>
-    <Title>NgsPacker</Title>
-    <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
-    <GenerateDocumentationFile>True</GenerateDocumentationFile>
     <AnalysisLevel>6.0-recommended</AnalysisLevel>
+    <UseWPF>true</UseWPF>
   </PropertyGroup>
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="rd &quot;$(TargetDir)af-ZA&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)am-ET&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)ar-SA&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)az-Latn-AZ&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)be-BY&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)bg-BG&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)bn-BD&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)bs-Latn-BA&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)ca-ES&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)cs-CZ&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)da-DK&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)de-DE&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)el-GR&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)en-GB&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)es-ES&quot; /S /Q &#xD;&#xA;rd &quot;$(TargetDir)es-MX&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)et-EE&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)eu-ES&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)fa&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)fa-IR&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)fi-FI&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)fr-CA&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)fr-FR&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)gl-ES&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)ha-Latn-NG&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)he-IL&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)hi-IN&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)hr-HR&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)hu-HU&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)id-ID&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)is-IS&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)it-IT&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)ka-GE&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)kk-KZ&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)km-KH&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)kn-KH&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)kn-IN&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)ko-KR&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)lo-LA&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)lt-LT&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)lv-LV&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)mk-MK&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)ml-IN&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)ms-MY&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)nb-NL&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)nb-NO&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)nl-NL&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)nn-NO&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)pl-PL&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)pt-BR&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)pt-PT&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)ro-RO&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)ru-RU&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)sk-SK&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)sl-SI&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)sq-AL&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)sr-Latn-RS&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)sv-SE&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)sw-KE&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)ta-IN&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)te-IN&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)th-TH&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)tr-TR&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)uk-UA&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)uz-Latn-UZ&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)vi-VN&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)zh-CN&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)zh-TW&quot; /S /Q&#xD;&#xA;" />
+  </Target>
   <ItemGroup>
-    <AdditionalFiles Include="$(MSBuildThisFileDirectory)..\stylecop.json" Link="stylecop.json" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="ice-cubes.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.2" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.2" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.2">
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.3">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Uwp.Notifications" Version="7.1.3" />
-    <PackageReference Include="ModernWpfUIs.MessageBox" Version="0.5.2" />
+    <PackageReference Include="ModernWpf.MessageBox" Version="0.5.2" />
+    <PackageReference Include="ModernWpfUI" Version="0.9.6" />
     <PackageReference Include="Prism.DryIoc" Version="8.1.97" />
     <PackageReference Include="ReactiveProperty" Version="9.0.0" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
@@ -58,16 +47,7 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Update="Properties\Resources.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-    <Compile Update="Properties\Settings.Designer.cs">
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-    </Compile>
+    <AdditionalFiles Include="$(MSBuildThisFileDirectory)..\stylecop.json" Link="stylecop.json" />
   </ItemGroup>
   <ItemGroup>
     <None Update="Properties\Settings.settings">
@@ -92,6 +72,18 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Properties\Settings.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\ProgressModule\ProgressModule.csproj" />
     <ProjectReference Include="..\ZamboniLib\ZamboniLib\ZamboniLib.csproj" />
   </ItemGroup>
@@ -102,15 +94,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
-  </ItemGroup>
-  <ItemGroup>
     <Folder Include="Migrations\" />
   </ItemGroup>
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="rd &quot;$(TargetDir)af-ZA&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)am-ET&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)ar-SA&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)az-Latn-AZ&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)be-BY&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)bg-BG&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)bn-BD&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)bs-Latn-BA&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)ca-ES&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)cs-CZ&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)da-DK&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)de-DE&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)el-GR&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)en-GB&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)es-ES&quot; /S /Q &#xD;&#xA;rd &quot;$(TargetDir)es-MX&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)et-EE&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)eu-ES&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)fa&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)fa-IR&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)fi-FI&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)fr-CA&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)fr-FR&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)gl-ES&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)ha-Latn-NG&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)he-IL&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)hi-IN&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)hr-HR&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)hu-HU&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)id-ID&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)is-IS&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)it-IT&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)ka-GE&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)kk-KZ&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)km-KH&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)kn-KH&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)kn-IN&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)ko-KR&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)lo-LA&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)lt-LT&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)lv-LV&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)mk-MK&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)ml-IN&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)ms-MY&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)nb-NL&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)nb-NO&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)nl-NL&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)nn-NO&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)pl-PL&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)pt-BR&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)pt-PT&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)ro-RO&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)ru-RU&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)sk-SK&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)sl-SI&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)sq-AL&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)sr-Latn-RS&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)sv-SE&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)sw-KE&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)ta-IN&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)te-IN&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)th-TH&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)tr-TR&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)uk-UA&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)uz-Latn-UZ&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)vi-VN&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)zh-CN&quot; /S /Q&#xD;&#xA;rd &quot;$(TargetDir)zh-TW&quot; /S /Q&#xD;&#xA;" />
-  </Target>
-  <!--Target Name="PreBuild" BeforeTargets="PreBuildEvent">
-    <Exec Command="copy &quot;$(SolutionDir)x64\$(Configuration)\ooz.dll&quot; $(TargetDir)" />
-  </Target-->
 </Project>

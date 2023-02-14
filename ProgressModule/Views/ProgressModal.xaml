@@ -8,6 +8,7 @@
     xmlns:prism="http://prismlibrary.com/"
     xmlns:ui="http://schemas.modernwpf.com/2019"
     xmlns:viewModels="clr-namespace:ProgressModule.ViewModels"
+    d:Background="White"
     d:DataContext="{d:DesignInstance viewModels:ProgressModalViewModel}"
     lex:LocalizeDictionary.DesignCulture="en"
     lex:ResxLocalizationProvider.DefaultAssembly="ProgressModule"
@@ -24,7 +25,7 @@
             <RowDefinition />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <StackPanel>
+        <ui:SimpleStackPanel>
             <!--  プログレスバー  -->
             <ui:ProgressBar
                 Margin="10,10,10,10"
@@ -33,14 +34,14 @@
             <ui:ProgressRing Visibility="{Binding ProgressRingVisibility}" />
             <!--  進捗テキスト  -->
             <TextBlock Margin="10,10,10,10" Text="{Binding Message, Mode=OneWay}" />
-        </StackPanel>
+        </ui:SimpleStackPanel>
         <StackPanel Grid.Row="1">
             <Button
-                Padding="10,5"
+                Height="32"
                 HorizontalAlignment="Right"
+                HorizontalContentAlignment="Right"
                 Command="{Binding CancelCommand, Mode=OneTime}"
-                IsCancel="True"
-                Style="{StaticResource ButtonRevealStyle}">
+                IsCancel="True">
                 <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
                     <ui:FontIcon Margin="0,0,5,0" Glyph="&#xE711;" />
                     <TextBlock VerticalAlignment="Center" Text="{lex:Loc CancelText}" />

@@ -24,7 +24,7 @@ public class Contents
     /// <summary>
     ///     IceファイルのID
     /// </summary>
-    public string IceFileId { get; set; }
+    public string IceFilesId { get; set; }
 
     /// <summary>
     ///     内容物のファイル名
