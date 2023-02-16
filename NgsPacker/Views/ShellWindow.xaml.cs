@@ -31,18 +31,18 @@ public partial class ShellWindow
     /// <summary>
     ///     スタイルを適用
     /// </summary>
-    /// <param name="hwnd">ウィンドウハンドル</param>
-    public static void UpdateStyleAttributes(HwndSource hwnd)
+    /// <param name="hWnd">ウィンドウハンドル</param>
+    public static void UpdateStyleAttributes(HwndSource hWnd)
     {
         // You can avoid using ModernWpf here and just rely on Win32 APIs or registry parsing if you want to.
         bool darkThemeEnabled = ThemeManager.Current.ActualApplicationTheme == ApplicationTheme.Dark;
 
-        DwmApi.EnableMica(hwnd, darkThemeEnabled);
+        DwmApi.EnableMica(hWnd, darkThemeEnabled);
     }
 
     private void Window_ContentRendered(object sender, EventArgs e)
     {
-        // Get current hwnd
+        // Get current hWnd
         HwndSource source = HwndSource.FromHwnd(new WindowInteropHelper(this).Handle);
 
         // Apply Mica brush and ImmersiveDarkMode if needed

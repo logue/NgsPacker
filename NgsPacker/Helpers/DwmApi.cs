@@ -14,6 +14,7 @@ namespace NgsPacker.Helpers;
 /// <summary>
 ///     ディスクトップウィンドウマネージャーのP/invoke
 /// </summary>
+/// <see href="https://learn.microsoft.com/ja-jp/windows/win32/api/_dwm/" />
 public class DwmApi
 {
     /// <summary>
@@ -21,42 +22,70 @@ public class DwmApi
     /// </summary>
     /// <param name="source">対象のハンドル</param>
     /// <param name="darkThemeEnabled">ダークモードか</param>
+    /// <see
+    ///     href="https://github.com/MicrosoftDocs/windows-dev-docs/blob/docs/hub/apps/desktop/modernize/apply-rounded-corners.md" />
     public static void EnableMica(HwndSource source, bool darkThemeEnabled)
     {
-        int trueValue = 0x01;
-        int falseValue = 0x00;
+        // ちゃんと動くけどたぶん記述が間違っている
+        DWM_WINDOW_CORNER_PREFERENCE rounded = DWM_WINDOW_CORNER_PREFERENCE.DWMWCP_ROUND;
+        DWM_WINDOW_CORNER_PREFERENCE normal = DWM_WINDOW_CORNER_PREFERENCE.DWMWCP_DEFAULT;
 
         // Set dark mode before applying the material, otherwise you'll get an ugly flash when displaying the window.
         if (darkThemeEnabled)
         {
-            _ = DwmSetWindowAttribute(source.Handle, DWMWINDOWATTRIBUTE.DWMWA_USE_IMMERSIVE_DARK_MODE, ref trueValue,
-                Marshal.SizeOf(typeof(int)));
+            DwmSetWindowAttribute(
+                source.Handle,
+                DWMWINDOWATTRIBUTE.DWMWA_USE_IMMERSIVE_DARK_MODE,
+                ref rounded,
+                sizeof(uint));
         }
         else
         {
-            _ = DwmSetWindowAttribute(source.Handle, DWMWINDOWATTRIBUTE.DWMWA_USE_IMMERSIVE_DARK_MODE, ref falseValue,
-                Marshal.SizeOf(typeof(int)));
+            DwmSetWindowAttribute(
+                source.Handle,
+                DWMWINDOWATTRIBUTE.DWMWA_USE_IMMERSIVE_DARK_MODE,
+                ref normal,
+                sizeof(uint));
         }
 
-        _ = DwmSetWindowAttribute(source.Handle, DWMWINDOWATTRIBUTE.DWMWA_SYSTEMBACKDROP_TYPE, ref trueValue,
-            Marshal.SizeOf(typeof(int)));
+        DwmSetWindowAttribute(
+            source.Handle,
+            DWMWINDOWATTRIBUTE.DWMWA_SYSTEMBACKDROP_TYPE,
+            ref rounded,
+            sizeof(uint));
     }
 
     /// <summary>
-    ///     デスクトップ ウィンドウ マネージャーのP/invoke
+    ///     ウィンドウのデスクトップ ウィンドウ マネージャー (DWM) のクライアント以外のレンダリング属性の値を設定します。 プログラミング ガイダンスとコード例については、「
+    ///     クライアント以外の領域のレンダリングの制御」を参照してください。
     /// </summary>
     /// <param name="hWnd">ハンドラ</param>
-    /// <param name="dwAttribute">DWMWINDOWATTRIBUTE 列挙型の値として指定された、設定する値を示すフラグ。</param>
-    /// <param name="pvAttribute">設定する属性値を含むオブジェクトへのポインター。</param>
-    /// <param name="cbAttribute">pvAttribute パラメーターを使用して設定される属性値のサイズ</param>
-    /// <returns>HRESULT値</returns>
-    [DllImport("dwmapi.dll")]
-    private static extern int DwmSetWindowAttribute(IntPtr hWnd, DWMWINDOWATTRIBUTE dwAttribute, ref int pvAttribute,
-        int cbAttribute);
+    /// <param name="dwAttribute">
+    ///     <see cref="DWMWINDOWATTRIBUTE">DWMWINDOWATTRIBUTE</see> 列挙型の値として指定された、設定する値を示すフラグ。
+    ///     このパラメーターは、設定する属性を指定し、 pvAttribute パラメーターは属性値を含むオブジェクトを指します。
+    /// </param>
+    /// <param name="pvAttribute">
+    ///     設定する属性値を含むオブジェクトへのポインター。 値セットの型は 、dwAttribute パラメーターの値によって異なります。
+    ///     <see cref="DWMWINDOWATTRIBUTE">DWMWINDOWATTRIBUTE</see>
+    ///     列挙トピックは、各フラグの行で、pvAttribute パラメーターにポインターを渡す必要がある値の種類を示します。
+    /// </param>
+    /// <param name="cbAttribute">
+    ///     pvAttribute パラメーターを使用して設定される属性値のサイズ (バイト単位)。 値セットの型、つまりサイズ (バイト単位) は、 dwAttribute
+    ///     パラメーターの値によって異なります。
+    /// </param>
+    /// <see href="https://learn.microsoft.com/ja-jp/windows/win32/api/dwmapi/nf-dwmapi-dwmsetwindowattribute" />
+    [DllImport("dwmapi.dll", CharSet = CharSet.Unicode, PreserveSig = false)]
+    internal static extern void DwmSetWindowAttribute(
+        IntPtr hWnd,
+        DWMWINDOWATTRIBUTE dwAttribute,
+        ref DWM_WINDOW_CORNER_PREFERENCE pvAttribute, // そもそもここの記述おかしくない？
+        uint cbAttribute);
+
 #pragma warning disable CA1707 // 識別子はアンダースコアを含むことはできません
     /// <summary>
     ///     DwmSetWindowAttribute 関数がウィンドウの角を丸く設定するために使用するフラグ。
     /// </summary>
+    [Flags]
     public enum DWM_WINDOW_CORNER_PREFERENCE
     {
         /// <summary>
@@ -90,7 +119,7 @@ public class DwmApi
         ///     DwmGetWindowAttribute で使用します。 クライアント以外のレンダリングが有効になっているかどうかを検出します。
         ///     取得された値は BOOL 型です。 クライアント以外のレンダリングが有効な場合は TRUE。それ以外の場合は FALSE。
         /// </summary>
-        DWMWA_NCRENDERING_ENABLED,
+        DWMWA_NCRENDERING_ENABLED = 1,
 
         /// <summary>
         ///     DwmSetWindowAttribute で使用します。 クライアント以外のレンダリング ポリシーを設定します。
@@ -251,6 +280,37 @@ public class DwmApi
         ///     検証目的で使用される、認識される DWMWINDOWATTRIBUTE の最大値。
         /// </summary>
         DWMWA_LAST
+    }
+
+    /// <summary>
+    ///     クライアント以外の領域の背後を含む、ウィンドウのシステム描画の背景マテリアルを指定するためのフラグ。
+    /// </summary>
+    private enum DWM_SYSTEMBACKDROP_TYPE
+    {
+        /// <summary>
+        ///     これが既定値です。 デスクトップ ウィンドウ マネージャー (DWM) が、このウィンドウのシステム描画の背景マテリアルを自動的に決定できるようにします。
+        /// </summary>
+        DWMSBT_AUTO,
+
+        /// <summary>
+        ///     システムの背景を描画しないでください。
+        /// </summary>
+        DWMSBT_NONE,
+
+        /// <summary>
+        ///     有効期間の長いウィンドウに対応する背景素材効果を描画します。
+        /// </summary>
+        DWMSBT_MAINWINDOW,
+
+        /// <summary>
+        ///     一時的なウィンドウに対応する背景マテリアル効果を描画します。
+        /// </summary>
+        DWMSBT_TRANSIENTWINDOW,
+
+        /// <summary>
+        ///     タブ付きのタイトル バーがあるウィンドウに対応する背景素材効果を描画します。
+        /// </summary>
+        DWMSBT_TABBEDWINDOW
     }
 #pragma warning restore CA1707 // 識別子はアンダースコアを含むことはできません
 }
