@@ -230,6 +230,7 @@ public class ZamboniService : IZamboniService
         _ = progressDialog.ShowAsync();
         List<string> ret = new();
         List<string> entries = new(Directory.EnumerateFiles(inputPath, "*.*", SearchOption.AllDirectories));
+
         Debug.WriteLine("Entries: ", entries.Count);
 
         // CSVのヘッダ
@@ -262,12 +263,10 @@ public class ZamboniService : IZamboniService
 
             FileInfo fileInfo = new(path);
 
-            // NGSのデータファイルの場合、親ディレクトリのパスも含める
-            string ice =
-                (fileInfo.Directory.Name != "win32"
-                    ? fileInfo.Directory.Name + Path.DirectorySeparatorChar
-                    : string.Empty)
-                + fileInfo.Name + ",ICE" + num + ",";
+            // dataディレクトリ以降のパスのファイル名を記入
+            string ice = IceUtility.GetEntryName(fileInfo.FullName) + ",ICE" + num + ",";
+
+            Debug.WriteLine(ice);
 
             // Iceファイルを読み込む
             IceFile iceFile;
@@ -325,6 +324,49 @@ public class ZamboniService : IZamboniService
         }
 
         progressDialog.Hide();
+        return ret;
+    }
+
+    /// <inheritdoc />
+    public async Task<List<string>> FileList(DataDirectoryType target)
+    {
+        string dataDir = IceUtility.GetDataDir();
+        List<string> ret = new();
+
+        switch (target)
+        {
+            case DataDirectoryType.Pso:
+                ret.AddRange(await FileList(dataDir + "win32"));
+                if (Directory.Exists(dataDir + "win32_na"))
+                {
+                    ret.AddRange(await FileList(dataDir + "win32_na"));
+                }
+
+                break;
+            case DataDirectoryType.Ngs:
+                ret.AddRange(await FileList(dataDir + "win32reboot"));
+                if (Directory.Exists(dataDir + "win32reboot_na"))
+                {
+                    ret.AddRange(await FileList(dataDir + "win32reboot_na"));
+                }
+
+                break;
+            default:
+                ret.AddRange(await FileList(dataDir + "win32"));
+                if (Directory.Exists(dataDir + "win32_na"))
+                {
+                    ret.AddRange(await FileList(dataDir + "win32_na"));
+                }
+
+                ret.AddRange(await FileList(dataDir + "win32reboot"));
+                if (Directory.Exists(dataDir + "win32reboot_na"))
+                {
+                    ret.AddRange(await FileList(dataDir + "win32reboot_na"));
+                }
+
+                break;
+        }
+
         return ret;
     }
 

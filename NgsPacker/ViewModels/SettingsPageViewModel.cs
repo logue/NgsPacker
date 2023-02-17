@@ -33,8 +33,11 @@ public class SettingsPageViewModel : BindableBase
     /// <param name="localizeService">多言語化サービス.</param>
     public SettingsPageViewModel(ILocalizeService localizeService)
     {
-        // 設定保存のイベント割当
+        // ブラウズダイアログを表示するイベント割当
         BrowseCommand = new DelegateCommand(ExecuteBrowseCommand);
+
+        // 設定保存のイベント割当
+        SaveCommand = new DelegateCommand(ExecuteSaveCommand);
 
         // 多言語化サービスのインジェクション
         this.localizeService = localizeService;
@@ -108,6 +111,20 @@ public class SettingsPageViewModel : BindableBase
     }
 
     /// <summary>
+    ///     ホワイトリスト設定を保存
+    /// </summary>
+    public DelegateCommand SaveCommand { get; }
+
+    /// <summary>
+    ///     ホワイトリスト
+    /// </summary>
+    public static string WhiteList
+    {
+        get => Settings.Default.WhiteList;
+        set => Settings.Default.WhiteList = value;
+    }
+
+    /// <summary>
     ///     pso2_binディレクトリ選択ダイアログを出す
     /// </summary>
     private void ExecuteBrowseCommand()
@@ -133,5 +150,14 @@ public class SettingsPageViewModel : BindableBase
         }
 
         Pso2BinPath = picker.ResultPath;
+    }
+
+    /// <summary>
+    ///     ホワイトリストの設定保存.
+    /// </summary>
+    private void ExecuteSaveCommand()
+    {
+        // 設定を保存
+        Settings.Default.Save();
     }
 }

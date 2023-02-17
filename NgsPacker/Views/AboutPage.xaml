@@ -11,7 +11,7 @@
     Title="{lex:Loc AboutText}"
     d:Background="White"
     d:DataContext="{d:DesignInstance Type=vm:AboutPageViewModel}"
-    d:DesignHeight="512"
+    d:DesignHeight="480"
     d:DesignWidth="640"
     lex:LocalizeDictionary.DesignCulture="en"
     lex:ResxLocalizationProvider.DefaultAssembly="NgsPacker"
@@ -26,7 +26,7 @@
                 Height="96"
                 Margin="10,0,10,0"
                 Source="{Binding Logo}" />
-            <ui:SimpleStackPanel Orientation="Vertical">
+            <ui:SimpleStackPanel>
                 <TextBlock FontSize="24" Text="{Binding Assembly.Title}" />
                 <TextBlock Text="{Binding Assembly.Description}" />
                 <TextBlock Text="{Binding Assembly.Version}" />
@@ -34,15 +34,13 @@
             </ui:SimpleStackPanel>
         </ui:SimpleStackPanel>
         <TextBlock
-            FontSize="11"
+            FontSize="9pt"
             Text="{lex:Loc ModdingWarningText}"
             TextWrapping="Wrap" />
         <Separator />
         <TextBlock Text="{lex:Loc SegaCopyrightNotice}" TextWrapping="Wrap" />
         <Grid>
-            <ui:HyperlinkButton NavigateUri="{lex:Loc SegaCopyrightWarningLinkUrl}">
-                <TextBlock Text="{lex:Loc SegaCopyrightWarningLinkText}" />
-            </ui:HyperlinkButton>
+            <ui:HyperlinkButton Content="{lex:Loc SegaCopyrightWarningLinkText}" NavigateUri="{lex:Loc SegaCopyrightWarningLinkUrl}" />
             <ui:SimpleStackPanel
                 HorizontalAlignment="Right"
                 Orientation="Horizontal"

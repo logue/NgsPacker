@@ -19,77 +19,37 @@
     prism:ViewModelLocator.AutoWireViewModel="True"
     mc:Ignorable="d">
 
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
-        <ui:SimpleStackPanel Grid.Row="0" Spacing="12">
-            <TextBlock Text="{lex:Loc PackInformationText}" TextWrapping="Wrap" />
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-                <CheckBox
-                    Grid.Column="0"
-                    Content="{lex:Loc CompressCheckBoxText}"
-                    IsChecked="{Binding IsCompress, Mode=TwoWay}" />
-                <CheckBox
-                    Grid.Column="1"
-                    Content="{lex:Loc CryptCheckBoxText}"
-                    IsChecked="{Binding IsCrypt, Mode=TwoWay}" />
-                <Button
-                    Grid.Column="2"
-                    Padding="10,5"
-                    HorizontalAlignment="Right"
-                    Command="{Binding PackCommand}">
-                    <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-                        <ui:FontIcon Margin="0,0,5,0" Glyph="&#xe1d8;" />
-                        <TextBlock VerticalAlignment="Center" Text="{lex:Loc PackText}" />
-                    </StackPanel>
-                </Button>
-            </Grid>
-            <Separator />
-            <Label Content="{lex:Loc WhiteListText}" />
-        </ui:SimpleStackPanel>
-        <Grid Grid.Row="1">
+    <ui:SimpleStackPanel Spacing="12">
+        <TextBlock Text="{lex:Loc PackInformationText}" TextWrapping="Wrap" />
+        <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <TextBox
+            <CheckBox
                 Grid.Column="0"
-                Height="150"
-                HorizontalContentAlignment="Stretch"
-                VerticalContentAlignment="Stretch"
-                AcceptsReturn="True"
-                AutomationProperties.Name="multi-line TextBox"
-                Text="{Binding WhiteList}"
-                VerticalScrollBarVisibility="Visible" />
-            <TextBlock
+                Content="{lex:Loc CompressCheckBoxText}"
+                IsChecked="{Binding IsCompress, Mode=TwoWay}" />
+            <CheckBox
                 Grid.Column="1"
-                Padding="12"
-                VerticalAlignment="Top"
-                Text="{lex:Loc SeparateByGroupCheckBoxToolTip}"
-                TextWrapping="Wrap" />
-        </Grid>
-        <ui:SimpleStackPanel
-            Grid.Row="2"
-            VerticalAlignment="Bottom"
-            Spacing="12">
+                Content="{lex:Loc CryptCheckBoxText}"
+                IsChecked="{Binding IsCrypt, Mode=TwoWay}" />
             <Button
+                Grid.Column="2"
                 Padding="10,5"
                 HorizontalAlignment="Right"
-                VerticalAlignment="Center"
-                Command="{Binding SaveCommand}">
+                Command="{Binding PackCommand}">
                 <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-                    <ui:FontIcon Margin="0,0,5,0" Glyph="&#xe78c;" />
-                    <TextBlock VerticalAlignment="Center" Text="{lex:Loc SaveText}" />
+                    <ui:FontIcon Margin="0,0,5,0" Glyph="&#xe1d8;" />
+                    <TextBlock VerticalAlignment="Center" Text="{lex:Loc PackText}" />
                 </StackPanel>
             </Button>
+        </Grid>
+        <ui:SimpleStackPanel>
+            <TextBlock Text="{lex:Loc ChecksumFileInformationText}" TextWrapping="Wrap" />
+            <ui:HyperlinkButton Content="{lex:Loc ChecksumFile}" NavigateUri="https://ngs.logue.dev/data/d4455ebc2bef618f29106da7692ebc1a" />
         </ui:SimpleStackPanel>
-    </Grid>
+
+    </ui:SimpleStackPanel>
 </Page>

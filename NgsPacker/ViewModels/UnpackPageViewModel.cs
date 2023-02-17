@@ -78,6 +78,11 @@ public class UnpackPageViewModel : BindableBase, INotifyPropertyChanged
     public DelegateCommand ExportFileListCommand { get; }
 
     /// <summary>
+    ///     対象ディレクトリ
+    /// </summary>
+    public DataDirectoryType Target { get; set; } = DataDirectoryType.Ngs;
+
+    /// <summary>
     ///     ファイル一覧を出力
     /// </summary>
     public DelegateCommand UnpackByFileListCommand { get; }
@@ -159,21 +164,12 @@ public class UnpackPageViewModel : BindableBase, INotifyPropertyChanged
     /// </summary>
     private async void ExecuteExportFileListCommand()
     {
-        // フォルダ選択ダイアログ
-        FolderPicker picker = new() { InputPath = Settings.Default.Pso2BinPath };
-
-        // 出力先ファイルダイアログを表示
-        if (picker.ShowDialog() != true)
-        {
-            return;
-        }
-
         // ファイル保存ダイアログ
         using SaveFileDialog saveFileDialog = new()
         {
             Title = localizeService.GetLocalizedString("SaveAsDialogText"),
             InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal),
-            FileName = "list.csv"
+            FileName = Target + "_data.csv"
         };
 
         // ダイアログを表示
@@ -185,7 +181,7 @@ public class UnpackPageViewModel : BindableBase, INotifyPropertyChanged
         }
 
         // 出力処理
-        List<string> list = new(await zamboniService.FileList(picker.ResultPath));
+        List<string> list = new(await zamboniService.FileList(Target));
         await File.WriteAllTextAsync(saveFileDialog.FileName, string.Join("\r\n", list));
 
         // 完了通知
@@ -225,19 +221,6 @@ public class UnpackPageViewModel : BindableBase, INotifyPropertyChanged
             return;
         }
 
-        // フォルダ選択ダイアログ
-        FolderPicker picker = new()
-        {
-            Title = localizeService.GetLocalizedString("UnpackDirectoryDialogText"),
-            InputPath = Settings.Default.Pso2BinPath
-        };
-
-        // 出力先ファイルダイアログを表示
-        if (picker.ShowDialog() != true)
-        {
-            return;
-        }
-
         // ファイル一覧を読み込む
         List<string> fileList = new(await File.ReadAllLinesAsync(openFileDialog.FileName));
 
@@ -255,7 +238,7 @@ public class UnpackPageViewModel : BindableBase, INotifyPropertyChanged
 
         fileList.ForEach(file =>
         {
-            string path = picker.ResultPath + Path.DirectorySeparatorChar + file;
+            string path = IceUtility.GetDataDir() + Path.DirectorySeparatorChar + file;
 
             if (File.Exists(path))
             {

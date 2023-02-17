@@ -42,10 +42,6 @@ public class PackPageViewModel : BindableBase
     {
         // パックのイベント割当
         PackCommand = new DelegateCommand(ExecutePackCommand);
-
-        // 設定保存のイベント割当
-        SaveCommand = new DelegateCommand(ExecuteSaveCommand);
-
         IsCompress = true;
 
         // サービスのインジェクション
@@ -54,23 +50,9 @@ public class PackPageViewModel : BindableBase
     }
 
     /// <summary>
-    ///     ホワイトリスト
-    /// </summary>
-    public static string WhiteList
-    {
-        get => Settings.Default.WhiteList;
-        set => Settings.Default.WhiteList = value;
-    }
-
-    /// <summary>
     ///     パック
     /// </summary>
     public DelegateCommand PackCommand { get; }
-
-    /// <summary>
-    ///     設定を保存
-    /// </summary>
-    public DelegateCommand SaveCommand { get; }
 
     /// <summary>
     ///     パック時に圧縮する
@@ -88,9 +70,11 @@ public class PackPageViewModel : BindableBase
     private async void ExecutePackCommand()
     {
         // フォルダ選択ダイアログ
-        FolderPicker picker = new();
-        picker.Title = localizeService.GetLocalizedString("PackInputPathText");
-        picker.InputPath = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+        FolderPicker picker = new()
+        {
+            Title = localizeService.GetLocalizedString("PackInputPathText"),
+            InputPath = Environment.GetFolderPath(Environment.SpecialFolder.Personal)
+        };
 
         // ファイルダイアログを表示
         if (picker.ShowDialog() != true)
@@ -131,14 +115,5 @@ public class PackPageViewModel : BindableBase
             _ = MessageBox.Show(
                 localizeService.GetLocalizedString("PackText"), localizeService.GetLocalizedString("CompleteText"));
         }
-    }
-
-    /// <summary>
-    ///     設定保存.
-    /// </summary>
-    private void ExecuteSaveCommand()
-    {
-        // 設定を保存
-        Settings.Default.Save();
     }
 }

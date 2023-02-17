@@ -5,6 +5,7 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using NgsPacker.Helpers;
 using NgsPacker.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -39,11 +40,18 @@ public interface IZamboniService
         bool separate = false);
 
     /// <summary>
-    ///     ファイル一覧を取得
+    ///     指定されたパスのファイル一覧を取得
     /// </summary>
     /// <param name="inputPath">解析するdataディレクトリ</param>
     /// <returns>A <see cref="Task" /> representing the asynchronous operation.</returns>
     public Task<List<string>> FileList(string inputPath);
+
+    /// <summary>
+    ///     対象ディレクトリのファイル一覧を取得
+    /// </summary>
+    /// <param name="target">解析するdataディレクトリ</param>
+    /// <returns>A <see cref="Task" /> representing the asynchronous operation.</returns>
+    public Task<List<string>> FileList(DataDirectoryType target);
 
     /// <summary>
     ///     Iceファイルを読み込む.

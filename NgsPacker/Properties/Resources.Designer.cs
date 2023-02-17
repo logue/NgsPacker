@@ -89,6 +89,24 @@ namespace NgsPacker.Properties {
         }
         
         /// <summary>
+        ///   Download Checksum File に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string ChecksumFile {
+            get {
+                return ResourceManager.GetString("ChecksumFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///    To activate the mod, a separate third-party launcher and checksum file are required. Overwrite this file in data\win32. に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string ChecksumFileInformationText {
+            get {
+                return ResourceManager.GetString("ChecksumFileInformationText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   The process is complete. に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string CompleteText {
@@ -125,7 +143,7 @@ namespace NgsPacker.Properties {
         }
         
         /// <summary>
-        ///   Outputs the list of files included in the data file in CSV format. Select the win32 (PSO2 data) or win32_reboot (PSO2NGS data) directory in the PSO2 data directory. に類似しているローカライズされた文字列を検索します。
+        ///   Outputs a list of game data files in the target directory in CSV format. Read it into Excel etc. and extract the necessary files. に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string ExportFileListInformationText {
             get {
@@ -209,8 +227,7 @@ namespace NgsPacker.Properties {
         }
         
         /// <summary>
-        ///   To create a PSO2 mod, click &quot;Pack&quot; and select a directory. You can create a mod by creating modified data with the same structure as an existing file.
-        ///* A separate third-party launcher is required to activate the mod. に類似しているローカライズされた文字列を検索します。
+        ///   To create a PSO2 mod, click &quot;Pack&quot; and select a directory. You can create a mod by creating modified data with the same structure as an existing file. に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string PackInformationText {
             get {
@@ -337,11 +354,13 @@ namespace NgsPacker.Properties {
         }
         
         /// <summary>
-        ///   PSO2 data files are divided into two groups according to extension and file name. If you check this checkbox, subdirectories &quot;group1&quot; and &quot;group2&quot; will be created at the time of unpacking and sorted according to the file affiliation. に類似しているローカライズされた文字列を検索します。
+        ///   PSO2 data files are divided into two groups according to extension and file name. If you check this checkbox, subdirectories &quot;group1&quot; and &quot;group2&quot; will be created at the time of unpacking and sorted according to the file affiliation.
+        ///
+        ///Do not change if you are not sure. に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        public static string SeparateByGroupCheckBoxToolTip {
+        public static string SeparateByGroupInformation {
             get {
-                return ResourceManager.GetString("SeparateByGroupCheckBoxToolTip", resourceCulture);
+                return ResourceManager.GetString("SeparateByGroupInformation", resourceCulture);
             }
         }
         
@@ -445,7 +464,8 @@ namespace NgsPacker.Properties {
         }
         
         /// <summary>
-        ///   Batch unpacks only the files contained in the line-delimited file list. に類似しているローカライズされた文字列を検索します。
+        ///   Unpack all at once from the file list.
+        ///The file list format is a list of file names from the data directory separated by newlines. に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string UnpackByFilelistInformationText {
             get {
@@ -468,15 +488,6 @@ namespace NgsPacker.Properties {
         public static string UnpackDialogText {
             get {
                 return ResourceManager.GetString("UnpackDialogText", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Select the PSO2 data file directory (win32 or win32_reboot). に類似しているローカライズされた文字列を検索します。
-        /// </summary>
-        public static string UnpackDirectoryDialogText {
-            get {
-                return ResourceManager.GetString("UnpackDirectoryDialogText", resourceCulture);
             }
         }
         
