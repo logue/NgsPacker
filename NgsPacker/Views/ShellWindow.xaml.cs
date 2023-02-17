@@ -6,11 +6,11 @@
 // -----------------------------------------------------------------------
 
 using ModernWpf;
-using NgsPacker.Helpers;
 using System;
 using System.Windows;
 using System.Windows.Interop;
 using System.Windows.Media;
+using static NgsPacker.Helpers.DwmApi;
 
 namespace NgsPacker.Views;
 
@@ -25,7 +25,6 @@ public partial class ShellWindow
     public ShellWindow()
     {
         InitializeComponent();
-        ContentRendered += Window_ContentRendered;
     }
 
     /// <summary>
@@ -34,10 +33,44 @@ public partial class ShellWindow
     /// <param name="hWnd">ウィンドウハンドル</param>
     public static void UpdateStyleAttributes(HwndSource hWnd)
     {
-        // You can avoid using ModernWpf here and just rely on Win32 APIs or registry parsing if you want to.
-        bool darkThemeEnabled = ThemeManager.Current.ActualApplicationTheme == ApplicationTheme.Dark;
+        int trueValue = 0x01;
+        int falseValue = 0x00;
 
-        DwmApi.EnableMica(hWnd, darkThemeEnabled);
+        // ダークモードの切り替え
+        if (ThemeManager.Current.ActualApplicationTheme == ApplicationTheme.Dark)
+        {
+            DwmSetWindowAttribute(
+                hWnd.Handle,
+                DWMWINDOWATTRIBUTE.DWMWA_USE_IMMERSIVE_DARK_MODE,
+                ref trueValue,
+                sizeof(uint));
+        }
+        else
+        {
+            DwmSetWindowAttribute(
+                hWnd.Handle,
+                DWMWINDOWATTRIBUTE.DWMWA_USE_IMMERSIVE_DARK_MODE,
+                ref falseValue,
+                sizeof(uint));
+        }
+
+        // ウィンドウの角を丸くする
+        int rounded = (int)DWM_WINDOW_CORNER_PREFERENCE.DWMWCP_ROUND;
+
+        DwmSetWindowAttribute(
+            hWnd.Handle,
+            DWMWINDOWATTRIBUTE.DWMWA_WINDOW_CORNER_PREFERENCE,
+            ref rounded,
+            sizeof(uint));
+
+        // ウィンドウの背景を半透過にする
+        int mica = (int)DWM_SYSTEMBACKDROP_TYPE.DWMSBT_MAINWINDOW;
+
+        DwmSetWindowAttribute(
+            hWnd.Handle,
+            DWMWINDOWATTRIBUTE.DWMWA_SYSTEMBACKDROP_TYPE,
+            ref mica,
+            sizeof(uint));
     }
 
     private void Window_ContentRendered(object sender, EventArgs e)

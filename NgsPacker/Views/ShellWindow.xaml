@@ -13,6 +13,7 @@
     Title="{Binding Title}"
     Width="640"
     Height="480"
+    d:Background="White"
     d:DataContext="{d:DesignInstance Type=vm:ShellWindowViewModel}"
     lex:LocalizeDictionary.DesignCulture="en"
     lex:ResxLocalizationProvider.DefaultAssembly="NgsPacker"
@@ -21,6 +22,7 @@
     ui:ThemeManager.IsThemeAware="True"
     ui:WindowHelper.UseModernWindowStyle="True"
     Background="Transparent"
+    ContentRendered="Window_ContentRendered"
     Foreground="{DynamicResource SystemControlPageTextBaseHighBrush}"
     Loaded="Window_Loaded"
     mc:Ignorable="d">

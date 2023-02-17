@@ -9,14 +9,12 @@ using ImTools;
 using NgsPacker.Entities;
 using NgsPacker.Helpers;
 using NgsPacker.Interfaces;
-using NgsPacker.Properties;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace NgsPacker.Services;
@@ -26,12 +24,6 @@ namespace NgsPacker.Services;
 /// </summary>
 public class CacheDbService : ICacheDbService, IDisposable
 {
-    /// <summary>
-    ///     データファイルのある場所へのパス
-    /// </summary>
-    private readonly string dataPath = Settings.Default.Pso2BinPath + Path.DirectorySeparatorChar + "data" +
-                                       Path.DirectorySeparatorChar;
-
     /// <summary>
     ///     Zamboniサービス
     /// </summary>
@@ -55,7 +47,8 @@ public class CacheDbService : ICacheDbService, IDisposable
     /// <inheritdoc />
     public async Task ScanFileｓ(DataDirectoryType target = DataDirectoryType.Ngs, bool force = false)
     {
-        List<string> entries = new(Directory.EnumerateFiles(dataPath, "*.*", SearchOption.AllDirectories));
+        List<string> entries =
+            new(Directory.EnumerateFiles(IceUtility.GetDataDir(), "*.*", SearchOption.AllDirectories));
         Debug.WriteLine("Entries: ", entries.Count);
 
         // CSVのヘッダ
@@ -64,7 +57,7 @@ public class CacheDbService : ICacheDbService, IDisposable
             Debug.Print(path);
 
             // ディレクトリチェック
-            if (IsTargetPath(path))
+            if (IceUtility.IsTargetPath(path))
             {
                 // 除外条件だった場合スキップ
                 continue;
@@ -74,7 +67,7 @@ public class CacheDbService : ICacheDbService, IDisposable
             byte[] buffer = await File.ReadAllBytesAsync(path);
 
             // Iceファイルのヘッダチェック
-            if (buffer.Length <= 127 || buffer[0] != 73 || buffer[1] != 67 || buffer[2] != 69 || buffer[3] != 0)
+            if (IceUtility.IsIceFile(buffer))
             {
                 // Iceファイルでない場合はスキップ
                 continue;
@@ -143,39 +136,5 @@ public class CacheDbService : ICacheDbService, IDisposable
 
         context.Dispose();
         context = null;
-    }
-
-    /// <summary>
-    ///     対象のパスかの判定（後日、このクラスから独立させる予定）
-    /// </summary>
-    /// <param name="path">対象パス</param>
-    /// <param name="target">対象ディレクトリ</param>
-    /// <returns>対象だった場合true、そうでない場合false。licenseディレクトリは常にfalse</returns>
-    private static bool IsTargetPath(string path, DataDirectoryType target = DataDirectoryType.Ngs)
-    {
-        if (path.Contains('.'))
-        {
-            // 入力パスがディレクトリの場合false
-            return false;
-        }
-
-        switch (target)
-        {
-            case DataDirectoryType.Pso:
-                // PSO2ディレクトリのみの場合
-                return Regex.IsMatch(path, "win32" + Path.DirectorySeparatorChar) ||
-                       Regex.IsMatch(path, "win32_na" + Path.DirectorySeparatorChar);
-            case DataDirectoryType.Ngs:
-                // NGSディレクトリのみの場合
-                return Regex.IsMatch(path, "win32reboot" + Path.DirectorySeparatorChar) ||
-                       Regex.IsMatch(path, "win32reboot_na" + Path.DirectorySeparatorChar);
-            default:
-            case DataDirectoryType.All:
-                // すべて対象にする場合
-                break;
-        }
-
-        // ライセンスディレクトリは対象外
-        return !Regex.IsMatch(path, "license");
     }
 }

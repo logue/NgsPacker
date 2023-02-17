@@ -7,6 +7,7 @@
 
 using ModernWpf;
 using ModernWpf.Controls;
+using NgsPacker.Helpers;
 using NgsPacker.Interfaces;
 using NgsPacker.Models;
 using NgsPacker.Properties;
@@ -107,7 +108,11 @@ public class ShellWindowViewModel : BindableBase
     /// </summary>
     public void OnLoaded()
     {
-        if (!File.Exists(Settings.Default.Pso2BinPath + Path.DirectorySeparatorChar + "pso2.exe"))
+        try
+        {
+            _ = IceUtility.GetDataDir();
+        }
+        catch (FileNotFoundException)
         {
             // pso.exe存在確認チェック
             _ = MessageBox.Show(

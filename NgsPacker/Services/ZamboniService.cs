@@ -6,6 +6,7 @@
 // -----------------------------------------------------------------------
 
 using ImTools;
+using NgsPacker.Helpers;
 using NgsPacker.Interfaces;
 using NgsPacker.Models;
 using NgsPacker.Properties;
@@ -246,7 +247,7 @@ public class ZamboniService : IZamboniService
             byte[] buffer = await File.ReadAllBytesAsync(path);
 
             // Iceファイルのヘッダチェック
-            if (IsNotIce(buffer))
+            if (!IceUtility.IsIceFile(buffer))
             {
                 continue;
             }
@@ -336,7 +337,7 @@ public class ZamboniService : IZamboniService
         // IceFile.LoadIceFile(fs).header;
 
         // Iceファイルのヘッダチェック
-        if (IsNotIce(buffer))
+        if (!IceUtility.IsIceFile(buffer))
         {
             throw new ArgumentException("Not ice file.");
         }
@@ -356,7 +357,7 @@ public class ZamboniService : IZamboniService
         byte[] buffer = await File.ReadAllBytesAsync(inputPath);
 
         // Iceファイルのヘッダチェック
-        if (IsNotIce(buffer))
+        if (!IceUtility.IsIceFile(buffer))
         {
             throw new ArgumentException("Not ice file.");
         }
@@ -407,16 +408,6 @@ public class ZamboniService : IZamboniService
         }
 
         return ret;
-    }
-
-    /// <summary>
-    ///     Iceファイルヘッダー簡易チェック
-    /// </summary>
-    /// <param name="buffer">データのバイト</param>
-    /// <returns>Iceファイルである場合false、Ice出ない場合true</returns>
-    public static bool IsNotIce(byte[] buffer)
-    {
-        return buffer.Length <= 127 || buffer[0] != 73 || buffer[1] != 67 || buffer[2] != 69 || buffer[3] != 0;
     }
 
     /// <summary>

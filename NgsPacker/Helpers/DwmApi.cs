@@ -7,7 +7,6 @@
 
 using System;
 using System.Runtime.InteropServices;
-using System.Windows.Interop;
 
 namespace NgsPacker.Helpers;
 
@@ -18,41 +17,26 @@ namespace NgsPacker.Helpers;
 public class DwmApi
 {
     /// <summary>
-    ///     Enable Mica on the given HWND.
+    ///     ウィンドウの属性設定
     /// </summary>
-    /// <param name="source">対象のハンドル</param>
-    /// <param name="darkThemeEnabled">ダークモードか</param>
-    /// <see
-    ///     href="https://github.com/MicrosoftDocs/windows-dev-docs/blob/docs/hub/apps/desktop/modernize/apply-rounded-corners.md" />
-    public static void EnableMica(HwndSource source, bool darkThemeEnabled)
+    /// <param name="hWnd">ウィンドウハンドル</param>
+    /// <param name="attribute">属性</param>
+    /// <param name="parameter">属性のパラメータ</param>
+    /// <returns>結果</returns>
+    public static HRESULT SetWindowAttribute(IntPtr hWnd, DWMWINDOWATTRIBUTE attribute, int parameter)
     {
-        // ちゃんと動くけどたぶん記述が間違っている
-        DWM_WINDOW_CORNER_PREFERENCE rounded = DWM_WINDOW_CORNER_PREFERENCE.DWMWCP_ROUND;
-        DWM_WINDOW_CORNER_PREFERENCE normal = DWM_WINDOW_CORNER_PREFERENCE.DWMWCP_DEFAULT;
+        return DwmSetWindowAttribute(hWnd, attribute, ref parameter, Marshal.SizeOf<int>());
+    }
 
-        // Set dark mode before applying the material, otherwise you'll get an ugly flash when displaying the window.
-        if (darkThemeEnabled)
-        {
-            DwmSetWindowAttribute(
-                source.Handle,
-                DWMWINDOWATTRIBUTE.DWMWA_USE_IMMERSIVE_DARK_MODE,
-                ref rounded,
-                sizeof(uint));
-        }
-        else
-        {
-            DwmSetWindowAttribute(
-                source.Handle,
-                DWMWINDOWATTRIBUTE.DWMWA_USE_IMMERSIVE_DARK_MODE,
-                ref normal,
-                sizeof(uint));
-        }
-
-        DwmSetWindowAttribute(
-            source.Handle,
-            DWMWINDOWATTRIBUTE.DWMWA_SYSTEMBACKDROP_TYPE,
-            ref rounded,
-            sizeof(uint));
+    /// <summary>
+    ///     クライアントエリアのフレームを拡張
+    /// </summary>
+    /// <param name="hWnd">ウィンドウハンドル</param>
+    /// <param name="margins">余白</param>
+    /// <returns>結果</returns>
+    public static HRESULT ExtendFrame(IntPtr hWnd, MARGINS margins)
+    {
+        return DwmExtendFrameIntoClientArea(hWnd, ref margins);
     }
 
     /// <summary>
@@ -74,46 +58,39 @@ public class DwmApi
     ///     パラメーターの値によって異なります。
     /// </param>
     /// <see href="https://learn.microsoft.com/ja-jp/windows/win32/api/dwmapi/nf-dwmapi-dwmsetwindowattribute" />
+    /// <returns>
+    ///     この関数が成功すると、 S_OKが返されます。 それ以外の場合は、see cref="HRESULT">HRESULT</see>エラー コードが返されます。
+    /// </returns>
     [DllImport("dwmapi.dll", CharSet = CharSet.Unicode, PreserveSig = false)]
-    internal static extern void DwmSetWindowAttribute(
+    internal static extern HRESULT DwmSetWindowAttribute(IntPtr hWnd, DWMWINDOWATTRIBUTE dwAttribute,
+        ref int pvAttribute, int cbAttribute);
+
+    /// <summary>
+    ///     ウィンドウ フレームをクライアント領域に拡張します。
+    /// </summary>
+    /// <param name="hWnd">フレームがクライアント領域に拡張されるウィンドウへのハンドル。</param>
+    /// <param name="pMarInset">クライアント領域にフレームを拡張するときに使用する余白を記述する MARGINS 構造体へのポインター。</param>
+    /// <returns>クライアント領域にフレームを拡張するときに使用する余白を記述する MARGINS 構造体へのポインター。</returns>
+    [DllImport("dwmapi.dll", CharSet = CharSet.Unicode, PreserveSig = false)]
+    internal static extern HRESULT DwmExtendFrameIntoClientArea(
         IntPtr hWnd,
-        DWMWINDOWATTRIBUTE dwAttribute,
-        ref DWM_WINDOW_CORNER_PREFERENCE pvAttribute, // そもそもここの記述おかしくない？
-        uint cbAttribute);
+        ref MARGINS pMarInset);
 
 #pragma warning disable CA1707 // 識別子はアンダースコアを含むことはできません
-    /// <summary>
-    ///     DwmSetWindowAttribute 関数がウィンドウの角を丸く設定するために使用するフラグ。
-    /// </summary>
-    [Flags]
-    public enum DWM_WINDOW_CORNER_PREFERENCE
+    [StructLayout(LayoutKind.Sequential)]
+    public struct MARGINS
     {
-        /// <summary>
-        ///     ウィンドウの角を丸めるタイミングをシステムに決定させます。
-        /// </summary>
-        DWMWCP_DEFAULT = 0,
-
-        /// <summary>
-        ///     ウィンドウの角は丸められません。
-        /// </summary>
-        DWMWCP_DONOTROUND = 1,
-
-        /// <summary>
-        ///     必要に応じて、角を丸くします。
-        /// </summary>
-        DWMWCP_ROUND = 2,
-
-        /// <summary>
-        ///     必要に応じて角を丸め、半径を小さくします。
-        /// </summary>
-        DWMWCP_ROUNDSMALL = 3
+        public int cxLeftWidth; // width of left border that retains its size
+        public int cxRightWidth; // width of right border that retains its size
+        public int cyTopHeight; // height of top border that retains its size
+        public int cyBottomHeight; // height of bottom border that retains its size
     }
 
     /// <summary>
     ///     DwmGetWindowAttribute 関数と DwmSetWindowAttribute 関数で使用されるオプション。
     /// </summary>
     [Flags]
-    public enum DWMWINDOWATTRIBUTE : uint
+    public enum DWMWINDOWATTRIBUTE
     {
         /// <summary>
         ///     DwmGetWindowAttribute で使用します。 クライアント以外のレンダリングが有効になっているかどうかを検出します。
@@ -283,9 +260,83 @@ public class DwmApi
     }
 
     /// <summary>
+    ///     戻り値が成功または失敗を表すかどうかを示します。
+    /// </summary>
+    [Flags]
+    public enum HRESULT
+    {
+        /// <summary>
+        ///     成功
+        /// </summary>
+        FACILITY_NULL = 0,
+
+        /// <summary>
+        ///     リモート プロシージャ コールから返される状態コードの場合。
+        /// </summary>
+        FACILITY_RPC = 1,
+
+        /// <summary>
+        ///     遅延バインディング IDispatch インターフェイス エラーの場合。
+        /// </summary>
+        FACILITY_DISPATCH = 2,
+
+        /// <summary>
+        ///     構造化ストレージに関連する IStorage または IStream メソッド呼び出しから返される状態コード。 コード (下位 16 ビット) の値が MS-DOS エラー コード (つまり、256 未満)
+        ///     の範囲内にある状態コードは、対応する MS-DOS エラーと同じ意味を持ちます。
+        /// </summary>
+        FACILITY_STORAGE = 3,
+
+        /// <summary>
+        ///     インターフェイス メソッドから返されるほとんどの状態コード。 エラーの実際の意味は、インターフェイスによって定義されます。 つまり、2 つの異なるインターフェイスから返されるまったく同じ 32 ビット値を持つ 2 つの
+        ///     HRESULT の意味が異なる場合があります。
+        /// </summary>
+        FACILITY_ITF = 4,
+
+        /// <summary>
+        ///     Windows API の関数のエラー コードを HRESULT として処理する手段を提供するために使用されます。 重複するシステム エラー コードを示す 16 ビット OLE のエラー
+        ///     コードもFACILITY_WIN32に変更されました。
+        /// </summary>
+        FACILITY_WIN32 = 7,
+
+        /// <summary>
+        ///     Microsoft が定義したインターフェイスからの追加のエラー コードに使用されます。
+        /// </summary>
+        FACILITY_WINDOWS = 8
+    }
+
+    /// <summary>
+    ///     DwmSetWindowAttribute 関数がウィンドウの角を丸く設定するために使用するフラグ。
+    /// </summary>
+    [Flags]
+    public enum DWM_WINDOW_CORNER_PREFERENCE
+    {
+        /// <summary>
+        ///     ウィンドウの角を丸めるタイミングをシステムに決定させます。
+        /// </summary>
+        DWMWCP_DEFAULT = 0,
+
+        /// <summary>
+        ///     ウィンドウの角は丸められません。
+        /// </summary>
+        DWMWCP_DONOTROUND = 1,
+
+        /// <summary>
+        ///     必要に応じて、角を丸くします。
+        /// </summary>
+        DWMWCP_ROUND = 2,
+
+        /// <summary>
+        ///     必要に応じて角を丸め、半径を小さくします。
+        /// </summary>
+        DWMWCP_ROUNDSMALL = 3
+    }
+
+
+    /// <summary>
     ///     クライアント以外の領域の背後を含む、ウィンドウのシステム描画の背景マテリアルを指定するためのフラグ。
     /// </summary>
-    private enum DWM_SYSTEMBACKDROP_TYPE
+    [Flags]
+    public enum DWM_SYSTEMBACKDROP_TYPE
     {
         /// <summary>
         ///     これが既定値です。 デスクトップ ウィンドウ マネージャー (DWM) が、このウィンドウのシステム描画の背景マテリアルを自動的に決定できるようにします。
@@ -300,17 +351,17 @@ public class DwmApi
         /// <summary>
         ///     有効期間の長いウィンドウに対応する背景素材効果を描画します。
         /// </summary>
-        DWMSBT_MAINWINDOW,
+        DWMSBT_MAINWINDOW, // マイカ
 
         /// <summary>
         ///     一時的なウィンドウに対応する背景マテリアル効果を描画します。
         /// </summary>
-        DWMSBT_TRANSIENTWINDOW,
+        DWMSBT_TRANSIENTWINDOW, // アクリル
 
         /// <summary>
         ///     タブ付きのタイトル バーがあるウィンドウに対応する背景素材効果を描画します。
         /// </summary>
-        DWMSBT_TABBEDWINDOW
+        DWMSBT_TABBEDWINDOW // タブ
     }
 #pragma warning restore CA1707 // 識別子はアンダースコアを含むことはできません
 }
