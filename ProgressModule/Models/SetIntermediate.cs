@@ -7,7 +7,7 @@
 
 using Prism.Events;
 
-namespace ProgressModule.Models;
+namespace NgsPacker.Models;
 
 /// <summary>
 ///     中間状態に変化した

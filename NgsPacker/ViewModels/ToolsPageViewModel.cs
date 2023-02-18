@@ -28,7 +28,6 @@ public class ToolsPageViewModel : BindableBase
     /// </summary>
     private readonly ILocalizeService localizeService;
 
-
     /// <summary>
     ///     Zamboniサービス
     /// </summary>
@@ -61,7 +60,6 @@ public class ToolsPageViewModel : BindableBase
     ///     スキャンボタンが押された
     /// </summary>
     public DelegateCommand ScanCommand { get; }
-
 
     /// <summary>
     ///     スキャン処理

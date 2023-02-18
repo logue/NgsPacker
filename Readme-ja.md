@@ -40,7 +40,7 @@
 
 ## ライセンス
 
-[MIT](./LICENSE)
+©2021-2023 by Logue. Licensed under the [MIT License](./LICENSE).
 
 本ツールは、[Shadowth117](https://github.com/Shadowth117)氏の[ZamboniLib](https://github.com/Shadowth117/ZamboniLib)および、[PizzaCrust](https://github.com/PizzaCrust)氏の[ooz-sys](https://github.com/PizzaCrust/ooz-sys)を使用しています。
 

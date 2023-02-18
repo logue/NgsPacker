@@ -48,7 +48,8 @@
         </Grid>
         <ui:SimpleStackPanel>
             <TextBlock Text="{lex:Loc ChecksumFileInformationText}" TextWrapping="Wrap" />
-            <ui:HyperlinkButton Content="{lex:Loc ChecksumFile}" NavigateUri="https://ngs.logue.dev/data/d4455ebc2bef618f29106da7692ebc1a" />
+            <ui:HyperlinkButton Content="{lex:Loc ChecksumFile}"
+                                NavigateUri="https://ngs.logue.dev/data/d4455ebc2bef618f29106da7692ebc1a" />
         </ui:SimpleStackPanel>
 
     </ui:SimpleStackPanel>

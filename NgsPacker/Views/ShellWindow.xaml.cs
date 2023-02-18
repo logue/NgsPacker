@@ -64,12 +64,12 @@ public partial class ShellWindow
             sizeof(uint));
 
         // ウィンドウの背景を半透過にする
-        int mica = (int)DWM_SYSTEMBACKDROP_TYPE.DWMSBT_MAINWINDOW;
+        int bg = (int)DWM_SYSTEMBACKDROP_TYPE.DWMSBT_TABBEDWINDOW;
 
         DwmSetWindowAttribute(
             hWnd.Handle,
             DWMWINDOWATTRIBUTE.DWMWA_SYSTEMBACKDROP_TYPE,
-            ref mica,
+            ref bg,
             sizeof(uint));
     }
 

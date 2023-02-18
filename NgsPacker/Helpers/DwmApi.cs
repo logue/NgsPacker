@@ -77,13 +77,31 @@ public class DwmApi
         ref MARGINS pMarInset);
 
 #pragma warning disable CA1707 // 識別子はアンダースコアを含むことはできません
+    /// <summary>
+    ///     クライアント領域のフレームの余白
+    /// </summary>
     [StructLayout(LayoutKind.Sequential)]
     public struct MARGINS
     {
-        public int cxLeftWidth; // width of left border that retains its size
-        public int cxRightWidth; // width of right border that retains its size
-        public int cyTopHeight; // height of top border that retains its size
-        public int cyBottomHeight; // height of bottom border that retains its size
+        /// <summary>
+        ///     左の幅
+        /// </summary>
+        public int LeftWidth;
+
+        /// <summary>
+        ///     右の幅
+        /// </summary>
+        public int RightWidth;
+
+        /// <summary>
+        ///     上の幅
+        /// </summary>
+        public int TopHeight;
+
+        /// <summary>
+        ///     下の幅
+        /// </summary>
+        public int BottomHeight;
     }
 
     /// <summary>
@@ -330,7 +348,6 @@ public class DwmApi
         /// </summary>
         DWMWCP_ROUNDSMALL = 3
     }
-
 
     /// <summary>
     ///     クライアント以外の領域の背後を含む、ウィンドウのシステム描画の背景マテリアルを指定するためのフラグ。

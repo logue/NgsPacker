@@ -5,15 +5,18 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-using System.Windows.Controls;
+using ModernWpf.Controls;
 
-namespace ProgressModule.Views;
+namespace NgsPacker.Views;
 
 /// <summary>
 ///     Interaction logic for ViewA.xaml
 /// </summary>
-public partial class ProgressModal : UserControl
+public partial class ProgressModal : ContentDialog
 {
+    /// <summary>
+    ///     Initializes a new instance of the <see cref="ProgressModal" /> class.
+    /// </summary>
     public ProgressModal()
     {
         InitializeComponent();

@@ -537,7 +537,7 @@ namespace NgsPacker.Properties {
         }
         
         /// <summary>
-        ///   File name to classify into group 1 (last match, Line break delimiter) に類似しているローカライズされた文字列を検索します。
+        ///   Files to be classified into group 1 when packed (suffix match/line feed delimiter) に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string WhiteListText {
             get {

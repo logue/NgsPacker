@@ -40,7 +40,8 @@
         <Separator />
         <TextBlock Text="{lex:Loc SegaCopyrightNotice}" TextWrapping="Wrap" />
         <Grid>
-            <ui:HyperlinkButton Content="{lex:Loc SegaCopyrightWarningLinkText}" NavigateUri="{lex:Loc SegaCopyrightWarningLinkUrl}" />
+            <ui:HyperlinkButton Content="{lex:Loc SegaCopyrightWarningLinkText}"
+                                NavigateUri="{lex:Loc SegaCopyrightWarningLinkUrl}" />
             <ui:SimpleStackPanel
                 HorizontalAlignment="Right"
                 Orientation="Horizontal"

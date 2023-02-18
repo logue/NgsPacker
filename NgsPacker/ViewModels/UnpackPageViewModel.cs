@@ -116,7 +116,7 @@ public class UnpackPageViewModel : BindableBase, INotifyPropertyChanged
         using OpenFileDialog openFileDialog = new()
         {
             Title = localizeService.GetLocalizedString("UnpackDialogText"),
-            InitialDirectory = Settings.Default.Pso2BinPath
+            InitialDirectory = Settings.Default.Pso2BinPath + Path.DirectorySeparatorChar + "data" + Path.DirectorySeparatorChar
         };
 
         // ダイアログを表示

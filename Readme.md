@@ -42,8 +42,8 @@ Please use it with common sense, and USE AT YOUR OWN RISK.
 
 ## License
 
-[MIT](./LICENSE)
+©2021-2023 by Logue. Licensed under the [MIT License](./LICENSE).
 
-This tool uses [Shadowth117](https://github.com/Shadowth117)'s [ZamboniLib](https://github.com/Shadowth117/ZamboniLib) and [PizzaCrust](https://github.com/PizzaCrust)'s [ooz-sys](https://github.com/PizzaCrust/ooz-sys).
+This progrem uses [Shadowth117](https://github.com/Shadowth117)'s [ZamboniLib](https://github.com/Shadowth117/ZamboniLib) and [PizzaCrust](https://github.com/PizzaCrust)'s [ooz-sys](https://github.com/PizzaCrust/ooz-sys).
 
 All rights to the copyrighted works (images, data, audios, texts, etc.) used in "PSO2: NGS" are owned by SEGA Corporation or its licensors.

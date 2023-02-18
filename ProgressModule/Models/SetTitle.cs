@@ -7,7 +7,7 @@
 
 using Prism.Events;
 
-namespace ProgressModule.Models;
+namespace NgsPacker.Models;
 
 /// <summary>
 ///     タイトルの値が変化した

@@ -17,7 +17,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows;
-using Module = ProgressModule.Module;
+using ProgressModule = NgsPacker.ProgressModule;
 
 namespace NgsPacker;
 
@@ -102,7 +102,7 @@ public partial class App : PrismApplication
     /// <param name="moduleCatalog">登録するモジュール</param>
     protected override void ConfigureModuleCatalog(IModuleCatalog moduleCatalog)
     {
-        _ = moduleCatalog.AddModule<Module>();
+        _ = moduleCatalog.AddModule<ProgressModule>();
     }
 #pragma warning disable SA1305
     /// <summary>

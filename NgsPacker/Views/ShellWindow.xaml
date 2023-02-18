@@ -22,12 +22,14 @@
     lex:ResxLocalizationProvider.DefaultDictionary="Resources"
     prism:ViewModelLocator.AutoWireViewModel="True"
     ui:ThemeManager.IsThemeAware="True"
+    ui:TitleBar.ExtendViewIntoTitleBar="False"
+    ui:TitleBar.Style="{DynamicResource AppTitleBarStyle}"
     ui:WindowHelper.UseModernWindowStyle="True"
     Background="Transparent"
     ContentRendered="Window_ContentRendered"
     Foreground="{DynamicResource SystemControlPageTextBaseHighBrush}"
     Loaded="Window_Loaded"
-    OverridesDefaultStyle="True"
+    WindowStartupLocation="CenterOwner"
     WindowStyle="None"
     mc:Ignorable="d">
     <WindowChrome.WindowChrome>

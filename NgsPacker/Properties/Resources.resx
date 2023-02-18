@@ -139,7 +139,7 @@
     <value>A desktop notification is issued when the process is completed.</value>
   </data>
   <data name="WhiteListText" xml:space="preserve">
-    <value>File name to classify into group 1 (last match, Line break delimiter)</value>
+    <value>Files to be classified into group 1 when packed (suffix match/line feed delimiter)</value>
   </data>
   <data name="UnpackText" xml:space="preserve">
     <value>Unpack</value>

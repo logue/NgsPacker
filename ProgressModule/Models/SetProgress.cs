@@ -7,7 +7,7 @@
 
 using Prism.Events;
 
-namespace ProgressModule.Models;
+namespace NgsPacker.Models;
 
 /// <summary>
 ///     進捗の値が変化した

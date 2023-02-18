@@ -139,7 +139,7 @@
     <value>処理完了時にデスクトップ通知を出します。</value>
   </data>
   <data name="WhiteListText" xml:space="preserve">
-    <value>グループ1に分類するファイル（後方一致・改行区切り）</value>
+    <value>パック時にグループ１に分類するファイル（後方一致・改行区切り）</value>
   </data>
   <data name="UnpackText" xml:space="preserve">
     <value>アンパック</value>

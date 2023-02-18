@@ -61,15 +61,16 @@
             </Button>
         </Grid>
         <Separator />
-        <Label Content="{lex:Loc WhiteListText}" />
+        <Label Content="{lex:Loc WhiteListText}" Target="{Binding ElementName=WhiteList}" />
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
             <TextBox
+                Name="WhiteList"
                 Grid.Column="0"
-                Height="150"
+                Height="180"
                 Margin="0,0,12,0"
                 HorizontalContentAlignment="Stretch"
                 VerticalContentAlignment="Stretch"

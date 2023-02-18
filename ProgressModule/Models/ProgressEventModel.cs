@@ -1,5 +1,5 @@
 // -----------------------------------------------------------------------
-// <copyright file="ProgressModel.cs" company="Logue">
+// <copyright file="ProgressEventModel.cs" company="Logue">
 // Copyright (c) 2021-2023 Masashi Yoshikawa All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 // </copyright>
@@ -8,19 +8,19 @@
 using Prism.Events;
 using Prism.Mvvm;
 
-namespace ProgressModule.Models;
+namespace NgsPacker.Models;
 
 /// <summary>
 ///     進捗モデル
 /// </summary>
-public class ProgressModel : BindableBase
+public class ProgressEventModel : BindableBase
 {
     /// <summary>
-    ///     Initializes a new instance of the <see cref="ProgressModel" /> class.
+    ///     Initializes a new instance of the <see cref="ProgressEventModel" /> class.
     ///     コンストラクタ
     /// </summary>
     /// <param name="eventAggregator">イベント</param>
-    public ProgressModel(IEventAggregator eventAggregator)
+    public ProgressEventModel(IEventAggregator eventAggregator)
     {
         Progress = 0;
 

@@ -8,6 +8,9 @@
   </PropertyGroup>
     <PropertyGroup>
       <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)..\StyleCop.Analyzers.ruleset</CodeAnalysisRuleSet>
+      <AnalysisLevel>6.0-recommended</AnalysisLevel>
+      <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
+      <RootNamespace>NgsPacker</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
     <AdditionalFiles Include="$(MSBuildThisFileDirectory)..\stylecop.json" Link="stylecop.json" />

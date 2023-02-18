@@ -5,14 +5,14 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using NgsPacker.Models;
 using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Services.Dialogs;
-using ProgressModule.Models;
 using System;
 using System.Windows;
 
-namespace ProgressModule.ViewModels;
+namespace NgsPacker.ViewModels;
 
 /// <summary>
 ///     進捗モーダルのビューモデル
@@ -23,7 +23,7 @@ public class ProgressModalViewModel : BindableBase, IDialogAware
     ///     Initializes a new instance of the <see cref="ProgressModalViewModel" /> class.
     /// </summary>
     /// <param name="model">進捗モデル</param>
-    public ProgressModalViewModel(ProgressModel model)
+    public ProgressModalViewModel(ProgressEventModel model)
     {
         Progress = model.Progress;
 
@@ -59,6 +59,8 @@ public class ProgressModalViewModel : BindableBase, IDialogAware
 
         CloseCommand =
             new DelegateCommand(() => CloseDialog(), () => Progress >= 100).ObservesProperty(() => Progress);
+        CancelCommand =
+            new DelegateCommand(() => CloseDialog(), () => Progress >= 100).ObservesProperty(() => Progress);
     }
 
     /// <summary>
@@ -85,6 +87,11 @@ public class ProgressModalViewModel : BindableBase, IDialogAware
     ///     閉じる
     /// </summary>
     public DelegateCommand CloseCommand { get; }
+
+    /// <summary>
+    ///     キャンセルボタン
+    /// </summary>
+    public DelegateCommand CancelCommand { get; }
 
     /// <summary>
     ///     タイトル
@@ -126,6 +133,6 @@ public class ProgressModalViewModel : BindableBase, IDialogAware
     /// </summary>
     private void CloseDialog()
     {
-        RequestClose?.Invoke(new DialogResult(ButtonResult.OK));
+        RequestClose?.Invoke(new DialogResult(ButtonResult.Cancel));
     }
 }
