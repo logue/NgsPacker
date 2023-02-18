@@ -17,7 +17,6 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows;
-using ProgressModule = NgsPacker.ProgressModule;
 
 namespace NgsPacker;
 
