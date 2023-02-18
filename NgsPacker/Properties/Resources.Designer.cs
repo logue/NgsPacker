@@ -354,13 +354,11 @@ namespace NgsPacker.Properties {
         }
         
         /// <summary>
-        ///   PSO2 data files are divided into two groups according to extension and file name. If you check this checkbox, subdirectories &quot;group1&quot; and &quot;group2&quot; will be created at the time of unpacking and sorted according to the file affiliation.
-        ///
-        ///Do not change if you are not sure. に類似しているローカライズされた文字列を検索します。
+        ///   PSO2 data files are divided into two groups according to extension and file name. If you check this checkbox, subdirectories &quot;group1&quot; and &quot;group2&quot; will be created at the time of unpacking and sorted according to the file affiliation. に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        public static string SeparateByGroupInformation {
+        public static string SeparateByGroupCheckBoxToolTip {
             get {
-                return ResourceManager.GetString("SeparateByGroupInformation", resourceCulture);
+                return ResourceManager.GetString("SeparateByGroupCheckBoxToolTip", resourceCulture);
             }
         }
         
@@ -533,6 +531,17 @@ namespace NgsPacker.Properties {
         public static string VisitText {
             get {
                 return ResourceManager.GetString("VisitText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   PSO2 game data is divided into Group 1 and Group 2 by extension and file name, and packed as one. Files contained in this form are assigned to Group 1.
+        ///
+        ///Do not change if you are not sure. に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string WhiteListInformation {
+            get {
+                return ResourceManager.GetString("WhiteListInformation", resourceCulture);
             }
         }
         

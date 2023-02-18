@@ -81,7 +81,7 @@
             <ui:SimpleStackPanel Grid.Column="1" Spacing="12">
                 <TextBlock
                     VerticalAlignment="Top"
-                    Text="{lex:Loc SeparateByGroupInformation}"
+                    Text="{lex:Loc WhiteListInformation}"
                     TextWrapping="Wrap" />
                 <Button
                     Padding="10,5"

@@ -2,8 +2,8 @@
 
 namespace NgsPacker.Migrations
 {
-    using System;
     using Microsoft.EntityFrameworkCore.Migrations;
+    using System;
 
     /// <inheritdoc />
     public partial class InitialCreate : Migration

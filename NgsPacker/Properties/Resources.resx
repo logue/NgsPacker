@@ -198,10 +198,8 @@ The authors are not responsible for any damage caused by that. Use it with commo
   <data name="SeparateByGroupCheckBoxText" xml:space="preserve">
     <value>Separate output directories by group</value>
   </data>
-  <data name="SeparateByGroupInformation" xml:space="preserve">
-    <value>PSO2 data files are divided into two groups according to extension and file name. If you check this checkbox, subdirectories "group1" and "group2" will be created at the time of unpacking and sorted according to the file affiliation.
-
-Do not change if you are not sure.</value>
+  <data name="SeparateByGroupCheckBoxToolTip" xml:space="preserve">
+    <value>PSO2 data files are divided into two groups according to extension and file name. If you check this checkbox, subdirectories "group1" and "group2" will be created at the time of unpacking and sorted according to the file affiliation.</value>
   </data>
   <data name="CompressCheckboxText" xml:space="preserve">
     <value>Compress</value>
@@ -285,5 +283,10 @@ The file list format is a list of file names from the data directory separated b
   </data>
   <data name="ChecksumFile" xml:space="preserve">
     <value>Download Checksum File</value>
+  </data>
+  <data name="WhiteListInformation" xml:space="preserve">
+    <value>PSO2 game data is divided into Group 1 and Group 2 by extension and file name, and packed as one. Files contained in this form are assigned to Group 1.
+
+Do not change if you are not sure.</value>
   </data>
 </root>
