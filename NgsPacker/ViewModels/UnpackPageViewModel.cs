@@ -222,7 +222,6 @@ public class UnpackPageViewModel : BindableBase, INotifyPropertyChanged
             return;
         }
 
-        // ファイル一覧を読み込む
         List<string> fileList = new(await File.ReadAllLinesAsync(openFileDialog.FileName));
 
         // 出力先ディレクトリ
@@ -239,7 +238,7 @@ public class UnpackPageViewModel : BindableBase, INotifyPropertyChanged
 
         fileList.ForEach(file =>
         {
-            string path = IceUtility.GetDataDir() + Path.DirectorySeparatorChar + file;
+            string path = IceUtility.GetDataDir() + file;
 
             if (File.Exists(path))
             {

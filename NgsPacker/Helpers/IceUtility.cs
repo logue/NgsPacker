@@ -1,4 +1,11 @@
-﻿using NgsPacker.Properties;
+// -----------------------------------------------------------------------
+// <copyright file="IceUtility.cs" company="Logue">
+// Copyright (c) 2021-2023 Masashi Yoshikawa All rights reserved.
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
+// </copyright>
+// -----------------------------------------------------------------------
+
+using NgsPacker.Properties;
 using System.IO;
 using System.Text.RegularExpressions;
 
@@ -35,29 +42,23 @@ public static class IceUtility
     }
 
     /// <summary>
-    ///     対象のパスかの判定（後日、このクラスから独立させる予定）
+    ///     対象のパスかの判定
     /// </summary>
     /// <param name="path">対象パス</param>
     /// <param name="target">対象ディレクトリ</param>
     /// <returns>対象だった場合true、そうでない場合false。licenseディレクトリは常にfalse</returns>
-    public static bool IsTargetPath(string path, DataDirectoryType target = DataDirectoryType.Ngs)
+    public static bool IsTargetPath(DirectoryInfo path, DataDirectoryType target = DataDirectoryType.Ngs)
     {
-        if (path.Contains('.'))
-        {
-            // 入力パスがディレクトリの場合false
-            return false;
-        }
-
         switch (target)
         {
             case DataDirectoryType.Pso:
                 // PSO2ディレクトリのみの場合
-                return Regex.IsMatch(path, "win32" + Path.DirectorySeparatorChar) ||
-                       Regex.IsMatch(path, "win32_na" + Path.DirectorySeparatorChar);
+                return Regex.IsMatch(path.Name, "win32") ||
+                       Regex.IsMatch(path.Name, "win32_na");
             case DataDirectoryType.Ngs:
                 // NGSディレクトリのみの場合
-                return Regex.IsMatch(path, "win32reboot" + Path.DirectorySeparatorChar) ||
-                       Regex.IsMatch(path, "win32reboot_na" + Path.DirectorySeparatorChar);
+                return Regex.IsMatch(path.Name, "win32reboot") ||
+                       Regex.IsMatch(path.Name, "win32reboot_na");
             default:
             case DataDirectoryType.All:
                 // すべて対象にする場合
@@ -65,13 +66,13 @@ public static class IceUtility
         }
 
         // ライセンスディレクトリは対象外
-        return !Regex.IsMatch(path, "license");
+        return !Regex.IsMatch(path.Name, "license");
     }
 
     /// <summary>
     ///     入力パスからdataディレクトリまでのパスを抜いた値を返す（win32_reboot\00\112da290e9b607c4ab330e4a9103e1）
     /// </summary>
-    /// <param name="inputPath">入力パス</param>
+    /// <param name="inputPath">入力フルパス</param>
     /// <returns>エントリ名</returns>
     public static string GetEntryName(string inputPath)
     {

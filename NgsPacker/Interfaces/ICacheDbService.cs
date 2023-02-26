@@ -21,7 +21,7 @@ public interface ICacheDbService
     /// <param name="target">対象</param>
     /// <param name="force">すべて書き直し</param>
     /// <returns>A <see cref="Task" /> representing the asynchronous operation.</returns>
-    public Task ScanFileｓ(DataDirectoryType target = DataDirectoryType.Ngs, bool force = false);
+    public Task ScanFiles(DataDirectoryType target = DataDirectoryType.Ngs, bool force = false);
 
     /// <summary>
     ///     ファイルの内容物レコードを作成する

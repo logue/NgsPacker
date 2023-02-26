@@ -5,6 +5,7 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using FastSearchLibrary;
 using ImTools;
 using NgsPacker.Entities;
 using NgsPacker.Helpers;
@@ -45,26 +46,26 @@ public class CacheDbService : ICacheDbService, IDisposable
     }
 
     /// <inheritdoc />
-    public async Task ScanFileｓ(DataDirectoryType target = DataDirectoryType.Ngs, bool force = false)
+    public async Task ScanFiles(DataDirectoryType target = DataDirectoryType.Ngs, bool force = false)
     {
-        List<string> entries =
-            new(Directory.EnumerateFiles(IceUtility.GetDataDir(), "*.*", SearchOption.AllDirectories));
+        List<FileInfo> entries = FileSearcher.GetFilesFast(IceUtility.GetDataDir(), "*.*");
+
         Debug.WriteLine("Entries: ", entries.Count);
 
         // CSVのヘッダ
-        foreach (string path in entries)
+        foreach (FileInfo path in entries)
         {
-            Debug.Print(path);
+            Debug.Print(path.Name);
 
             // ディレクトリチェック
-            if (IceUtility.IsTargetPath(path))
+            if (IceUtility.IsTargetPath(path.Directory))
             {
                 // 除外条件だった場合スキップ
                 continue;
             }
 
             // Iceファイルをバイトとして読み込む
-            byte[] buffer = await File.ReadAllBytesAsync(path);
+            byte[] buffer = await File.ReadAllBytesAsync(path.FullName);
 
             // Iceファイルのヘッダチェック
             if (IceUtility.IsIceFile(buffer))
@@ -83,14 +84,16 @@ public class CacheDbService : ICacheDbService, IDisposable
             string fileHash = BitConverter.ToString(hash).Replace("-", string.Empty);
 
             // ファイルのエントリ
-            IceFiles fileEntry = context.IceFiles.Single(x => x.Name == path);
+            IceFiles fileEntry = context.IceFiles.Single(x => x.Name == path.FullName);
 
             if (fileEntry.List().IsEmpty)
             {
                 // 新規登録
                 await context.IceFiles.AddAsync(new IceFiles
                 {
-                    Name = path, Hash = fileHash, UpdatedAt = File.GetLastWriteTime(path)
+                    Name = IceUtility.GetEntryName(path.FullName),
+                    Hash = fileHash,
+                    UpdatedAt = File.GetLastWriteTime(path.FullName)
                 });
             }
             else

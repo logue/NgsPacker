@@ -5,6 +5,7 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using FastSearchLibrary;
 using ImTools;
 using NgsPacker.Helpers;
 using NgsPacker.Interfaces;
@@ -83,6 +84,9 @@ public class ZamboniService : IZamboniService
             ? Directory.EnumerateFiles(inputPath, "*.*", SearchOption.AllDirectories).ToArray()
             : Directory.GetFiles(inputPath);
 
+        // ファイル一覧を読み込む
+        List<FileInfo> entries = FileSearcher.GetFilesFast(IceUtility.GetDataDir(), "*.*");
+
         // グループ1に書き込むバイナリデータ
         List<byte[]> group1Binaries = new();
 
@@ -147,7 +151,7 @@ public class ZamboniService : IZamboniService
         }
 
         // Iceファイルを読み込む
-        IceFile iceFile = LoadIceFile(inputPath);
+        IceFile iceFile = await LoadIceFileAsync(inputPath);
 
         // 出力先のディレクトリ（ファイル名_ext）　※repack_ice.exeと同じ仕様
         string destination = outputPath +
@@ -418,7 +422,7 @@ public class ZamboniService : IZamboniService
         List<IceEntryModel> ret = new();
 
         // 入力ディレクトリ内のファイルを走査
-        foreach (string fileName in files)
+        files.ForEach(fileName =>
         {
             // ファイルをバイト配列として読み込む
             ret.Add(new IceEntryModel
@@ -427,7 +431,7 @@ public class ZamboniService : IZamboniService
                 Content = File.ReadAllBytes(fileName),
                 Group = whiteList.Contains(fileName) ? IceGroup.Group1 : IceGroup.Group2
             });
-        }
+        });
 
         return ret;
     }

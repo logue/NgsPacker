@@ -60,10 +60,8 @@ public class LocalizeService : ILocalizeService
     /// <inheritdoc />
     public string GetLocalizedString(string key)
     {
-#pragma warning disable SA1305
         LocExtension locExtension = new(key);
         _ = locExtension.ResolveLocalizedValue(out string uiString);
         return uiString;
-#pragma warning restore SA1305
     }
 }
