@@ -71,7 +71,7 @@ public class ShellWindowViewModel : BindableBase
     /// <summary>
     ///     アプリケーション名
     /// </summary>
-    public string Title { get; set; } = "Prism Application";
+    public string Title { get; set; }
 
     /// <summary>
     ///     ナビゲーション変更

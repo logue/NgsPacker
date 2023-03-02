@@ -7,6 +7,7 @@
 
 using FastSearchLibrary;
 using ImTools;
+using NgsPacker.Events;
 using NgsPacker.Helpers;
 using NgsPacker.Interfaces;
 using NgsPacker.Models;
@@ -17,7 +18,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Zamboni;
@@ -71,21 +71,20 @@ public class ZamboniService : IZamboniService
     public async Task<byte[]> Pack(string inputPath, bool recursive = true, bool compress = false,
         bool forceUnencrypted = false)
     {
+        _ = progressDialog.ShowAsync();
+        eventAggregator.GetEvent<ProgressEvent>().Publish(new ProgressEventModel
+        {
+            Title = "Pack", Message = "Initializing...", IsIntermediate = true
+        });
+
         // ディレクトリの存在チェック
         if (!Directory.Exists(inputPath))
         {
             throw new DirectoryNotFoundException("ZamboniService: Input directory is not found.");
         }
 
-        _ = progressDialog.ShowAsync();
-
-        // ファイル一覧を取得
-        string[] files = recursive
-            ? Directory.EnumerateFiles(inputPath, "*.*", SearchOption.AllDirectories).ToArray()
-            : Directory.GetFiles(inputPath);
-
         // ファイル一覧を読み込む
-        List<FileInfo> entries = FileSearcher.GetFilesFast(IceUtility.GetDataDir(), "*.*");
+        Task<List<FileInfo>> fileList = FileSearcher.GetFilesFastAsync(inputPath, "*.*");
 
         // グループ1に書き込むバイナリデータ
         List<byte[]> group1Binaries = new();
@@ -94,18 +93,25 @@ public class ZamboniService : IZamboniService
         List<byte[]> group2Binaries = new();
 
         // 入力ディレクトリ内のファイルを走査
-        foreach (string currentFile in files)
-        {
-            // 入力ファイル
-            string fileName = Path.GetFileName(currentFile);
+        List<FileInfo> files = await fileList;
 
-            // int index = files.IndexOf(currentFile);
+        files.ForEach(file =>
+        {
+            eventAggregator.GetEvent<ProgressEvent>().Publish(new ProgressEventModel
+            {
+                Title = "Pack",
+                Message = "Packing...",
+                Min = 0,
+                Max = files.Count,
+                Value = files.IndexOf(file),
+                IsIntermediate = false
+            });
 
             // ファイルをバイト配列として読み込む
-            List<byte> file = new(await File.ReadAllBytesAsync(currentFile));
+            List<byte> bytes = new(File.ReadAllBytes(file.FullName));
 
             // ヘッダを書き込む
-            file.InsertRange(0, new IceFileHeader(currentFile, (uint)file.Count).GetBytes());
+            bytes.InsertRange(0, new IceFileHeader(file.FullName, (uint)bytes.Count).GetBytes());
 
             // グループ1と2でファイルを振り分ける
             // 本プログラムでは設定画面から振り分けるファイルを定義する。
@@ -114,17 +120,17 @@ public class ZamboniService : IZamboniService
             // 　たとえばテスクチャなどの.ddsファイルはグループ1に書き込まれるが、
             // 　モデルやポリゴンを定義するaqoファイルなどはグループ2に書き込まれないと動かない。
             // 　ちなみに、グループ1に書き込まれるoxyresource.crcは、Modを有効化させるとき必要だぞ。
-            if (whiteList.Contains(fileName))
+            if (whiteList.Contains(file.Name))
             {
                 // グループ1に分類されるファイル
-                group1Binaries.Add(file.ToArray());
+                group1Binaries.Add(bytes.ToArray());
             }
             else
             {
                 // グループ2に分類されるファイル
-                group2Binaries.Add(file.ToArray());
+                group2Binaries.Add(bytes.ToArray());
             }
-        }
+        });
 
         // ヘッダ
         IceArchiveHeader header = new();
@@ -144,6 +150,11 @@ public class ZamboniService : IZamboniService
         bool separate = false)
     {
         _ = progressDialog.ShowAsync();
+
+        eventAggregator.GetEvent<ProgressEvent>().Publish(new ProgressEventModel
+        {
+            Title = "Unpack", Message = "Loading " + inputPath + "...", IsIntermediate = true
+        });
 
         if (string.IsNullOrEmpty(outputPath))
         {
@@ -200,14 +211,22 @@ public class ZamboniService : IZamboniService
 
         foreach (IceEntryModel model in groupOneFiles)
         {
-            // int index = groupOneFiles.IndexOf(model);
-
             // ファイル名（ひどい可読性だ）
             string fileName = destination + (separate
                                               ? (model.Group == IceGroup.Group1 ? "group1" : "group2") +
                                                 Path.DirectorySeparatorChar
                                               : string.Empty)
                                           + model.FileName;
+
+            eventAggregator.GetEvent<ProgressEvent>().Publish(new ProgressEventModel
+            {
+                Title = "Unpack",
+                Message = "Unpacking " + fileName,
+                Min = 0,
+                Max = groupOneFiles.Count,
+                Value = groupOneFiles.IndexOf(model),
+                IsIntermediate = false
+            });
 
             try
             {
@@ -232,43 +251,53 @@ public class ZamboniService : IZamboniService
     public async Task<List<string>> FileList(string inputPath)
     {
         _ = progressDialog.ShowAsync();
+        eventAggregator.GetEvent<ProgressEvent>().Publish(new ProgressEventModel
+        {
+            Title = "Scanning...", Message = "Initializing...", IsIntermediate = true
+        });
         List<string> ret = new();
-        List<string> entries = new(Directory.EnumerateFiles(inputPath, "*.*", SearchOption.AllDirectories));
+        // ファイル一覧を読み込む
+        Task<List<FileInfo>> fileList = FileSearcher.GetFilesFastAsync(inputPath, "*.*");
 
-        Debug.WriteLine("Entries: ", entries.Count);
+        // 入力ディレクトリ内のファイルを走査
+        List<FileInfo> files = await fileList;
+
+        Debug.WriteLine("Entries: ", files.Count);
 
         // CSVのヘッダ
         ret.Add("filename,version,group,content");
-        foreach (string path in entries)
+        foreach (FileInfo file in await fileList)
         {
-            Debug.WriteLine(path);
-
-            if (path.Contains('.'))
+            eventAggregator.GetEvent<ProgressEvent>().Publish(new ProgressEventModel
             {
-                continue;
-            }
+                Title = "Scanning...",
+                Message = file.FullName,
+                Min = 0,
+                Max = files.Count,
+                Value = files.IndexOf(file),
+                IsIntermediate = false
+            });
+
 
             // Iceファイルをバイトとして読み込む
-            byte[] buffer = await File.ReadAllBytesAsync(path);
+            Task<byte[]> buffer = File.ReadAllBytesAsync(file.FullName);
 
             // Iceファイルのヘッダチェック
-            if (!IceUtility.IsIceFile(buffer))
+            if (!IceUtility.IsIceFile(await buffer))
             {
                 continue;
             }
 
             // メモリーストリームを生成
-            using MemoryStream ms = new(buffer);
+            using MemoryStream ms = new(await buffer);
 
             // ヘッダを確認
             _ = ms.Seek(8L, SeekOrigin.Begin);
             int num = ms.ReadByte();
             _ = ms.Seek(0L, SeekOrigin.Begin);
 
-            FileInfo fileInfo = new(path);
-
             // dataディレクトリ以降のパスのファイル名を記入
-            string ice = IceUtility.GetEntryName(fileInfo.FullName) + ",ICE" + num + ",";
+            string ice = IceUtility.GetEntryName(file.FullName) + ",ICE" + num + ",";
 
             Debug.WriteLine(ice);
 
@@ -326,6 +355,8 @@ public class ZamboniService : IZamboniService
                 }
             }
         }
+
+        ;
 
         progressDialog.Hide();
         return ret;

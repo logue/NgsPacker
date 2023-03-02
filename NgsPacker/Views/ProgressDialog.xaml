@@ -5,17 +5,25 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:lex="http://wpflocalizeextension.codeplex.com"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:prism="http://prismlibrary.com/"
     xmlns:ui="http://schemas.modernwpf.com/2019"
-    Title="{lex:Loc ProgressDialogText}"
+    xmlns:vm="clr-namespace:NgsPacker.ViewModels"
+    Title="{Binding Title}"
+    d:Background="White"
+    d:DataContext="{d:DesignInstance Type=vm:ProgressDialogViewModel}"
     lex:LocalizeDictionary.DesignCulture="en"
     lex:ResxLocalizationProvider.DefaultAssembly="NgsPacker"
     lex:ResxLocalizationProvider.DefaultDictionary="Resources"
+    prism:ViewModelLocator.AutoWireViewModel="True"
     mc:Ignorable="d">
-    <Grid>
-        <ui:ProgressRing
-            Width="50"
-            Height="50"
-            HorizontalAlignment="Center"
-            IsActive="True" />
-    </Grid>
+    <ui:SimpleStackPanel>
+        <!--  プログレスバー  -->
+        <ui:ProgressBar
+            Margin="10,10,10,10"
+            Visibility="{Binding ProgressBarVisibility}"
+            Value="{Binding Progress, Mode=OneWay}" />
+        <ui:ProgressRing Visibility="{Binding ProgressRingVisibility}" />
+        <!--  進捗テキスト  -->
+        <TextBlock Margin="10,10,10,10" Text="{Binding Message, Mode=OneWay}" />
+    </ui:SimpleStackPanel>
 </ui:ContentDialog>

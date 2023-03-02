@@ -93,6 +93,9 @@ public partial class App : PrismApplication
         containerRegistry.RegisterForNavigation<AboutPage>();
         containerRegistry.RegisterForNavigation<ToolsPage>();
         containerRegistry.RegisterForNavigation<SettingsPage>();
+
+        // ダイアログの登録（モーダルなのでナビゲーション扱い）
+        containerRegistry.RegisterForNavigation<ProgressDialog>();
     }
 
     /// <summary>
@@ -101,7 +104,7 @@ public partial class App : PrismApplication
     /// <param name="moduleCatalog">登録するモジュール</param>
     protected override void ConfigureModuleCatalog(IModuleCatalog moduleCatalog)
     {
-        _ = moduleCatalog.AddModule<ProgressModule>();
+        // _ = moduleCatalog.AddModule<ProgressModule>();
     }
 #pragma warning disable SA1305
     /// <summary>
