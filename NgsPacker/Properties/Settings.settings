@@ -55,5 +55,8 @@ oxyresource.crc</Value>
     <Setting Name="Pso2BinPath" Type="System.String" Scope="User">
       <Value Profile="(Default)">C:\Program Files (x86)\SEGA\PHANTASYSTARONLINE2\pso2_bin</Value>
     </Setting>
+    <Setting Name="MaxThreads" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">4</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

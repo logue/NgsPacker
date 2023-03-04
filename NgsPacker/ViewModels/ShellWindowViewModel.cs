@@ -26,7 +26,7 @@ namespace NgsPacker.ViewModels;
 /// <summary>
 ///     親画面のビューモデル.
 /// </summary>
-public class ShellWindowViewModel : BindableBase
+public class ShellWindowViewModel : BindableBase, IDisposable
 {
     /// <summary>
     ///     多言語化サービス
@@ -37,6 +37,8 @@ public class ShellWindowViewModel : BindableBase
     ///     リージョンマネージャー.
     /// </summary>
     private readonly IRegionManager regionManager;
+
+    private bool disposedValue;
 
     /// <summary>
     ///     Initializes a new instance of the <see cref="ShellWindowViewModel" /> class.
@@ -54,6 +56,7 @@ public class ShellWindowViewModel : BindableBase
 
         // 初期状態のページ
         _ = regionManager.RegisterViewWithRegion("ContentRegion", typeof(UnpackPage));
+        // _ = regionManager.RegisterViewWithRegion("ContentDialogRegion", typeof(ProgressDialog));
 
         // 画面が読み込まれたときの処理
         OnLoadedCommand = new DelegateCommand(OnLoaded);
@@ -94,6 +97,23 @@ public class ShellWindowViewModel : BindableBase
         { "Tools", new Uri("ToolsPage", UriKind.Relative) },
         { "SettingsItem", new Uri("SettingsPage", UriKind.Relative) }
     };
+
+    // // TODO: 'Dispose(bool disposing)' にアンマネージド リソースを解放するコードが含まれる場合にのみ、ファイナライザーをオーバーライドします
+    // ~ShellWindowViewModel()
+    // {
+    //     // このコードを変更しないでください。クリーンアップ コードを 'Dispose(bool disposing)' メソッドに記述します
+    //     Dispose(disposing: false);
+    // }
+
+    /// <summary>
+    /// 破棄処理
+    /// </summary>
+    public void Dispose()
+    {
+        // このコードを変更しないでください。クリーンアップ コードを 'Dispose(bool disposing)' メソッドに記述します
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
 
     /// <summary>
     ///     終了コマンド.
@@ -141,6 +161,29 @@ public class ShellWindowViewModel : BindableBase
         {
             // _ = AcrylicMessageBox.Show(Application.Current.MainWindow, ex.Message, LocalizeService.GetLocalizedString("ErrorTitleText"));
             _ = MessageBox.Show(ex.Message, localizeService.GetLocalizedString("ErrorTitleText"));
+        }
+    }
+
+    /// <summary>
+    /// 破棄する
+    /// </summary>
+    /// <param name="disposing">破棄中か</param>
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!disposedValue)
+        {
+            if (disposing)
+            {
+                // TODO: マネージド状態を破棄します (マネージド オブジェクト)
+                foreach (IRegion region in regionManager.Regions)
+                {
+                    region.RemoveAll();
+                }
+            }
+
+            // TODO: アンマネージド リソース (アンマネージド オブジェクト) を解放し、ファイナライザーをオーバーライドします
+            // TODO: 大きなフィールドを null に設定します
+            disposedValue = true;
         }
     }
 }

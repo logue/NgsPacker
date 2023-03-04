@@ -70,6 +70,19 @@ public class SettingsPageViewModel : BindableBase
     }
 
     /// <summary>
+    ///     最大スレッド数
+    /// </summary>
+    public static int MaxThreads
+    {
+        get => Settings.Default.MaxThreads;
+        set
+        {
+            Settings.Default.MaxThreads = value;
+            Settings.Default.Save();
+        }
+    }
+
+    /// <summary>
     ///     ダークモード
     /// </summary>
     public static bool ToggleDarkTheme

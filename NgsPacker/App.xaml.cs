@@ -95,7 +95,7 @@ public partial class App : PrismApplication
         containerRegistry.RegisterForNavigation<SettingsPage>();
 
         // ダイアログの登録（モーダルなのでナビゲーション扱い）
-        containerRegistry.RegisterForNavigation<ProgressDialog>();
+        containerRegistry.RegisterDialog<ProgressDialog>();
     }
 
     /// <summary>
@@ -106,6 +106,7 @@ public partial class App : PrismApplication
     {
         // _ = moduleCatalog.AddModule<ProgressModule>();
     }
+
 #pragma warning disable SA1305
     /// <summary>
     ///     外部プロセスのメイン・ウィンドウを起動するためのWin32 API.

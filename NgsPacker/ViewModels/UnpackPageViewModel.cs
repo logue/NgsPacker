@@ -12,6 +12,8 @@ using NgsPacker.Properties;
 using NgsPacker.Views;
 using Prism.Commands;
 using Prism.Mvvm;
+using Prism.Regions;
+using Prism.Services.Dialogs;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using System;
@@ -196,7 +198,7 @@ public class UnpackPageViewModel : BindableBase, INotifyPropertyChanged
         }
         else
         {
-            _ = MessageBox.Show(
+            _ = MessageBox.ShowAsync(
                 localizeService.GetLocalizedString("ExportFileListText"),
                 localizeService.GetLocalizedString("CompleteText"));
         }
@@ -233,9 +235,6 @@ public class UnpackPageViewModel : BindableBase, INotifyPropertyChanged
             _ = Directory.CreateDirectory(outputPath);
         }
 
-        ProgressDialog progressDialog = new();
-        _ = progressDialog.ShowAsync();
-
         fileList.ForEach(file =>
         {
             string path = IceUtility.GetDataDir() + file;
@@ -246,8 +245,6 @@ public class UnpackPageViewModel : BindableBase, INotifyPropertyChanged
                 zamboniService.Unpack(path, outputPath, false);
             }
         });
-
-        progressDialog.Hide();
 
         // 完了通知
         if (Settings.Default.NotifyComplete)
@@ -260,7 +257,7 @@ public class UnpackPageViewModel : BindableBase, INotifyPropertyChanged
         }
         else
         {
-            _ = MessageBox.Show(
+            _ = MessageBox.ShowAsync(
                 localizeService.GetLocalizedString("UnpackByFileListText"),
                 localizeService.GetLocalizedString("CompleteText"));
         }

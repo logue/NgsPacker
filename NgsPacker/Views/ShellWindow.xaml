@@ -5,11 +5,12 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
     xmlns:lex="http://wpflocalizeextension.codeplex.com"
+    xmlns:local="clr-namespace:NgsPacker"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:prism="http://prismlibrary.com/"
     xmlns:ui="http://schemas.modernwpf.com/2019"
+    xmlns:views="clr-namespace:NgsPacker.Views"
     xmlns:vm="clr-namespace:NgsPacker.ViewModels"
-    x:Name="Window"
     Title="{Binding Title}"
     Width="740"
     Height="480"
@@ -26,9 +27,9 @@
     ui:TitleBar.Style="{DynamicResource AppTitleBarStyle}"
     ui:WindowHelper.UseModernWindowStyle="True"
     Background="Transparent"
+    Closed="Window_Closed"
     ContentRendered="Window_ContentRendered"
     Foreground="{DynamicResource SystemControlPageTextBaseHighBrush}"
-    Loaded="Window_Loaded"
     WindowStartupLocation="CenterOwner"
     WindowStyle="None"
     mc:Ignorable="d">
@@ -44,53 +45,59 @@
         <i:EventTrigger EventName="Loaded">
             <i:InvokeCommandAction Command="{Binding OnLoadedCommand}" />
         </i:EventTrigger>
+        <i:EventTrigger EventName="Closed">
+            <local:DataContextDisposeAction />
+        </i:EventTrigger>
     </i:Interaction.Triggers>
-    <ui:NavigationView
-        x:Name="NavView"
-        IsBackButtonVisible="Collapsed"
-        IsBackEnabled="False"
-        IsPaneOpen="True"
-        PaneDisplayMode="Top">
-        <i:Interaction.Triggers>
-            <i:EventTrigger EventName="SelectionChanged">
-                <prism:InvokeCommandAction Command="{Binding SelectionChangedCommand}" />
-            </i:EventTrigger>
-        </i:Interaction.Triggers>
+    <Grid>
+        <ui:NavigationView
+            Name="NavView"
+            IsBackButtonVisible="Collapsed"
+            IsBackEnabled="False"
+            IsPaneOpen="True"
+            PaneDisplayMode="Top">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="SelectionChanged">
+                    <prism:InvokeCommandAction Command="{Binding SelectionChangedCommand}" />
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+            <!--  ナビゲーション項目  -->
+            <ui:NavigationView.MenuItems>
+                <ui:NavigationViewItem
+                    Name="Unpack"
+                    Content="{lex:Loc UnpackText}"
+                    Icon="FullScreen"
+                    IsSelected="True" />
+                <ui:NavigationViewItem
+                    Name="Pack"
+                    Content="{lex:Loc PackText}"
+                    Icon="BackToWindow" />
+                <ui:NavigationViewItem
+                    Name="Tools"
+                    Content="{lex:Loc ToolsText}"
+                    Icon="Repair"
+                    IsEnabled="False" />
+            </ui:NavigationView.MenuItems>
+            <ui:NavigationView.FooterMenuItems>
+                <ui:NavigationViewItem
+                    Name="About"
+                    Content="{lex:Loc AboutText}"
+                    Icon="Message" />
+            </ui:NavigationView.FooterMenuItems>
 
-        <ui:NavigationView.MenuItems>
-            <ui:NavigationViewItem
-                Name="Unpack"
-                Content="{lex:Loc UnpackText}"
-                Icon="FullScreen"
-                IsSelected="True" />
-            <ui:NavigationViewItem
-                Name="Pack"
-                Content="{lex:Loc PackText}"
-                Icon="BackToWindow" />
-            <ui:NavigationViewItem
-                Name="Tools"
-                Content="{lex:Loc ToolsText}"
-                Icon="Repair"
-                IsEnabled="False" />
-        </ui:NavigationView.MenuItems>
-        <ui:NavigationView.FooterMenuItems>
-            <ui:NavigationViewItem
-                Name="About"
-                Content="{lex:Loc AboutText}"
-                Icon="Message" />
-        </ui:NavigationView.FooterMenuItems>
-
-        <Border>
-            <ui:SimpleStackPanel
-                Margin="24,32,24,0"
-                ScrollViewer.CanContentScroll="True"
-                ScrollViewer.VerticalScrollBarVisibility="Auto"
-                Spacing="24"
-                UseLayoutRounding="True">
-                <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <Border>
+                <ui:SimpleStackPanel
+                    Margin="24,32,24,0"
+                    ScrollViewer.CanContentScroll="True"
+                    ScrollViewer.VerticalScrollBarVisibility="Auto"
+                    Spacing="24"
+                    UseLayoutRounding="True">
+                    <!--  本体  -->
                     <ui:Frame prism:RegionManager.RegionName="ContentRegion" />
-                </ScrollViewer>
-            </ui:SimpleStackPanel>
-        </Border>
-    </ui:NavigationView>
+                </ui:SimpleStackPanel>
+            </Border>
+        </ui:NavigationView>
+        <!--  進捗ダイアログ  -->
+        <views:ProgressDialog />
+    </Grid>
 </Window>

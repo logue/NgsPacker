@@ -85,12 +85,11 @@ public partial class ShellWindow
         ThemeManager.Current.ActualApplicationThemeChanged += (s, ev) => UpdateStyleAttributes(source);
     }
 
-    private void Window_Loaded(object sender, RoutedEventArgs e)
+    /// <summary>Closedイベントハンドラ。</summary>
+    /// <param name="sender">イベントのソース。</param>
+    /// <param name="e">イベントデータを格納しているEventArgs。</param>
+    private void Window_Closed(object sender, EventArgs e)
     {
-        // Get PresentationSource
-        PresentationSource presentationSource = PresentationSource.FromVisual((Visual)sender);
-
-        // Subscribe to PresentationSource's ContentRendered event
-        presentationSource.ContentRendered += Window_ContentRendered;
+        (DataContext as IDisposable)?.Dispose();
     }
 }

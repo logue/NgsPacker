@@ -12,10 +12,10 @@ using NgsPacker.Helpers;
 using NgsPacker.Interfaces;
 using NgsPacker.Models;
 using NgsPacker.Properties;
-using NgsPacker.Views;
 using Prism.Events;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
@@ -34,7 +34,7 @@ public class ZamboniService : IZamboniService
     /// <summary>
     ///     イベントアグリエイター
     /// </summary>
-    private readonly IEventAggregator eventAggregator;
+    private readonly ProgressEvent progressEvent;
 
     /// <summary>
     ///     多言語化サービス
@@ -42,14 +42,14 @@ public class ZamboniService : IZamboniService
     private readonly ILocalizeService localizeService;
 
     /// <summary>
-    ///     進捗ダイアログ
-    /// </summary>
-    private readonly ProgressDialog progressDialog;
-
-    /// <summary>
     ///     グループ１のホワイトリスト
     /// </summary>
     private readonly List<string> whiteList;
+
+    /// <summary>
+    /// 並列処理のオプション
+    /// </summary>
+    private ParallelOptions parallelOptions;
 
     /// <summary>
     ///     Initializes a new instance of the <see cref="ZamboniService" /> class.
@@ -61,20 +61,24 @@ public class ZamboniService : IZamboniService
         // 設定からホワイトリストを読み込む
         whiteList = new List<string>(Settings.Default.WhiteList.Replace("\r\n", "\n").Split('\n', '\r'));
 
-        this.localizeService = localizeService;
-        this.eventAggregator = eventAggregator;
+        ParallelOptions parallelOptions = new()
+        {
+            MaxDegreeOfParallelism = Settings.Default.MaxThreads // 最大実行数
+        };
 
-        progressDialog = new ProgressDialog();
+        this.localizeService = localizeService;
+        this.progressEvent = eventAggregator.GetEvent<ProgressEvent>();
+        this.parallelOptions = parallelOptions;
     }
 
     /// <inheritdoc />
     public async Task<byte[]> Pack(string inputPath, bool recursive = true, bool compress = false,
         bool forceUnencrypted = false)
     {
-        _ = progressDialog.ShowAsync();
-        eventAggregator.GetEvent<ProgressEvent>().Publish(new ProgressEventModel
+        progressEvent.Publish(new ProgressEventModel
         {
-            Title = "Pack", Message = "Initializing...", IsIntermediate = true
+            Title = "Pack", Message = "Initializing...", IsIntermediate = true,
+            IsVisible = true
         });
 
         // ディレクトリの存在チェック
@@ -95,16 +99,17 @@ public class ZamboniService : IZamboniService
         // 入力ディレクトリ内のファイルを走査
         List<FileInfo> files = await fileList;
 
-        files.ForEach(file =>
+        Parallel.ForEach(files, parallelOptions,file =>
         {
-            eventAggregator.GetEvent<ProgressEvent>().Publish(new ProgressEventModel
+            progressEvent.Publish(new ProgressEventModel
             {
                 Title = "Pack",
                 Message = "Packing...",
                 Min = 0,
                 Max = files.Count,
                 Value = files.IndexOf(file),
-                IsIntermediate = false
+                IsIntermediate = false,
+                IsVisible = true
             });
 
             // ファイルをバイト配列として読み込む
@@ -138,10 +143,11 @@ public class ZamboniService : IZamboniService
         // Iceファイルとして書き出す
         IceV4File ice = new(header.GetBytes(), group1Binaries.ToArray(), group2Binaries.ToArray());
 
-        byte[] ret = ice.getRawData(compress, forceUnencrypted);
-
-        progressDialog.Hide();
-
+        byte[] ret =  ice.getRawData(compress, forceUnencrypted);
+        progressEvent.Publish(new ProgressEventModel
+        {
+            IsVisible = false
+        });
         return ret;
     }
 
@@ -149,11 +155,9 @@ public class ZamboniService : IZamboniService
     public async void Unpack(string inputPath, string outputPath = null, bool createSubDirectory = true,
         bool separate = false)
     {
-        _ = progressDialog.ShowAsync();
-
-        eventAggregator.GetEvent<ProgressEvent>().Publish(new ProgressEventModel
+        progressEvent.Publish(new ProgressEventModel
         {
-            Title = "Unpack", Message = "Loading " + inputPath + "...", IsIntermediate = true
+            Title = "Unpack", Message = "Loading " + inputPath + "...", IsIntermediate = true, IsVisible = true
         });
 
         if (string.IsNullOrEmpty(outputPath))
@@ -209,7 +213,7 @@ public class ZamboniService : IZamboniService
             }
         }
 
-        foreach (IceEntryModel model in groupOneFiles)
+        Parallel.ForEach(groupOneFiles, parallelOptions, model =>
         {
             // ファイル名（ひどい可読性だ）
             string fileName = destination + (separate
@@ -218,19 +222,20 @@ public class ZamboniService : IZamboniService
                                               : string.Empty)
                                           + model.FileName;
 
-            eventAggregator.GetEvent<ProgressEvent>().Publish(new ProgressEventModel
+            progressEvent.Publish(new ProgressEventModel
             {
                 Title = "Unpack",
                 Message = "Unpacking " + fileName,
                 Min = 0,
                 Max = groupOneFiles.Count,
                 Value = groupOneFiles.IndexOf(model),
-                IsIntermediate = false
+                IsIntermediate = false,
+                IsVisible = true
             });
 
             try
             {
-                await File.WriteAllBytesAsync(fileName, model.Content);
+                File.WriteAllBytesAsync(fileName, model.Content);
             }
             catch (Exception ex)
             {
@@ -242,19 +247,16 @@ public class ZamboniService : IZamboniService
             await writer.WriteAsync(model.Content);
             writer.Close();
             */
-        }
-
-        progressDialog.Hide();
+        });
+        progressEvent.Publish(new ProgressEventModel
+        {
+            IsVisible = false
+        });
     }
 
     /// <inheritdoc />
     public async Task<List<string>> FileList(string inputPath)
     {
-        _ = progressDialog.ShowAsync();
-        eventAggregator.GetEvent<ProgressEvent>().Publish(new ProgressEventModel
-        {
-            Title = "Scanning...", Message = "Initializing...", IsIntermediate = true
-        });
         List<string> ret = new();
         // ファイル一覧を読み込む
         Task<List<FileInfo>> fileList = FileSearcher.GetFilesFastAsync(inputPath, "*.*");
@@ -266,18 +268,18 @@ public class ZamboniService : IZamboniService
 
         // CSVのヘッダ
         ret.Add("filename,version,group,content");
-        foreach (FileInfo file in await fileList)
+        Parallel.ForEach(files, parallelOptions, async file =>
         {
-            eventAggregator.GetEvent<ProgressEvent>().Publish(new ProgressEventModel
+            progressEvent.Publish(new ProgressEventModel
             {
                 Title = "Scanning...",
                 Message = file.FullName,
                 Min = 0,
                 Max = files.Count,
                 Value = files.IndexOf(file),
-                IsIntermediate = false
+                IsIntermediate = false,
+                IsVisible = true,
             });
-
 
             // Iceファイルをバイトとして読み込む
             Task<byte[]> buffer = File.ReadAllBytesAsync(file.FullName);
@@ -285,7 +287,7 @@ public class ZamboniService : IZamboniService
             // Iceファイルのヘッダチェック
             if (!IceUtility.IsIceFile(await buffer))
             {
-                continue;
+                return;
             }
 
             // メモリーストリームを生成
@@ -299,7 +301,7 @@ public class ZamboniService : IZamboniService
             // dataディレクトリ以降のパスのファイル名を記入
             string ice = IceUtility.GetEntryName(file.FullName) + ",ICE" + num + ",";
 
-            Debug.WriteLine(ice);
+            // Debug.WriteLine(ice);
 
             // Iceファイルを読み込む
             IceFile iceFile;
@@ -310,13 +312,13 @@ public class ZamboniService : IZamboniService
             catch
             {
                 ret.Add(ice + "0,[ERROR] Could not load ice file.");
-                continue;
+                return;
             }
 
             if (iceFile == null)
             {
                 ret.Add(ice + "0,[ERROR] Could not parse ice file.");
-                continue;
+                return;
             }
 
             // グループ1のファイルをパース
@@ -354,17 +356,24 @@ public class ZamboniService : IZamboniService
                     ret.Add(ice + "2,[ERROR] Could not parse Group2 files.");
                 }
             }
-        }
-
-        ;
-
-        progressDialog.Hide();
+        });
+        progressEvent.Publish(new ProgressEventModel
+        {
+            IsVisible = false
+        });
         return ret;
     }
 
     /// <inheritdoc />
     public async Task<List<string>> FileList(DataDirectoryType target)
     {
+        progressEvent.Publish(new ProgressEventModel
+        {
+            Title = "Initializing...",
+            Message = "Now acquiring the file list of the target directory...",
+            IsIntermediate = true,
+            IsVisible = true
+        });
         string dataDir = IceUtility.GetDataDir();
         List<string> ret = new();
 
@@ -401,6 +410,10 @@ public class ZamboniService : IZamboniService
 
                 break;
         }
+        progressEvent.Publish(new ProgressEventModel
+        {
+            IsVisible = false
+        });
 
         return ret;
     }

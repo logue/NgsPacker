@@ -15,14 +15,23 @@
     lex:ResxLocalizationProvider.DefaultAssembly="NgsPacker"
     lex:ResxLocalizationProvider.DefaultDictionary="Resources"
     prism:ViewModelLocator.AutoWireViewModel="True"
+    IsPrimaryButtonEnabled="False"
+    IsSecondaryButtonEnabled="{Binding Closable}"
+    SecondaryButtonText="{lex:Loc CancelText}"
     mc:Ignorable="d">
     <ui:SimpleStackPanel>
         <!--  プログレスバー  -->
+        <ui:ProgressRing
+            Width="50"
+            Height="50"
+            IsActive="True"
+            Visibility="{Binding ProgressRingVisibility, Mode=OneWay}" />
         <ui:ProgressBar
             Margin="10,10,10,10"
-            Visibility="{Binding ProgressBarVisibility}"
-            Value="{Binding Progress, Mode=OneWay}" />
-        <ui:ProgressRing Visibility="{Binding ProgressRingVisibility}" />
+            Maximum="{Binding Maximum, Mode=OneWay}"
+            Minimum="{Binding Minimum, Mode=OneWay}"
+            Visibility="{Binding ProgressBarVisibility, Mode=OneWay}"
+            Value="{Binding Value, Mode=OneWay}" />
         <!--  進捗テキスト  -->
         <TextBlock Margin="10,10,10,10" Text="{Binding Message, Mode=OneWay}" />
     </ui:SimpleStackPanel>

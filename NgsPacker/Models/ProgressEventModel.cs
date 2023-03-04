@@ -6,6 +6,7 @@
 // -----------------------------------------------------------------------
 
 using System;
+using System.Windows;
 
 namespace NgsPacker.Models;
 
@@ -17,6 +18,21 @@ public class ProgressEventModel
     private int current;
     private int max;
     private int min;
+    private Visibility visibility;
+
+    /// <summary>
+    /// ダイアログの表示制御
+    /// </summary>
+    public bool IsVisible {
+        get
+        {
+            return visibility == Visibility.Visible;
+        }
+        set
+        {
+            visibility = value ? Visibility.Visible : Visibility.Hidden;
+        }
+    }
 
     /// <summary>
     ///     進捗値

@@ -82,9 +82,18 @@ namespace NgsPacker.Properties {
         /// <summary>
         ///   Browse... に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        public static string BrowseText {
+        public static string BrowseButton_Text {
             get {
-                return ResourceManager.GetString("BrowseText", resourceCulture);
+                return ResourceManager.GetString("BrowseButton_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Cancel に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string CancelText {
+            get {
+                return ResourceManager.GetString("CancelText", resourceCulture);
             }
         }
         
@@ -181,9 +190,27 @@ namespace NgsPacker.Properties {
         /// <summary>
         ///   Language に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        public static string LanguageText {
+        public static string Language_Content {
             get {
-                return ResourceManager.GetString("LanguageText", resourceCulture);
+                return ResourceManager.GetString("Language_Content", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Max Threads に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string MaxThreads_Header {
+            get {
+                return ResourceManager.GetString("MaxThreads_Header", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Specifies the maximum number of threads for parallel processing. The higher the number, the faster the processing ends, but it also consumes a large amount of memory. に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string MaxThreads_Tooltip {
+            get {
+                return ResourceManager.GetString("MaxThreads_Tooltip", resourceCulture);
             }
         }
         
@@ -202,18 +229,27 @@ namespace NgsPacker.Properties {
         /// <summary>
         ///   Notify when completed に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        public static string NotifyCompleteText {
+        public static string NotifyComplete_Header {
             get {
-                return ResourceManager.GetString("NotifyCompleteText", resourceCulture);
+                return ResourceManager.GetString("NotifyComplete_Header", resourceCulture);
             }
         }
         
         /// <summary>
         ///   A desktop notification is issued when the process is completed. に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        public static string NotifyCompleteTooltip {
+        public static string NotifyComplete_ToolTip {
             get {
-                return ResourceManager.GetString("NotifyCompleteTooltip", resourceCulture);
+                return ResourceManager.GetString("NotifyComplete_ToolTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   OK に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string OkText {
+            get {
+                return ResourceManager.GetString("OkText", resourceCulture);
             }
         }
         
@@ -274,9 +310,9 @@ namespace NgsPacker.Properties {
         /// <summary>
         ///   Path of pso2_bin Path: に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        public static string Pso2BinPathText {
+        public static string Pso2BinPathLabel_Content {
             get {
-                return ResourceManager.GetString("Pso2BinPathText", resourceCulture);
+                return ResourceManager.GetString("Pso2BinPathLabel_Content", resourceCulture);
             }
         }
         
@@ -302,9 +338,9 @@ namespace NgsPacker.Properties {
         /// <summary>
         ///   Save に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        public static string SaveText {
+        public static string SaveButton_Text {
             get {
-                return ResourceManager.GetString("SaveText", resourceCulture);
+                return ResourceManager.GetString("SaveButton_Text", resourceCulture);
             }
         }
         
@@ -417,20 +453,20 @@ namespace NgsPacker.Properties {
         }
         
         /// <summary>
-        ///   Toggle dark theme に類似しているローカライズされた文字列を検索します。
+        ///   Dark Theme に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        public static string ToggleDarkThemeTooltip {
+        public static string ToggleTheme_Header {
             get {
-                return ResourceManager.GetString("ToggleDarkThemeTooltip", resourceCulture);
+                return ResourceManager.GetString("ToggleTheme_Header", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Dark Theme に類似しているローカライズされた文字列を検索します。
+        ///   Toggle dark theme に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        public static string ToggleThemeText {
+        public static string ToggleTheme_Tooltip {
             get {
-                return ResourceManager.GetString("ToggleThemeText", resourceCulture);
+                return ResourceManager.GetString("ToggleTheme_Tooltip", resourceCulture);
             }
         }
         
@@ -539,18 +575,18 @@ namespace NgsPacker.Properties {
         ///
         ///Do not change if you are not sure. に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        public static string WhiteListInformation {
+        public static string WhiteListDescription_Text {
             get {
-                return ResourceManager.GetString("WhiteListInformation", resourceCulture);
+                return ResourceManager.GetString("WhiteListDescription_Text", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Files to be classified into group 1 when packed (suffix match/line feed delimiter) に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        public static string WhiteListText {
+        public static string WhiteListLabel_Content {
             get {
-                return ResourceManager.GetString("WhiteListText", resourceCulture);
+                return ResourceManager.GetString("WhiteListLabel_Content", resourceCulture);
             }
         }
     }
