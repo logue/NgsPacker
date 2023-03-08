@@ -94,8 +94,8 @@ public partial class App : PrismApplication
         containerRegistry.RegisterForNavigation<ToolsPage>();
         containerRegistry.RegisterForNavigation<SettingsPage>();
 
-        // ダイアログの登録（モーダルなのでナビゲーション扱い）
-        containerRegistry.RegisterDialog<ProgressDialog>();
+        // ダイアログの登録（コンテントダイアログなのでナビゲーション扱い）
+        // containerRegistry.RegisterForNavigation<ProgressDialog>();
     }
 
     /// <summary>

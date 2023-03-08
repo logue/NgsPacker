@@ -36,6 +36,7 @@
                 VerticalAlignment="Center"
                 Header="{lex:Loc}"
                 LargeChange="99"
+                Maximum="{Binding ThreadsLimit}"
                 SmallChange="1"
                 SpinButtonPlacementMode="Compact"
                 ToolTip="{lex:Loc}"

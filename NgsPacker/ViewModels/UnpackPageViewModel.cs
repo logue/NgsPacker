@@ -5,15 +5,13 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using FastSearchLibrary;
 using Microsoft.Toolkit.Uwp.Notifications;
 using NgsPacker.Helpers;
 using NgsPacker.Interfaces;
 using NgsPacker.Properties;
-using NgsPacker.Views;
 using Prism.Commands;
 using Prism.Mvvm;
-using Prism.Regions;
-using Prism.Services.Dialogs;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using System;
@@ -296,7 +294,7 @@ public class UnpackPageViewModel : BindableBase, INotifyPropertyChanged
         }
 
         // ドロップされたものがFileDrop形式の場合は、各ファイルのパス文字列を文字列配列に格納する。
-        List<string> fileList = new((string[])e.Data.GetData(DataFormats.FileDrop));
+        List<FileInfo> fileList = FileSearcher.GetFilesFast((string)e.Data.GetData(DataFormats.FileDrop), "*.*");
 
         // 出力先ディレクトリ
         string outputPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
@@ -306,20 +304,15 @@ public class UnpackPageViewModel : BindableBase, INotifyPropertyChanged
             _ = Directory.CreateDirectory(outputPath);
         }
 
-        ProgressDialog progressDialog = new();
-        _ = progressDialog.ShowAsync();
-
         fileList.ForEach(file =>
         {
-            string path = picker.ResultPath + Path.DirectorySeparatorChar + file;
+            string path = picker.ResultPath + Path.DirectorySeparatorChar + file.Name;
             if (File.Exists(path))
             {
                 // アンパック
                 zamboniService.Unpack(path, outputPath, false);
             }
         });
-
-        progressDialog.Hide();
 
         // 完了通知
         if (Settings.Default.NotifyComplete)

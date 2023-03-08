@@ -11,6 +11,7 @@ using NgsPacker.Interfaces;
 using NgsPacker.Properties;
 using Prism.Commands;
 using Prism.Mvvm;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -95,6 +96,11 @@ public class SettingsPageViewModel : BindableBase
             Settings.Default.Save();
         }
     }
+
+    /// <summary>
+    ///     スレッド最大値
+    /// </summary>
+    public static int ThreadsLimit { get; } = Environment.ProcessorCount;
 
     /// <summary>
     ///     pso2_binのディレクトリ選択

@@ -7,9 +7,7 @@
 
 using ModernWpf;
 using System;
-using System.Windows;
 using System.Windows.Interop;
-using System.Windows.Media;
 using static NgsPacker.Helpers.DwmApi;
 
 namespace NgsPacker.Views;

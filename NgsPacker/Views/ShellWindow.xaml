@@ -9,7 +9,6 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:prism="http://prismlibrary.com/"
     xmlns:ui="http://schemas.modernwpf.com/2019"
-    xmlns:views="clr-namespace:NgsPacker.Views"
     xmlns:vm="clr-namespace:NgsPacker.ViewModels"
     Title="{Binding Title}"
     Width="740"
@@ -97,7 +96,7 @@
                 </ui:SimpleStackPanel>
             </Border>
         </ui:NavigationView>
-        <!--  進捗ダイアログ  -->
-        <views:ProgressDialog />
+        <!--  コンテントダイアログ  -->
+        <ui:ContentDialog prism:RegionManager.RegionName="ContentDialogRegion" />
     </Grid>
 </Window>

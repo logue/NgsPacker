@@ -24,13 +24,12 @@ public class ProgressDialogViewModel : BindableBase, IDisposable
     /// <summary>
     ///     Initializes a new instance of the <see cref="ProgressDialogViewModel" /> class.
     /// </summary>
-    public ProgressDialogViewModel(IEventAggregator eventAggregator, ILocalizeService localizeService)
+    public ProgressDialogViewModel(IEventAggregator eventAggregator)
     {
         eventAggregator
             .GetEvent<ProgressEvent>()
             .Subscribe(ProgressEventHandle, ThreadOption.PublisherThread, true);
 
-        Title = localizeService.GetLocalizedString("ProgressDialogText");
         this.eventAggregator = eventAggregator;
     }
 

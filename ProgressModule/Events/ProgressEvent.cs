@@ -10,9 +10,6 @@ using Prism.Events;
 
 namespace NgsPacker.Events;
 
-/// <summary>
-///     進捗モーダルを表示するイベント
-/// </summary>
 public class ProgressEvent : PubSubEvent<ProgressEventModel>
 {
 }

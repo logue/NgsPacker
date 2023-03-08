@@ -22,8 +22,8 @@ public interface IInitializeWithWindow
     /// <summary>
     ///     初期化
     /// </summary>
-    /// <param name="hwnd">The hwnd<see cref="IntPtr" />.</param>
-    void Initialize([In] IntPtr hwnd);
+    /// <param name="hWnd">The hWnd<see cref="IntPtr" />.</param>
+    void Initialize([In] IntPtr hWnd);
 }
 
 /// <summary>

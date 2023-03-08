@@ -1,18 +1,17 @@
-// -----------------------------------------------------------------------
-// <copyright file="ProgressEvent.cs" company="Logue">
+ï»¿// -----------------------------------------------------------------------
+// <copyright file="ProgressCancelEvent.cs" company="Logue">
 // Copyright (c) 2021-2023 Masashi Yoshikawa All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 // </copyright>
 // -----------------------------------------------------------------------
 
-using NgsPacker.Models;
 using Prism.Events;
 
 namespace NgsPacker.Events;
 
 /// <summary>
-///     i’»ƒ‚[ƒ_ƒ‹‚ğ•\¦‚·‚éƒCƒxƒ“ƒg
+///     é€²æ—ãƒ¢ãƒ¼ãƒ€ãƒ«ã§ã‚­ãƒ£ãƒ³ã‚»ãƒ«ãƒœã‚¿ãƒ³ãŒæŠ¼ã•ã‚ŒãŸæ™‚ã®ã‚¤ãƒ™ãƒ³ãƒˆ
 /// </summary>
-public class ProgressEvent : PubSubEvent<ProgressEventModel>
+public class ProgressCancelEvent : PubSubEvent<bool>
 {
 }

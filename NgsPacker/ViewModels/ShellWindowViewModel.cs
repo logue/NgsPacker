@@ -7,12 +7,14 @@
 
 using ModernWpf;
 using ModernWpf.Controls;
+using NgsPacker.Events;
 using NgsPacker.Helpers;
 using NgsPacker.Interfaces;
 using NgsPacker.Models;
 using NgsPacker.Properties;
 using NgsPacker.Views;
 using Prism.Commands;
+using Prism.Events;
 using Prism.Mvvm;
 using Prism.Regions;
 using System;
@@ -29,9 +31,19 @@ namespace NgsPacker.ViewModels;
 public class ShellWindowViewModel : BindableBase, IDisposable
 {
     /// <summary>
+    ///     イベントアグリエイター
+    /// </summary>
+    private readonly IEventAggregator eventAggregator;
+
+    /// <summary>
     ///     多言語化サービス
     /// </summary>
     private readonly ILocalizeService localizeService;
+
+    /// <summary>
+    ///     進捗ダイアログ
+    /// </summary>
+    private readonly ProgressDialog progressDialog;
 
     /// <summary>
     ///     リージョンマネージャー.
@@ -45,7 +57,9 @@ public class ShellWindowViewModel : BindableBase, IDisposable
     /// </summary>
     /// <param name="regionManager">インジェクションするIRegionManager。.</param>
     /// <param name="localizeService">多言語化サービス.</param>
-    public ShellWindowViewModel(IRegionManager regionManager, ILocalizeService localizeService)
+    /// <param name="eventAggregator">イベントアグリエイター.</param>
+    public ShellWindowViewModel(IRegionManager regionManager, ILocalizeService localizeService,
+        IEventAggregator eventAggregator)
     {
         // アプリ名はアセンブリ名
         Title = AppAssemblyModel.Title;
@@ -56,7 +70,6 @@ public class ShellWindowViewModel : BindableBase, IDisposable
 
         // 初期状態のページ
         _ = regionManager.RegisterViewWithRegion("ContentRegion", typeof(UnpackPage));
-        // _ = regionManager.RegisterViewWithRegion("ContentDialogRegion", typeof(ProgressDialog));
 
         // 画面が読み込まれたときの処理
         OnLoadedCommand = new DelegateCommand(OnLoaded);
@@ -69,6 +82,18 @@ public class ShellWindowViewModel : BindableBase, IDisposable
 
         // 多言語サービスをインジェクション
         this.localizeService = localizeService;
+
+        // 進捗ダイアログをセット
+        progressDialog = new ProgressDialog
+        {
+            Title = Title, CancelMessage = localizeService.GetLocalizedString("CancelText")
+        };
+
+        eventAggregator
+            .GetEvent<ProgressEvent>()
+            .Subscribe(ProgressEventHandler);
+
+        this.eventAggregator = eventAggregator;
     }
 
     /// <summary>
@@ -106,7 +131,7 @@ public class ShellWindowViewModel : BindableBase, IDisposable
     // }
 
     /// <summary>
-    /// 破棄処理
+    ///     破棄処理
     /// </summary>
     public void Dispose()
     {
@@ -165,7 +190,7 @@ public class ShellWindowViewModel : BindableBase, IDisposable
     }
 
     /// <summary>
-    /// 破棄する
+    ///     破棄する
     /// </summary>
     /// <param name="disposing">破棄中か</param>
     protected virtual void Dispose(bool disposing)
@@ -184,6 +209,32 @@ public class ShellWindowViewModel : BindableBase, IDisposable
             // TODO: アンマネージド リソース (アンマネージド オブジェクト) を解放し、ファイナライザーをオーバーライドします
             // TODO: 大きなフィールドを null に設定します
             disposedValue = true;
+        }
+    }
+
+    /// <summary>
+    ///     進捗ダイアログのイベントハンドラ
+    /// </summary>
+    /// <param name="model">進捗イベントのモデル</param>
+    private void ProgressEventHandler(ProgressEventModel model)
+    {
+        if (!model.IsVisible)
+        {
+            progressDialog.Close();
+            return;
+        }
+
+        progressDialog.Show();
+        progressDialog.Caption = model.Caption;
+        progressDialog.Message = model.Message;
+        progressDialog.Animation = model.Animation;
+        progressDialog.Value = model.Value;
+        progressDialog.Maximum = model.Maximum;
+
+        if (progressDialog.HasUserCancelled)
+        {
+            // キャンセルボタンが押されたときは、キャンセル用のイベントバスにその旨を送る
+            eventAggregator.GetEvent<ProgressCancelEvent>().Publish(true);
         }
     }
 }
