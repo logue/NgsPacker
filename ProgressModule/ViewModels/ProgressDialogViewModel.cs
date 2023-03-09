@@ -6,7 +6,6 @@
 // -----------------------------------------------------------------------
 
 using NgsPacker.Events;
-using NgsPacker.Interfaces;
 using NgsPacker.Models;
 using Prism.Events;
 using Prism.Mvvm;
@@ -17,10 +16,15 @@ using System.Windows;
 namespace NgsPacker.ViewModels;
 
 /// <summary>
-/// 進捗ダイアログのビューモデル
+///     進捗ダイアログのビューモデル
 /// </summary>
 public class ProgressDialogViewModel : BindableBase, IDisposable
 {
+    /// <summary>
+    ///     イベントアグリエイター
+    /// </summary>
+    private readonly IEventAggregator eventAggregator;
+
     /// <summary>
     ///     Initializes a new instance of the <see cref="ProgressDialogViewModel" /> class.
     /// </summary>
@@ -79,7 +83,7 @@ public class ProgressDialogViewModel : BindableBase, IDisposable
     public Visibility ProgressBarVisibility { get; set; } = Visibility.Hidden;
 
     /// <summary>
-    /// 破棄
+    ///     破棄
     /// </summary>
     public void Dispose()
     {
@@ -87,11 +91,6 @@ public class ProgressDialogViewModel : BindableBase, IDisposable
             .GetEvent<ProgressEvent>()
             .Unsubscribe(ProgressEventHandle);
     }
-
-    /// <summary>
-    /// イベントアグリエイター
-    /// </summary>
-    private readonly IEventAggregator eventAggregator;
 
     /// <summary>
     ///     進捗モデルのイベントハンドラ

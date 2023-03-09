@@ -227,6 +227,7 @@ public class ShellWindowViewModel : BindableBase, IDisposable
         progressDialog.Show();
         progressDialog.Caption = model.Caption;
         progressDialog.Message = model.Message;
+        progressDialog.Detail = model.Detail;
         progressDialog.Animation = model.Animation;
         progressDialog.Value = model.Value;
         progressDialog.Maximum = model.Maximum;

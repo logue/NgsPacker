@@ -7,6 +7,7 @@
 
 using ImTools;
 using System;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
@@ -32,6 +33,11 @@ public class ProgressDialog
     /// </summary>
     public ProgressDialog()
     {
+        parentHandle = Process.GetCurrentProcess().MainWindowHandle;
+        if (parentHandle == IntPtr.Zero)
+        {
+            parentHandle = GetDesktopWindow();
+        }
     }
 
     /// <summary>
@@ -43,7 +49,7 @@ public class ProgressDialog
         this.parentHandle = parentHandle;
         // Reduced the lag of up to display the dialog displayed by force the function ShowWindow when uses Windows.Forms
         // This idea taken from http://rarara.cafe.coocan.jp/cgi-bin/lng/vc/vclng.cgi?print+200902/09020022.txt
-        // ShowWindow(this.parentHandle, SW_SHOWNORMAL);
+        ShowWindow(this.parentHandle, SW_SHOWNORMAL);
     }
 
     /// <summary>
@@ -153,7 +159,10 @@ public class ProgressDialog
     /// <param name="flags" cref="PROGDLG">フラグ</param>
     public void Show(params PROGDLG[] flags)
     {
-        pd ??= (IWin32IProgressDialog)new Win32ProgressDialog();
+        if (pd == null)
+        {
+            pd = (IWin32IProgressDialog)new Win32ProgressDialog();
+        }
 
         pd.SetTitle(title);
         pd.SetLine(1, line1, false, IntPtr.Zero);
@@ -183,16 +192,16 @@ public class ProgressDialog
         }
 
         pd.StopProgressDialog();
-        Marshal.ReleaseComObject(pd);
+        // Marshal.ReleaseComObject(pd);
         pd = null;
     }
 
     #region "Win32 Stuff"
 
     [ComImport]
-    [Guid("EBBC7C04-315E-11d2-B62F-006097DF5BD4")]
+    [Guid("EBBC7C04-315E-11D2-B62F-006097DF5BD4")]
     [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-    public interface IWin32IProgressDialog
+    internal interface IWin32IProgressDialog
     {
         /// <summary>
         ///     Starts the progress dialog box.
@@ -363,7 +372,7 @@ public class ProgressDialog
 
     [ComImport]
     [Guid("F8383852-FCD3-11d1-A6B9-006097DF5BD4")]
-    public class Win32ProgressDialog
+    internal class Win32ProgressDialog
     {
     }
 
@@ -441,6 +450,7 @@ public class ProgressDialog
     /// <summary>
     ///     File operation animations resource IDs in shell32.dll
     /// </summary>
+    /// <see href="http://www.randomnoun.com/wp/2013/10/27/windows-shell32-animations/" />
     [Flags]
     public enum PROGANI : ushort
     {
@@ -489,7 +499,7 @@ public class ProgressDialog
         /// <summary>
         ///     Set multiple file attributes
         /// </summary>
-        FlyingPapers = 165,
+        FileMultiple = 165,
 
         /// <summary>
         ///     Magnifying glass over globe
@@ -546,6 +556,9 @@ public class ProgressDialog
     (
         IntPtr hWnd
     );
+
+    [DllImport("user32")]
+    private static extern IntPtr GetDesktopWindow();
 
     #endregion
 }

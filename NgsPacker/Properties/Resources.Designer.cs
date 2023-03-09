@@ -299,11 +299,74 @@ namespace NgsPacker.Properties {
         }
         
         /// <summary>
-        ///   Please wait for a while... に類似しているローカライズされた文字列を検索します。
+        ///   Scanning... に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        public static string ProgressDialogText {
+        public static string ProgressFileListCaption {
             get {
-                return ResourceManager.GetString("ProgressDialogText", resourceCulture);
+                return ResourceManager.GetString("ProgressFileListCaption", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Now Generating file list. ({0}/{1}) に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string ProgressFileListMessage {
+            get {
+                return ResourceManager.GetString("ProgressFileListMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Initializing... に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string ProgressInitializeCaption {
+            get {
+                return ResourceManager.GetString("ProgressInitializeCaption", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Now acquiring the file list of the target directory. に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string ProgressInitializeMessage {
+            get {
+                return ResourceManager.GetString("ProgressInitializeMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Packing... に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string ProgressPackCaption {
+            get {
+                return ResourceManager.GetString("ProgressPackCaption", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Setting files to include in {2}. ({0}/{1}) に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string ProgressPackMessage {
+            get {
+                return ResourceManager.GetString("ProgressPackMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Unpacking... に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string ProgressUnpackCaption {
+            get {
+                return ResourceManager.GetString("ProgressUnpackCaption", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Extracting contents of {2}. ({0}/{1}) に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string ProgressUnpackMessage {
+            get {
+                return ResourceManager.GetString("ProgressUnpackMessage", resourceCulture);
             }
         }
         

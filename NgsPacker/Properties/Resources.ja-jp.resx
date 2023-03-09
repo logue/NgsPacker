@@ -244,9 +244,6 @@
   <data name="UnpackByFileListDialogText" xml:space="preserve">
     <value>アンパックしたいファイルの一覧の入ったリストファイルを選択してください。</value>
   </data>
-  <data name="ProgressDialogText" xml:space="preserve">
-    <value>しばらくお待ち下さい…</value>
-  </data>
   <data name="SettingsText" xml:space="preserve">
     <value>設定</value>
   </data>
@@ -296,5 +293,29 @@
   </data>
   <data name="MaxThreads_Tooltip" xml:space="preserve">
     <value>並列処理の最大スレッド数を指定します。多くすると早く処理が終わりますが、メモリも大量に消費します。</value>
+  </data>
+  <data name="ProgressInitializeCaption" xml:space="preserve">
+    <value>初期化中です…</value>
+  </data>
+  <data name="ProgressInitializeMessage" xml:space="preserve">
+    <value>対象ディレクトリのファイルを走査しています。</value>
+  </data>
+  <data name="ProgressFileListCaption" xml:space="preserve">
+    <value>走査しています…</value>
+  </data>
+  <data name="ProgressFileListMessage" xml:space="preserve">
+    <value>Now Generating file list. ({0}/{1})</value>
+  </data>
+  <data name="ProgressUnpackCaption" xml:space="preserve">
+    <value>アンパックしています…</value>
+  </data>
+  <data name="ProgressUnpackMessage" xml:space="preserve">
+    <value>{2}の中身を取り出しています。  ({0}/{1})</value>
+  </data>
+  <data name="ProgressPackCaption" xml:space="preserve">
+    <value>パックしています…</value>
+  </data>
+  <data name="ProgressPackMessage" xml:space="preserve">
+    <value>{2}に含めるファイルをセットしています。({0}/{1})</value>
   </data>
 </root>

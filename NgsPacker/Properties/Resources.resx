@@ -248,9 +248,6 @@ The file list format is a list of file names from the data directory separated b
   <data name="UnpackByFileListDialogText" xml:space="preserve">
     <value>Select the list file that contains the list of files you want to unpack.</value>
   </data>
-  <data name="ProgressDialogText" xml:space="preserve">
-    <value>Please wait for a while...</value>
-  </data>
   <data name="SettingsText" xml:space="preserve">
     <value>Settings</value>
   </data>
@@ -300,5 +297,29 @@ Do not change if you are not sure.</value>
   </data>
   <data name="MaxThreads_Tooltip" xml:space="preserve">
     <value>Specifies the maximum number of threads for parallel processing. The higher the number, the faster the processing ends, but it also consumes a large amount of memory.</value>
+  </data>
+  <data name="ProgressInitializeCaption" xml:space="preserve">
+    <value>Initializing...</value>
+  </data>
+  <data name="ProgressInitializeMessage" xml:space="preserve">
+    <value>Now acquiring the file list of the target directory.</value>
+  </data>
+  <data name="ProgressFileListCaption" xml:space="preserve">
+    <value>Scanning...</value>
+  </data>
+  <data name="ProgressFileListMessage" xml:space="preserve">
+    <value>Now Generating file list. ({0}/{1})</value>
+  </data>
+  <data name="ProgressUnpackCaption" xml:space="preserve">
+    <value>Unpacking...</value>
+  </data>
+  <data name="ProgressUnpackMessage" xml:space="preserve">
+    <value>Extracting contents of {2}. ({0}/{1})</value>
+  </data>
+  <data name="ProgressPackCaption" xml:space="preserve">
+    <value>Packing...</value>
+  </data>
+  <data name="ProgressPackMessage" xml:space="preserve">
+    <value>Setting files to include in {2}. ({0}/{1})</value>
   </data>
 </root>

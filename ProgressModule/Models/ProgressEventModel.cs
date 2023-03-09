@@ -1,60 +1,99 @@
 // -----------------------------------------------------------------------
-// <copyright file="ProgressEventModel.cs" company="Logue">
+// <copyright file="ProgressModel.cs" company="Logue">
 // Copyright (c) 2021-2023 Masashi Yoshikawa All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 // </copyright>
 // -----------------------------------------------------------------------
 
-using Prism.Events;
-using Prism.Mvvm;
+using System;
+using System.Windows;
 
 namespace NgsPacker.Models;
 
 /// <summary>
-///     進捗モデル
+///     進捗情報
 /// </summary>
-public class ProgressEventModel : BindableBase
+public class ProgressEventModel
 {
-    /// <summary>
-    ///     Initializes a new instance of the <see cref="ProgressEventModel" /> class.
-    ///     コンストラクタ
-    /// </summary>
-    /// <param name="eventAggregator">イベント</param>
-    public ProgressEventModel(IEventAggregator eventAggregator)
-    {
-        Progress = 0;
+    private int current;
+    private int max;
+    private int min;
+    private Visibility visibility;
 
-        _ = eventAggregator
-            .GetEvent<SetTitle>()
-            .Subscribe(x => Title = x);
-        _ = eventAggregator
-            .GetEvent<SetMessage>()
-            .Subscribe(x => Message = x);
-        _ = eventAggregator
-            .GetEvent<SetIntermediate>()
-            .Subscribe(x => IsIntermediate = x);
-        _ = eventAggregator
-            .GetEvent<SetProgress>()
-            .Subscribe(x => Progress = x);
+    /// <summary>
+    ///     ダイアログの表示制御
+    /// </summary>
+    public bool IsVisible
+    {
+        get => visibility == Visibility.Visible;
+        set => visibility = value ? Visibility.Visible : Visibility.Hidden;
+    }
+
+    /// <summary>
+    ///     進捗値
+    /// </summary>
+    public int Value
+    {
+        get => current;
+        set
+        {
+            if (current < min || current > max)
+            {
+                throw new IndexOutOfRangeException("Value must be smaller than Max and larger than Min value");
+            }
+
+            current = value;
+        }
+    }
+
+    /// <summary>
+    ///     最小値
+    /// </summary>
+    public int Min
+    {
+        get => min;
+        set
+        {
+            if (min > max)
+            {
+                throw new IndexOutOfRangeException("Min value must be smaller than Max value");
+            }
+
+            IsIntermediate = min == max;
+            min = value;
+        }
+    }
+
+    /// <summary>
+    ///     最大値
+    /// </summary>
+    public int Max
+    {
+        get => max;
+        set
+        {
+            if (max < min)
+            {
+                throw new IndexOutOfRangeException("Max value must be larger than Min value");
+            }
+
+            IsIntermediate = min == max;
+            max = value;
+        }
     }
 
     /// <summary>
     ///     タイトル
     /// </summary>
-    public string Title { get; set; }
+    public string Title { get; set; } = "Now Loading...";
 
     /// <summary>
-    ///     メッセージ
+    ///     進捗テキスト
     /// </summary>
     public string Message { get; set; }
 
     /// <summary>
-    ///     進捗
-    /// </summary>
-    public int Progress { get; set; }
-
-    /// <summary>
-    ///     中間状態（リンクを表示）
+    ///     中間状態
     /// </summary>
     public bool IsIntermediate { get; set; }
 }
