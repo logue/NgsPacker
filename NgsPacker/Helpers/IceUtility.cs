@@ -5,9 +5,15 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using FastSearchLibrary;
 using NgsPacker.Properties;
+using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
+using System.Threading;
+using System.Threading.Tasks;
+using Zamboni;
 
 namespace NgsPacker.Helpers;
 
@@ -77,5 +83,67 @@ public static class IceUtility
     public static string GetEntryName(string inputPath)
     {
         return inputPath.Replace(GetDataDir(), string.Empty);
+    }
+
+    /// <summary>
+    ///     対象ディレクトリのファイル一覧を取得
+    /// </summary>
+    /// <param name="target">対象ディレクトリ</param>
+    /// <returns>ファイルリスト</returns>
+    public static async Task<List<FileInfo>> GetTargetFiles(
+        DataDirectoryType target = DataDirectoryType.Ngs)
+    {
+        // Dataディレクトリのパス
+        string dataDir = GetDataDir();
+        // 対象パス
+        List<FileInfo> path = new();
+
+        if (target == DataDirectoryType.All || target == DataDirectoryType.Pso)
+        {
+            // PSO2ディレクトリ
+            path.AddRange(await FileSearcher.GetFilesFastAsync(dataDir + "win32", "*.*"));
+            if (Directory.Exists(dataDir + "win32_na"))
+            {
+                path.AddRange(await FileSearcher.GetFilesFastAsync(dataDir + "win32_na", "*.*"));
+            }
+        }
+
+        if (target == DataDirectoryType.All || target == DataDirectoryType.Ngs)
+        {
+            // NGSディレクトリ
+            path.AddRange(await FileSearcher.GetFilesFastAsync(dataDir + "win32reboot", "*.*"));
+            if (Directory.Exists(dataDir + "win32reboot_na"))
+            {
+                path.AddRange(await FileSearcher.GetFilesFastAsync(dataDir + "win32reboot_na", "*.*"));
+            }
+        }
+
+        return path;
+    }
+
+    /// <summary>
+    ///     Iceファイルを読み込む
+    /// </summary>
+    /// <param name="inputPath">Iceファイルへのパス</param>
+    /// <param name="token">中断トークン</param>
+    /// <returns>Iceファイルのオブジェクト</returns>
+    /// <exception cref="ZamboniException">パースできなかった場合</exception>
+    public static async Task<IceFile> LoadIceFileAsync(string inputPath, CancellationToken token)
+    {
+        // Iceファイルをバイトとして読み込む
+        byte[] buffer = await File.ReadAllBytesAsync(inputPath, token);
+
+        // Iceファイルのヘッダチェック
+        if (!IsIceFile(buffer))
+        {
+            throw new ArgumentException("Not ice file.");
+        }
+
+        // メモリーストリームを生成
+        using MemoryStream ms = new(buffer);
+
+        // Iceファイルを読み込む
+        IceFile iceFile = IceFile.LoadIceFile(ms);
+        return iceFile ?? throw new ArgumentException("Could not parse ice file.");
     }
 }

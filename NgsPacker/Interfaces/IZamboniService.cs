@@ -6,10 +6,8 @@
 // -----------------------------------------------------------------------
 
 using NgsPacker.Helpers;
-using NgsPacker.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Zamboni;
 
 namespace NgsPacker.Interfaces;
 
@@ -42,44 +40,8 @@ public interface IZamboniService
     /// <summary>
     ///     指定されたパスのファイル一覧を取得
     /// </summary>
-    /// <param name="inputPath">解析するdataディレクトリ</param>
-    /// <returns>A <see cref="Task" /> representing the asynchronous operation.</returns>
-    public Task<List<string>> FileList(string inputPath);
-
-    /// <summary>
-    ///     対象ディレクトリのファイル一覧を取得
-    /// </summary>
     /// <param name="target">解析するdataディレクトリ</param>
     /// <returns>A <see cref="Task" /> representing the asynchronous operation.</returns>
     public Task<List<string>> FileList(DataDirectoryType target);
-
     /// <summary>
-    ///     Iceファイルを読み込む.
-    /// </summary>
-    /// <param name="inputPath">Iceファイルへのパス</param>
-    /// <returns>Iceファイルのオブジェクト</returns>
-    /// <exception cref="ZamboniException">パースできなかった場合</exception>
-    public IceFile LoadIceFile(string inputPath);
-
-    /// <summary>
-    ///     Iceファイルを読み込む（非同期版）.
-    /// </summary>
-    /// <param name="inputPath">Iceファイルへのパス</param>
-    /// <returns>Iceファイルのオブジェクト</returns>
-    /// <exception cref="ZamboniException">パースできなかった場合</exception>
-    public Task<IceFile> LoadIceFileAsync(string inputPath);
-
-    /// <summary>
-    ///     ファイルリストをIceEntryModelにする
-    /// </summary>
-    /// <param name="files">ファイル一覧</param>
-    /// <returns>IceEntryModel</returns>
-    public List<IceEntryModel> FileListToIce(string[] files);
-
-    /// <summary>
-    ///     ファイルリストをIceEntryModelにする（非同期）
-    /// </summary>
-    /// <param name="files">ファイル一覧</param>
-    /// <returns>IceEntryModel</returns>
-    public Task<List<IceEntryModel>> FileListToIceAsync(string[] files);
 }

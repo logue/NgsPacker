@@ -29,10 +29,15 @@ namespace NgsPacker.Services;
 /// <summary>
 ///     ZamboniLibサービス
 /// </summary>
-public class ZamboniService : IZamboniService
+public class ZamboniService : IZamboniService, IDisposable
 {
     /// <summary>
     ///     中断トークン
+    /// </summary>
+    private readonly CancellationToken cancellationToken;
+
+    /// <summary>
+    ///     中断トークンソース
     /// </summary>
     private readonly CancellationTokenSource cancellationTokenSource;
 
@@ -47,14 +52,19 @@ public class ZamboniService : IZamboniService
     private readonly ParallelOptions parallelOptions;
 
     /// <summary>
+    ///     進捗中断要求イベント
+    /// </summary>
+    private readonly ProgressCancelEvent progressCancelEvent;
+
+    /// <summary>
     ///     進捗イベント
     /// </summary>
     private readonly ProgressEvent progressEvent;
 
     /// <summary>
-    ///     グループ１のホワイトリスト
+    ///     破棄フラグ
     /// </summary>
-    private readonly List<string> whiteList;
+    private bool disposedValue;
 
     /// <summary>
     ///     Initializes a new instance of the <see cref="ZamboniService" /> class.
@@ -63,18 +73,14 @@ public class ZamboniService : IZamboniService
     /// <param name="eventAggregator">イベントアグリエイター</param>
     public ZamboniService(ILocalizeService localizeService, IEventAggregator eventAggregator)
     {
-        // 設定からホワイトリストを読み込む
-        whiteList = new List<string>(Settings.Default.WhiteList.Replace("\r\n", "\n").Split('\n', '\r'));
-
         // 多言語サービス
         this.localizeService = localizeService;
         // 進捗イベント
         progressEvent = eventAggregator.GetEvent<ProgressEvent>();
-        // 進捗キャンセルイベント
-        ProgressCancelEvent progressCancelEvent = eventAggregator.GetEvent<ProgressCancelEvent>();
 
         // 中断トークンを発行
         cancellationTokenSource = new CancellationTokenSource();
+        cancellationToken = cancellationTokenSource.Token;
 
         // 並列処理設定
         parallelOptions = new ParallelOptions
@@ -82,25 +88,38 @@ public class ZamboniService : IZamboniService
             // 最大スレッド数
             MaxDegreeOfParallelism = Settings.Default.MaxThreads,
             // 中断トークン
-            CancellationToken = cancellationTokenSource.Token
+            CancellationToken = cancellationToken
         };
 
         // 進捗ダイアログのキャンセルボタンが押されたときにキャンセルフラグを立てる
-        Task.Factory.StartNew(() =>
+        progressCancelEvent = eventAggregator.GetEvent<ProgressCancelEvent>();
+        progressCancelEvent.Subscribe(() =>
         {
-            bool cancelFlag = false;
-            progressCancelEvent.Subscribe(s =>
-            {
-                if (s)
-                {
-                    cancelFlag = true;
-                }
-            });
-            if (cancelFlag)
-            {
-                cancellationTokenSource.Cancel();
-            }
+            cancellationTokenSource.Cancel();
         });
+    }
+
+    /// <summary>
+    ///     グループ１のホワイトリスト
+    /// </summary>
+    private static List<string> WhiteList =>
+        new(Settings.Default.WhiteList.Replace("\r\n", "\n").Split('\n', '\r'));
+
+    // // TODO: 'Dispose(bool disposing)' にアンマネージド リソースを解放するコードが含まれる場合にのみ、ファイナライザーをオーバーライドします
+    // ~ZamboniService()
+    // {
+    //     // このコードを変更しないでください。クリーンアップ コードを 'Dispose(bool disposing)' メソッドに記述します
+    //     Dispose(disposing: false);
+    // }
+
+    /// <summary>
+    ///     破棄
+    /// </summary>
+    public void Dispose()
+    {
+        // このコードを変更しないでください。クリーンアップ コードを 'Dispose(bool disposing)' メソッドに記述します
+        Dispose(true);
+        GC.SuppressFinalize(this);
     }
 
     /// <inheritdoc />
@@ -113,7 +132,7 @@ public class ZamboniService : IZamboniService
             Caption = localizeService.GetLocalizedString("ProgressInitializeCaption"),
             Message = localizeService.GetLocalizedString("ProgressInitializeMessage"),
             Detail = inputPath,
-            Animation = ProgressDialog.PROGANI.FileMultiple,
+            Animation = ProgressDialog.IPD_Animation.FileMultiple,
             IsIntermediate = true,
             IsVisible = true
         });
@@ -135,61 +154,57 @@ public class ZamboniService : IZamboniService
 
         // 入力ディレクトリ内のファイルを走査
         List<FileInfo> files = await fileList;
-        progressEvent.Publish(new ProgressEventModel { IsVisible = false });
 
-        try
+        ParallelLoopResult result = Parallel.ForEach(files, parallelOptions, async (file, state) =>
         {
-            Parallel.ForEach(files, parallelOptions, file =>
+            // 進捗モーダルの表示を更新
+            progressEvent.Publish(new ProgressEventModel
             {
-                // 進捗モーダルの表示を更新
-                progressEvent.Publish(new ProgressEventModel
-                {
-                    Caption = localizeService.GetLocalizedString("ProgressPackCaption"),
-                    Message =
-                        string.Format(localizeService.GetLocalizedString("ProgressPackMessage"),
-                            files.IndexOf(file), files.Count, inputPath),
-                    Detail = file.Name,
-                    Maximum = (uint)files.Count,
-                    Value = (uint)files.IndexOf(file),
-                    Animation = ProgressDialog.PROGANI.FileMove,
-                    IsIntermediate = false,
-                    IsVisible = true
-                });
-
-                // ファイルをバイト配列として読み込む
-                List<byte> bytes = new(File.ReadAllBytes(file.FullName));
-
-                // ヘッダを書き込む
-                bytes.InsertRange(0, new IceFileHeader(file.FullName, (uint)bytes.Count).GetBytes());
-
-                // グループ1と2でファイルを振り分ける
-                // 本プログラムでは設定画面から振り分けるファイルを定義する。
-                //
-                // ※PSO2のデータファイルは、拡張子やファイル名に応じてグループ1とグループ2で振り分けて書き込まれる。
-                // 　たとえばテスクチャなどの.ddsファイルはグループ1に書き込まれるが、
-                // 　モデルやポリゴンを定義するaqoファイルなどはグループ2に書き込まれないと動かない。
-                // 　ちなみに、グループ1に書き込まれるoxyresource.crcは、Modを有効化させるとき必要だぞ。
-                if (whiteList.Contains(file.Name))
-                {
-                    // グループ1に分類されるファイル
-                    group1Binaries.Add(bytes.ToArray());
-                }
-                else
-                {
-                    // グループ2に分類されるファイル
-                    group2Binaries.Add(bytes.ToArray());
-                }
+                Caption = localizeService.GetLocalizedString("ProgressPackCaption"),
+                Message =
+                    string.Format(localizeService.GetLocalizedString("ProgressPackMessage"),
+                        files.IndexOf(file), files.Count, inputPath),
+                Detail = file.Name,
+                Maximum = (uint)files.Count,
+                Value = (uint)files.IndexOf(file),
+                Animation = ProgressDialog.IPD_Animation.FileMove,
+                IsIntermediate = false,
+                IsVisible = true
             });
-        }
-        catch (OperationCanceledException e)
+
+            // ファイルをバイト配列として読み込む
+            List<byte> bytes = new(await File.ReadAllBytesAsync(file.FullName, CancellationToken.None));
+
+            // ヘッダを書き込む
+            bytes.InsertRange(0, new IceFileHeader(file.FullName, (uint)bytes.Count).GetBytes());
+
+            // グループ1と2でファイルを振り分ける
+            // 本プログラムでは設定画面から振り分けるファイルを定義する。
+            //
+            // ※PSO2のデータファイルは、拡張子やファイル名に応じてグループ1とグループ2で振り分けて書き込まれる。
+            // 　たとえばテスクチャなどの.ddsファイルはグループ1に書き込まれるが、
+            // 　モデルやポリゴンを定義するaqoファイルなどはグループ2に書き込まれないと動かない。
+            // 　ちなみに、グループ1に書き込まれるoxyresource.crcは、Modを有効化させるとき必要だぞ。
+            if (WhiteList.Contains(file.Name))
+            {
+                // グループ1に分類されるファイル
+                group1Binaries.Add(bytes.ToArray());
+            }
+            else
+            {
+                // グループ2に分類されるファイル
+                group2Binaries.Add(bytes.ToArray());
+            }
+
+            if (cancellationToken.IsCancellationRequested)
+            {
+                state.Break();
+                // throw new TaskCanceledException("ZamboniService: Pack Canceled.");
+            }
+        });
+        if (!result.IsCompleted)
         {
-            Console.WriteLine(e.Message);
             return null;
-        }
-        finally
-        {
-            cancellationTokenSource.Dispose();
-            progressEvent.Publish(new ProgressEventModel { IsVisible = false });
         }
 
         // ヘッダ
@@ -210,7 +225,7 @@ public class ZamboniService : IZamboniService
             Caption = localizeService.GetLocalizedString("ProgressInitializeCaption"),
             Message = localizeService.GetLocalizedString("ProgressInitializeMessage"),
             Detail = inputPath,
-            Animation = ProgressDialog.PROGANI.FileMultiple,
+            Animation = ProgressDialog.IPD_Animation.FileMultiple,
             IsIntermediate = true,
             IsVisible = true
         });
@@ -221,7 +236,7 @@ public class ZamboniService : IZamboniService
         }
 
         // Iceファイルを読み込む
-        IceFile iceFile = await LoadIceFileAsync(inputPath);
+        IceFile iceFile = await IceUtility.LoadIceFileAsync(inputPath, cancellationToken);
 
         // 出力先のディレクトリ（ファイル名_ext）　※repack_ice.exeと同じ仕様
         string destination = outputPath +
@@ -269,237 +284,178 @@ public class ZamboniService : IZamboniService
         }
 
         progressEvent.Publish(new ProgressEventModel { IsVisible = false });
+        Debug.WriteLine("アンパック処理実行");
 
-        try
+        ParallelLoopResult result = Parallel.ForEach(groupOneFiles, parallelOptions, (model, state) =>
         {
-            Parallel.ForEach(groupOneFiles, parallelOptions, model =>
+            // ファイル名（ひどい可読性だ）
+            string fileName = destination + (separate
+                                              ? (model.Group == IceGroup.Group1 ? "group1" : "group2") +
+                                                Path.DirectorySeparatorChar
+                                              : string.Empty)
+                                          + model.FileName;
+
+
+            // 進捗ダイアログを更新
+            progressEvent.Publish(new ProgressEventModel
             {
-                // ファイル名（ひどい可読性だ）
-                string fileName = destination + (separate
-                                                  ? (model.Group == IceGroup.Group1 ? "group1" : "group2") +
-                                                    Path.DirectorySeparatorChar
-                                                  : string.Empty)
-                                              + model.FileName;
-
-
-                // 進捗ダイアログを更新
-                progressEvent.Publish(new ProgressEventModel
-                {
-                    Caption = localizeService.GetLocalizedString("ProgressUnpackCaption"),
-                    Message =
-                        string.Format(localizeService.GetLocalizedString("ProgressUnpackMessage"),
-                            groupOneFiles.IndexOf(model), groupOneFiles.Count, inputPath),
-                    Detail = fileName,
-                    Maximum = (uint)groupOneFiles.Count,
-                    Value = (uint)groupOneFiles.IndexOf(model),
-                    Animation = ProgressDialog.PROGANI.FileCopy,
-                    IsIntermediate = false,
-                    IsVisible = true
-                });
-
-                try
-                {
-                    File.WriteAllBytesAsync(fileName, model.Content);
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine(ex.ToString());
-                }
-
-                /*
-                using BinaryWriter writer = new(new FileStream(fileName, FileMode.Create));
-                await writer.WriteAsync(model.Content);
-                writer.Close();
-                */
+                Caption = localizeService.GetLocalizedString("ProgressUnpackCaption"),
+                Message =
+                    string.Format(localizeService.GetLocalizedString("ProgressUnpackMessage"),
+                        groupOneFiles.IndexOf(model), groupOneFiles.Count, inputPath),
+                Detail = fileName,
+                Maximum = (uint)groupOneFiles.Count,
+                Value = (uint)groupOneFiles.IndexOf(model),
+                Animation = ProgressDialog.IPD_Animation.FileCopy,
+                IsIntermediate = false,
+                IsVisible = true
             });
-        }
-        catch (OperationCanceledException e)
-        {
-            Console.WriteLine(e.Message);
-        }
-        finally
-        {
-            cancellationTokenSource.Dispose();
-        }
+
+            try
+            {
+                File.WriteAllBytesAsync(fileName, model.Content, cancellationToken);
+            }
+            catch (Exception)
+            {
+                throw new IOException("ZamboniService: Could not write Unpacked file. ");
+            }
+
+            if (cancellationToken.IsCancellationRequested)
+            {
+                state.Break();
+                // throw new TaskCanceledException("ZamboniService: Unpack Canceled.");
+            }
+        });
+
 
         progressEvent.Publish(new ProgressEventModel { IsVisible = false });
     }
 
     /// <inheritdoc />
-    public async Task<List<string>> FileList(string inputPath)
+    public async Task<List<string>> FileList(DataDirectoryType target)
     {
-        List<string> ret = new();
-
-        // ファイル一覧を読み込む
-        Task<List<FileInfo>> fileList = FileSearcher.GetFilesFastAsync(inputPath, "*.*");
+        // ディレクトリ内ファイル一覧
+        Task<List<FileInfo>> fileList = IceUtility.GetTargetFiles(target);
 
         // 入力ディレクトリ内のファイルを走査
         List<FileInfo> files = await fileList;
 
         Debug.WriteLine("Entries: ", files.Count);
 
-        // CSVのヘッダ
-        ret.Add("filename,version,group,content");
-        try
+        // CSVデータ
+        List<string> ret = new()
         {
-            Parallel.ForEach(files, parallelOptions, async file =>
+            // CSVのヘッダ
+            "filename,version,group,content"
+        };
+
+        ParallelLoopResult result = Parallel.ForEach(files, parallelOptions, async (file, state) =>
+        {
+            // エントリ名
+            string entryName = IceUtility.GetEntryName(file.FullName);
+
+            // 進捗ダイアログを更新
+            progressEvent.Publish(new ProgressEventModel
             {
-                // エントリ名
-                string entryName = IceUtility.GetEntryName(file.FullName);
+                Caption = localizeService.GetLocalizedString("ProgressFileListCaption"),
+                Message =
+                    string.Format(
+                        localizeService.GetLocalizedString("ProgressFileListMessage"),
+                        files.IndexOf(file), files.Count),
+                Detail = entryName,
+                Maximum = (uint)files.Count,
+                Value = (uint)files.IndexOf(file),
+                Animation = ProgressDialog.IPD_Animation.FileMultiple,
+                IsIntermediate = false,
+                IsVisible = true
+            });
 
-                // 進捗ダイアログを更新
-                progressEvent.Publish(new ProgressEventModel
-                {
-                    Caption = localizeService.GetLocalizedString("ProgressFileListCaption"),
-                    Message =
-                        string.Format(localizeService.GetLocalizedString("ProgressFileListMessage"),
-                            files.IndexOf(file), files.Count),
-                    Detail = entryName,
-                    Maximum = (uint)files.Count,
-                    Value = (uint)files.IndexOf(file),
-                    Animation = ProgressDialog.PROGANI.FileMultiple,
-                    IsIntermediate = false,
-                    IsVisible = true
-                });
+            // Iceファイルをバイトとして読み込む
+            Task<byte[]> buffer = File.ReadAllBytesAsync(file.FullName, CancellationToken.None);
 
-                // Iceファイルをバイトとして読み込む
-                Task<byte[]> buffer = File.ReadAllBytesAsync(file.FullName);
+            // Iceファイルのヘッダチェック
+            if (!IceUtility.IsIceFile(await buffer))
+            {
+                return;
+            }
 
-                // Iceファイルのヘッダチェック
-                if (!IceUtility.IsIceFile(await buffer))
-                {
-                    return;
-                }
+            // メモリーストリームを生成
+            using MemoryStream ms = new(await buffer);
 
-                // メモリーストリームを生成
-                using MemoryStream ms = new(await buffer);
+            // ヘッダを確認
+            _ = ms.Seek(8L, SeekOrigin.Begin);
+            int num = ms.ReadByte();
+            _ = ms.Seek(0L, SeekOrigin.Begin);
 
-                // ヘッダを確認
-                _ = ms.Seek(8L, SeekOrigin.Begin);
-                int num = ms.ReadByte();
-                _ = ms.Seek(0L, SeekOrigin.Begin);
+            // dataディレクトリ以降のパスのファイル名を記入
+            string ice = entryName + ",ICE" + num + ",";
 
-                // dataディレクトリ以降のパスのファイル名を記入
-                string ice = entryName + ",ICE" + num + ",";
+            // Debug.WriteLine(ice);
 
-                // Debug.WriteLine(ice);
+            // Iceファイルを読み込む
+            IceFile iceFile;
+            try
+            {
+                iceFile = IceFile.LoadIceFile(ms);
+            }
+            catch
+            {
+                ret.Add(ice + "0,[ERROR] Could not load ice file.");
+                return;
+            }
 
-                // Iceファイルを読み込む
-                IceFile iceFile;
+            if (iceFile == null)
+            {
+                ret.Add(ice + "0,[ERROR] Could not parse ice file.");
+                return;
+            }
+
+            // グループ1のファイルをパース
+            if (iceFile.groupOneFiles != null)
+            {
                 try
                 {
-                    iceFile = IceFile.LoadIceFile(ms);
+                    iceFile.groupOneFiles.ForEach(bytes =>
+                    {
+                        int int32 = BitConverter.ToInt32(bytes, 16);
+                        string str2 = Encoding.ASCII.GetString(bytes, 64, int32).TrimEnd(new char[1]);
+                        ret.Add(ice + "1," + str2);
+                    });
                 }
                 catch
                 {
-                    ret.Add(ice + "0,[ERROR] Could not load ice file.");
-                    return;
+                    ret.Add(ice + "1,[ERROR] Could not parse Group1 files.");
                 }
+            }
 
-                if (iceFile == null)
+            // グループ2のファイルをパース
+            if (iceFile.groupTwoFiles != null)
+            {
+                try
                 {
-                    ret.Add(ice + "0,[ERROR] Could not parse ice file.");
-                    return;
+                    iceFile.groupTwoFiles.ForEach(bytes =>
+                    {
+                        int int32 = BitConverter.ToInt32(bytes, 16);
+                        string str2 = Encoding.ASCII.GetString(bytes, 64, int32).TrimEnd(new char[1]);
+                        ret.Add(ice + "2," + str2);
+                    });
                 }
-
-                // グループ1のファイルをパース
-                if (iceFile.groupOneFiles != null)
+                catch
                 {
-                    try
-                    {
-                        iceFile.groupOneFiles.ForEach(bytes =>
-                        {
-                            int int32 = BitConverter.ToInt32(bytes, 16);
-                            string str2 = Encoding.ASCII.GetString(bytes, 64, int32).TrimEnd(new char[1]);
-                            ret.Add(ice + "1," + str2);
-                        });
-                    }
-                    catch
-                    {
-                        ret.Add(ice + "1,[ERROR] Could not parse Group1 files.");
-                    }
+                    ret.Add(ice + "2,[ERROR] Could not parse Group2 files.");
                 }
+            }
 
-                // グループ2のファイルをパース
-                if (iceFile.groupTwoFiles != null)
-                {
-                    try
-                    {
-                        iceFile.groupTwoFiles.ForEach(bytes =>
-                        {
-                            int int32 = BitConverter.ToInt32(bytes, 16);
-                            string str2 = Encoding.ASCII.GetString(bytes, 64, int32).TrimEnd(new char[1]);
-                            ret.Add(ice + "2," + str2);
-                        });
-                    }
-                    catch
-                    {
-                        ret.Add(ice + "2,[ERROR] Could not parse Group2 files.");
-                    }
-                }
-            });
-        }
-        catch (OperationCanceledException e)
-        {
-            Console.WriteLine(e.Message);
-        }
-        finally
-        {
-            cancellationTokenSource.Dispose();
-        }
-
-        progressEvent.Publish(new ProgressEventModel { IsVisible = false });
-        return ret;
-    }
-
-    /// <inheritdoc />
-    public async Task<List<string>> FileList(DataDirectoryType target)
-    {
-        string dataDir = IceUtility.GetDataDir();
-        progressEvent.Publish(new ProgressEventModel
-        {
-            Caption = localizeService.GetLocalizedString("ProgressInitializeCaption"),
-            Message = localizeService.GetLocalizedString("ProgressInitializeMessage"),
-            Detail = dataDir,
-            Animation = ProgressDialog.PROGANI.FileMultiple,
-            IsIntermediate = true,
-            IsVisible = true
+            if (cancellationToken.IsCancellationRequested)
+            {
+                state.Break();
+                // throw new TaskCanceledException("ZamboniService: Export FileList Canceled.");
+            }
         });
-        List<string> ret = new();
 
-        switch (target)
+        if (!result.IsCompleted)
         {
-            case DataDirectoryType.Pso:
-                ret.AddRange(await FileList(dataDir + "win32"));
-                if (Directory.Exists(dataDir + "win32_na"))
-                {
-                    ret.AddRange(await FileList(dataDir + "win32_na"));
-                }
-
-                break;
-            case DataDirectoryType.Ngs:
-                ret.AddRange(await FileList(dataDir + "win32reboot"));
-                if (Directory.Exists(dataDir + "win32reboot_na"))
-                {
-                    ret.AddRange(await FileList(dataDir + "win32reboot_na"));
-                }
-
-                break;
-            case DataDirectoryType.All:
-            default:
-                ret.AddRange(await FileList(dataDir + "win32"));
-                if (Directory.Exists(dataDir + "win32_na"))
-                {
-                    ret.AddRange(await FileList(dataDir + "win32_na"));
-                }
-
-                ret.AddRange(await FileList(dataDir + "win32reboot"));
-                if (Directory.Exists(dataDir + "win32reboot_na"))
-                {
-                    ret.AddRange(await FileList(dataDir + "win32reboot_na"));
-                }
-
-                break;
+            return ret;
         }
 
         progressEvent.Publish(new ProgressEventModel { IsVisible = false });
@@ -507,86 +463,25 @@ public class ZamboniService : IZamboniService
         return ret;
     }
 
-    /// <inheritdoc />
-    public IceFile LoadIceFile(string inputPath)
+    /// <summary>
+    ///     破棄
+    /// </summary>
+    /// <param name="disposing">破棄中か</param>
+    protected virtual void Dispose(bool disposing)
     {
-        // Iceファイルをバイトとして読み込む
-        byte[] buffer = File.ReadAllBytes(inputPath);
-
-        // IceFile.LoadIceFile(fs).header;
-
-        // Iceファイルのヘッダチェック
-        if (!IceUtility.IsIceFile(buffer))
+        if (!disposedValue)
         {
-            throw new ArgumentException("Not ice file.");
-        }
-
-        // メモリーストリームを生成
-        using MemoryStream ms = new(buffer);
-
-        // Iceファイルを読み込む
-        IceFile iceFile = IceFile.LoadIceFile(ms);
-        return iceFile ?? throw new ArgumentException("Could not parse ice file.");
-    }
-
-    /// <inheritdoc />
-    public async Task<IceFile> LoadIceFileAsync(string inputPath)
-    {
-        // Iceファイルをバイトとして読み込む
-        byte[] buffer = await File.ReadAllBytesAsync(inputPath);
-
-        // Iceファイルのヘッダチェック
-        if (!IceUtility.IsIceFile(buffer))
-        {
-            throw new ArgumentException("Not ice file.");
-        }
-
-        // メモリーストリームを生成
-        using MemoryStream ms = new(buffer);
-
-        // Iceファイルを読み込む
-        IceFile iceFile = IceFile.LoadIceFile(ms);
-        return iceFile ?? throw new ArgumentException("Could not parse ice file.");
-    }
-
-    /// <inheritdoc />
-    public List<IceEntryModel> FileListToIce(string[] files)
-    {
-        List<IceEntryModel> ret = new();
-
-        // 入力ディレクトリ内のファイルを走査
-        files.ForEach(fileName =>
-        {
-            // ファイルをバイト配列として読み込む
-            ret.Add(new IceEntryModel
+            if (disposing)
             {
-                FileName = Path.GetFileName(fileName),
-                Content = File.ReadAllBytes(fileName),
-                Group = whiteList.Contains(fileName) ? IceGroup.Group1 : IceGroup.Group2
-            });
-        });
+                progressEvent.Unsubscribe(null);
+                progressCancelEvent.Unsubscribe(null);
+                cancellationTokenSource.Dispose();
+            }
 
-        return ret;
-    }
-
-    /// <inheritdoc />
-    public async Task<List<IceEntryModel>> FileListToIceAsync(string[] files)
-    {
-        List<IceEntryModel> ret = new();
-
-        // 入力ディレクトリ内のファイルを走査
-        foreach (string fileName in files)
-        {
-            // ファイルをバイト配列として読み込む
-            ret.Add(new IceEntryModel
-            {
-                FileName = Path.GetFileName(fileName),
-                Content = await File.ReadAllBytesAsync(fileName),
-                Group = whiteList.Contains(fileName) ? IceGroup.Group1 : IceGroup.Group2
-            });
+            // TODO: アンマネージド リソース (アンマネージド オブジェクト) を解放し、ファイナライザーをオーバーライドします
+            // TODO: 大きなフィールドを null に設定します
+            disposedValue = true;
         }
-
-        return ret;
     }
 
     /// <summary>
@@ -595,7 +490,7 @@ public class ZamboniService : IZamboniService
     /// <param name="data">解凍済みのIceのデータストリーム</param>
     /// <param name="isGroupOne">グループ１のファイルか</param>
     /// <returns>グループ別ファイルリスト</returns>
-    public static List<IceEntryModel> IceToFileList(byte[][] data, bool isGroupOne = false)
+    private static List<IceEntryModel> IceToFileList(byte[][] data, bool isGroupOne = false)
     {
         List<IceEntryModel> fileList = new();
         for (int index = 0; index < data.Length; ++index)
@@ -622,5 +517,30 @@ public class ZamboniService : IZamboniService
         }
 
         return fileList;
+    }
+
+    /// <summary>
+    ///     ファイルリストをIceEntryModelにする
+    /// </summary>
+    /// <param name="files">ファイル一覧</param>
+    /// <param name="token">中断トークン</param>
+    /// <returns>IceEntryModelのリスト</returns>
+    private static async Task<List<IceEntryModel>> FileListToIceAsync(string[] files, CancellationToken token)
+    {
+        List<IceEntryModel> ret = new();
+
+        // 入力ディレクトリ内のファイルを走査
+        foreach (string fileName in files)
+        {
+            // ファイルをバイト配列として読み込む
+            ret.Add(new IceEntryModel
+            {
+                FileName = Path.GetFileName(fileName),
+                Content = await File.ReadAllBytesAsync(fileName, token),
+                Group = WhiteList.Contains(fileName) ? IceGroup.Group1 : IceGroup.Group2
+            });
+        }
+
+        return ret;
     }
 }

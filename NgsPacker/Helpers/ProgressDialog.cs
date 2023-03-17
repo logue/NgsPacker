@@ -8,7 +8,6 @@
 using ImTools;
 using System;
 using System.Diagnostics;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 namespace NgsPacker.Helpers;
@@ -16,16 +15,53 @@ namespace NgsPacker.Helpers;
 /// <summary>
 ///     進捗ダイアログ
 /// </summary>
-public class ProgressDialog
+public class ProgressDialog : IDisposable
 {
+    /// <summary>
+    ///     親ウィンドウのハンドル
+    /// </summary>
     private readonly IntPtr parentHandle;
-    private PROGANI animation = PROGANI.FileMove;
+
+    /// <summary>
+    ///     アニメーション
+    /// </summary>
+    private IPD_Animation animation = IPD_Animation.FileMove;
+
+    private bool disposedValue;
+
+    /// <summary>
+    ///     キャプションの文字
+    /// </summary>
     private string line1 = string.Empty;
+
+    /// <summary>
+    ///     メッセージ文
+    /// </summary>
     private string line2 = string.Empty;
+
+    /// <summary>
+    ///     詳細
+    /// </summary>
     private string line3 = string.Empty;
+
+    /// <summary>
+    ///     最大値
+    /// </summary>
     private uint maximum = 100;
+
+    /// <summary>
+    ///     OS側の進捗ダイアログ
+    /// </summary>
     private IWin32IProgressDialog pd;
+
+    /// <summary>
+    ///     ダイアログのタイトル
+    /// </summary>
     private string title = string.Empty;
+
+    /// <summary>
+    ///     進捗
+    /// </summary>
     private uint value;
 
     /// <summary>
@@ -38,6 +74,9 @@ public class ProgressDialog
         {
             parentHandle = GetDesktopWindow();
         }
+
+        Win32ProgressDialog win32ProgressDialog = new();
+        pd = (IWin32IProgressDialog)win32ProgressDialog;
     }
 
     /// <summary>
@@ -50,6 +89,9 @@ public class ProgressDialog
         // Reduced the lag of up to display the dialog displayed by force the function ShowWindow when uses Windows.Forms
         // This idea taken from http://rarara.cafe.coocan.jp/cgi-bin/lng/vc/vclng.cgi?print+200902/09020022.txt
         ShowWindow(this.parentHandle, SW_SHOWNORMAL);
+
+        Win32ProgressDialog win32ProgressDialog = new();
+        pd = (IWin32IProgressDialog)win32ProgressDialog;
     }
 
     /// <summary>
@@ -133,7 +175,20 @@ public class ProgressDialog
     /// <summary>
     ///     ユーザがキャンセルボタンを押したか
     /// </summary>
-    public bool HasUserCancelled => pd.HasUserCancelled();
+    public bool HasUserCancelled
+    {
+        get
+        {
+            try
+            {
+                return pd.HasUserCancelled();
+            }
+            catch
+            {
+                return true;
+            }
+        }
+    }
 
     /// <summary>
     ///     キャンセル時のメッセージ
@@ -143,7 +198,7 @@ public class ProgressDialog
     /// <summary>
     ///     アニメーション
     /// </summary>
-    public PROGANI Animation
+    public IPD_Animation Animation
     {
         get => animation;
         set
@@ -153,30 +208,56 @@ public class ProgressDialog
         }
     }
 
+
+    public void Dispose()
+    {
+        // このコードを変更しないでください。クリーンアップ コードを 'Dispose(bool disposing)' メソッドに記述します
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!disposedValue)
+        {
+            if (disposing)
+            {
+                // TODO: マネージド状態を破棄します (マネージド オブジェクト)
+                pd = null;
+            }
+
+            // TODO: アンマネージド リソース (アンマネージド オブジェクト) を解放し、ファイナライザーをオーバーライドします
+            // TODO: 大きなフィールドを null に設定します
+            disposedValue = true;
+        }
+    }
+
+    // TODO: 'Dispose(bool disposing)' にアンマネージド リソースを解放するコードが含まれる場合にのみ、ファイナライザーをオーバーライドします
+    ~ProgressDialog()
+    {
+        // このコードを変更しないでください。クリーンアップ コードを 'Dispose(bool disposing)' メソッドに記述します
+        Dispose(false);
+    }
+
     /// <summary>
     ///     進捗ダイアログを表示
     /// </summary>
-    /// <param name="flags" cref="PROGDLG">フラグ</param>
-    public void Show(params PROGDLG[] flags)
+    /// <param name="flags" cref="IPD_Flags">フラグ</param>
+    public void Open(params IPD_Flags[] flags)
     {
-        if (pd == null)
-        {
-            pd = (IWin32IProgressDialog)new Win32ProgressDialog();
-        }
-
         pd.SetTitle(title);
         pd.SetLine(1, line1, false, IntPtr.Zero);
         pd.SetLine(2, line2, false, IntPtr.Zero);
         pd.SetLine(3, line3, false, IntPtr.Zero);
         pd.SetCancelMsg(CancelMessage, IntPtr.Zero);
 
-        uint dialogFlags = (uint)PROGDLG.Normal;
+        uint dialogFlags = (uint)IPD_Flags.Normal;
         if (flags.Length != 0)
         {
             flags.ForEach(flag => dialogFlags = dialogFlags | (uint)flag);
         }
 
-        pd.SetAnimation(parentHandle, animation);
+        pd.SetAnimation(parentHandle, Animation);
         pd.StartProgressDialog(parentHandle, null, dialogFlags, IntPtr.Zero);
     }
 
@@ -186,20 +267,19 @@ public class ProgressDialog
     /// </summary>
     public void Close()
     {
-        if (pd == null)
-        {
-            return;
-        }
-
         pd.StopProgressDialog();
-        // Marshal.ReleaseComObject(pd);
-        pd = null;
     }
 
     #region "Win32 Stuff"
 
     [ComImport]
-    [Guid("EBBC7C04-315E-11D2-B62F-006097DF5BD4")]
+    [Guid("F8383852-FCD3-11d1-A6B9-006097DF5BD4")]
+    internal class Win32ProgressDialog
+    {
+    }
+
+    [ComImport]
+    [Guid("EBBC7C04-315E-11d2-B62F-006097DF5BD4")]
     [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     internal interface IWin32IProgressDialog
     {
@@ -210,29 +290,29 @@ public class ProgressDialog
         /// <param name="punkEnableModless">Reserved. Set to null.</param>
         /// <param name="dwFlags">Flags that control the operation of the progress dialog box. </param>
         /// <param name="pvResevered">Reserved. Set to IntPtr.Zero</param>
-        [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
+        [PreserveSig]
         void StartProgressDialog
         (
-            IntPtr hwndParent, //HWND
-            [MarshalAs(UnmanagedType.IUnknown)] object punkEnableModless, //IUnknown
-            uint dwFlags, //DWORD
-            IntPtr pvResevered //LPCVOID
+            IntPtr hwndParent,
+            [MarshalAs(UnmanagedType.IUnknown)] object punkEnableModless,
+            uint dwFlags,
+            IntPtr pvResevered
         );
 
         /// <summary>
         ///     Stops the progress dialog box and removes it from the screen.
         /// </summary>
-        [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
+        [PreserveSig]
         void StopProgressDialog();
 
         /// <summary>
         ///     Sets the title of the progress dialog box.
         /// </summary>
         /// <param name="pwzTitle">A pointer to a null-terminated Unicode string that contains the dialog box title.</param>
-        [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
+        [PreserveSig]
         void SetTitle
         (
-            [MarshalAs(UnmanagedType.LPWStr)] string pwzTitle //LPCWSTR
+            [MarshalAs(UnmanagedType.LPWStr)] string pwzTitle
         );
 
         /// <summary>
@@ -244,11 +324,11 @@ public class ProgressDialog
         ///     An AVI resource identifier. To create this value, use the MAKEINTRESOURCE macro. The control
         ///     loads the AVI resource from the module specified by hInstAnimation.
         /// </param>
-        [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
+        [PreserveSig]
         void SetAnimation
         (
-            IntPtr hInstAnimation, // HINSTANCE
-            PROGANI idAnimation // UINT
+            IntPtr hInstAnimation,
+            IPD_Animation idAnimation
         );
 
         /// <summary>
@@ -261,7 +341,6 @@ public class ProgressDialog
         ///     whether the operation has been canceled.
         /// </remarks>
         [PreserveSig]
-        [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         [return: MarshalAs(UnmanagedType.Bool)]
         bool HasUserCancelled();
 
@@ -276,11 +355,11 @@ public class ProgressDialog
         ///     An application-defined value that specifies what value dwCompleted will have when the operation
         ///     is complete.
         /// </param>
-        [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
+        [PreserveSig]
         void SetProgress
         (
-            uint dwCompleted, //DWORD
-            uint dwTotal //DWORD
+            uint dwCompleted,
+            uint dwTotal
         );
 
         /// <summary>
@@ -294,11 +373,11 @@ public class ProgressDialog
         ///     An application-defined value that specifies what value ullCompleted will have when the operation
         ///     is complete.
         /// </param>
-        [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
+        [PreserveSig]
         void SetProgress64
         (
-            ulong ullCompleted, //ULONGLONG
-            ulong ullTotal //ULONGLONG
+            ulong ullCompleted,
+            ulong ullTotal
         );
 
         /// <summary>
@@ -306,7 +385,8 @@ public class ProgressDialog
         /// </summary>
         /// <param name="dwLineNum">
         ///     The line number on which the text is to be displayed. Currently there are three lines—1, 2, and
-        ///     3. If the PROGDLG_AUTOTIME flag was included in the dwFlags parameter when IProgressDialog.StartProgressDialog was
+        ///     3. If the <see cref="IPD_Flags">IPD_Flags</see> flag was included in the dwFlags parameter when
+        ///     IProgressDialog.StartProgressDialog was
         ///     called, only lines 1 and 2 can be used. The estimated time will be displayed on line 3.
         /// </param>
         /// <param name="pwzString">A null-terminated Unicode string that contains the text.</param>
@@ -319,13 +399,13 @@ public class ProgressDialog
         ///     This function is typically used to display a message such as "Item XXX is now being processed." typically,
         ///     messages are displayed on lines 1 and 2, with line 3 reserved for the estimated time.
         /// </remarks>
-        [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
+        [PreserveSig]
         void SetLine
         (
-            uint dwLineNum, //DWORD
-            [MarshalAs(UnmanagedType.LPWStr)] string pwzString, //LPCWSTR
-            [MarshalAs(UnmanagedType.VariantBool)] bool fCompactPath, //BOOL
-            IntPtr pvResevered //LPCVOID
+            uint dwLineNum,
+            [MarshalAs(UnmanagedType.LPWStr)] string pwzString,
+            [MarshalAs(UnmanagedType.VariantBool)] bool fCompactPath,
+            IntPtr pvResevered
         );
 
         /// <summary>
@@ -343,11 +423,11 @@ public class ProgressDialog
         ///     box will be closed shortly.
         ///     It is typically is set to something like "Please wait while ...".
         /// </remarks>
-        [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
+        [PreserveSig]
         void SetCancelMsg
         (
-            [MarshalAs(UnmanagedType.LPWStr)] string pwzCancelMsg, //LPCWSTR
-            IntPtr pvResevered //LPCVOID
+            [MarshalAs(UnmanagedType.LPWStr)] string pwzCancelMsg,
+            IntPtr pvResevered
         );
 
         /// <summary>
@@ -362,24 +442,18 @@ public class ProgressDialog
         ///     This practice ensures that the time estimates will be as accurate as possible. This method
         ///     should not be called after the first call to IProgressDialog.SetProgress.
         /// </remarks>
-        [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
+        [PreserveSig]
         void Timer
         (
-            PDTIMER dwTimerAction, //DWORD
-            IntPtr pvResevered //LPCVOID
+            IPDTIMER_Flags dwTimerAction,
+            IntPtr pvResevered
         );
-    }
-
-    [ComImport]
-    [Guid("F8383852-FCD3-11d1-A6B9-006097DF5BD4")]
-    internal class Win32ProgressDialog
-    {
     }
 
     /// <summary>
     ///     Flags that indicate the action to be taken by the ProgressDialog.SetTime() method.
     /// </summary>
-    public enum PDTIMER : uint //DWORD
+    public enum IPDTIMER_Flags : uint
     {
         /// <summary>Resets the timer to zero. Progress will be calculated from the time this method is called.</summary>
         Reset = 0x01,
@@ -395,7 +469,7 @@ public class ProgressDialog
     ///     進捗ダイアログのフラグ
     /// </summary>
     [Flags]
-    public enum PROGDLG : uint // DWORD
+    public enum IPD_Flags : uint // DWORD
     {
         /// <summary>Normal progress dialog box behavior.</summary>
         Normal = 0x00000000,
@@ -452,7 +526,7 @@ public class ProgressDialog
     /// </summary>
     /// <see href="http://www.randomnoun.com/wp/2013/10/27/windows-shell32-animations/" />
     [Flags]
-    public enum PROGANI : ushort
+    public enum IPD_Animation : ushort
     {
         None = 0,
 

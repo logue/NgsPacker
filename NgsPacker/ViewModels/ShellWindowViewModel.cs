@@ -41,16 +41,16 @@ public class ShellWindowViewModel : BindableBase, IDisposable
     private readonly ILocalizeService localizeService;
 
     /// <summary>
-    ///     進捗ダイアログ
-    /// </summary>
-    private readonly ProgressDialog progressDialog;
-
-    /// <summary>
     ///     リージョンマネージャー.
     /// </summary>
     private readonly IRegionManager regionManager;
 
     private bool disposedValue;
+
+    /// <summary>
+    ///     進捗ダイアログ
+    /// </summary>
+    private ProgressDialog progressDialog;
 
     /// <summary>
     ///     Initializes a new instance of the <see cref="ShellWindowViewModel" /> class.
@@ -123,13 +123,6 @@ public class ShellWindowViewModel : BindableBase, IDisposable
         { "SettingsItem", new Uri("SettingsPage", UriKind.Relative) }
     };
 
-    // // TODO: 'Dispose(bool disposing)' にアンマネージド リソースを解放するコードが含まれる場合にのみ、ファイナライザーをオーバーライドします
-    // ~ShellWindowViewModel()
-    // {
-    //     // このコードを変更しないでください。クリーンアップ コードを 'Dispose(bool disposing)' メソッドに記述します
-    //     Dispose(disposing: false);
-    // }
-
     /// <summary>
     ///     破棄処理
     /// </summary>
@@ -138,6 +131,15 @@ public class ShellWindowViewModel : BindableBase, IDisposable
         // このコードを変更しないでください。クリーンアップ コードを 'Dispose(bool disposing)' メソッドに記述します
         Dispose(true);
         GC.SuppressFinalize(this);
+    }
+
+    /// <summary>
+    ///     'Dispose(bool disposing)' にアンマネージド リソースを解放するコードが含まれる場合にのみ、ファイナライザーをオーバーライドします
+    /// </summary>
+    ~ShellWindowViewModel()
+    {
+        // このコードを変更しないでください。クリーンアップ コードを 'Dispose(bool disposing)' メソッドに記述します
+        Dispose(false);
     }
 
     /// <summary>
@@ -204,6 +206,8 @@ public class ShellWindowViewModel : BindableBase, IDisposable
                 {
                     region.RemoveAll();
                 }
+
+                progressDialog = null;
             }
 
             // TODO: アンマネージド リソース (アンマネージド オブジェクト) を解放し、ファイナライザーをオーバーライドします
@@ -224,18 +228,27 @@ public class ShellWindowViewModel : BindableBase, IDisposable
             return;
         }
 
-        progressDialog.Show();
-        progressDialog.Caption = model.Caption;
-        progressDialog.Message = model.Message;
-        progressDialog.Detail = model.Detail;
-        progressDialog.Animation = model.Animation;
-        progressDialog.Value = model.Value;
-        progressDialog.Maximum = model.Maximum;
-
         if (progressDialog.HasUserCancelled)
         {
             // キャンセルボタンが押されたときは、キャンセル用のイベントバスにその旨を送る
-            eventAggregator.GetEvent<ProgressCancelEvent>().Publish(true);
+            eventAggregator.GetEvent<ProgressCancelEvent>().Publish();
+            return;
+        }
+
+        progressDialog.Open();
+
+        try
+        {
+            progressDialog.Caption = model.Caption;
+            progressDialog.Message = model.Message;
+            progressDialog.Detail = model.Detail;
+            progressDialog.Animation = model.Animation;
+            progressDialog.Value = model.Value;
+            progressDialog.Maximum = model.Maximum;
+        }
+        catch
+        {
+            progressDialog.Close();
         }
     }
 }

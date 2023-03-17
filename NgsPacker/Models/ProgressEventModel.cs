@@ -57,5 +57,5 @@ public class ProgressEventModel
     /// <summary>
     ///     アニメーション
     /// </summary>
-    public PROGANI Animation { get; set; }
+    public IPD_Animation Animation { get; set; }
 }
