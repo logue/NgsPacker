@@ -142,7 +142,7 @@ public class UnpackPageViewModel : BindableBase, INotifyPropertyChanged
         }
 
         // アンパック
-        zamboniService.Unpack(openFileDialog.FileName, picker.ResultPath, true, IsSeparateByGroup);
+        bool result = zamboniService.Unpack(openFileDialog.FileName, picker.ResultPath, true, IsSeparateByGroup);
 
         // 完了通知
         if (Settings.Default.NotifyComplete)
@@ -150,13 +150,14 @@ public class UnpackPageViewModel : BindableBase, INotifyPropertyChanged
             // トースト通知
             new ToastContentBuilder()
                 .AddText(localizeService.GetLocalizedString("UnpackText"))
-                .AddText(localizeService.GetLocalizedString("CompleteText"))
+                .AddText(localizeService.GetLocalizedString(result ? "CompleteText" : "CancelledText"))
                 .Show();
         }
         else
         {
             _ = MessageBox.Show(
-                localizeService.GetLocalizedString("UnpackText"), localizeService.GetLocalizedString("CompleteText"));
+                localizeService.GetLocalizedString("UnpackText"),
+                localizeService.GetLocalizedString(result ? "CompleteText" : "CancelledText"));
         }
     }
 
@@ -183,6 +184,18 @@ public class UnpackPageViewModel : BindableBase, INotifyPropertyChanged
 
         // 出力処理
         List<string> list = new(await zamboniService.FileList(Target));
+
+        if (list.Count == 0)
+        {
+            // キャンセル通知
+            _ = MessageBox.ShowAsync(
+                localizeService.GetLocalizedString("ExportFileListText"),
+                localizeService.GetLocalizedString("CancelledText"));
+
+            return;
+        }
+
+        // CSV出力
         await File.WriteAllTextAsync(saveFileDialog.FileName, string.Join("\r\n", list));
 
         // 完了通知

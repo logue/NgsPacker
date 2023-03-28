@@ -27,6 +27,9 @@ public class ProgressDialog : IDisposable
     /// </summary>
     private IPD_Animation animation = IPD_Animation.FileMove;
 
+    /// <summary>
+    ///     破棄フラグ
+    /// </summary>
     private bool disposedValue;
 
     /// <summary>

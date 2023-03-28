@@ -318,4 +318,7 @@
   <data name="ProgressPackMessage" xml:space="preserve">
     <value>{2}に含めるファイルをセットしています。({0}/{1})</value>
   </data>
+  <data name="CancelledText" xml:space="preserve">
+    <value>処理は中断されました。</value>
+  </data>
 </root>

@@ -122,16 +122,41 @@ public static class IceUtility
     }
 
     /// <summary>
-    ///     Iceファイルを読み込む
+    ///     Iceファイルを読み込む（非同期）
     /// </summary>
     /// <param name="inputPath">Iceファイルへのパス</param>
     /// <param name="token">中断トークン</param>
     /// <returns>Iceファイルのオブジェクト</returns>
-    /// <exception cref="ZamboniException">パースできなかった場合</exception>
-    public static async Task<IceFile> LoadIceFileAsync(string inputPath, CancellationToken token)
+    /// <exception cref="ArgumentException">パースできなかった場合</exception>
+    public static async Task<IceFile> LoadIceFile(string inputPath, CancellationToken token)
     {
         // Iceファイルをバイトとして読み込む
         byte[] buffer = await File.ReadAllBytesAsync(inputPath, token);
+
+        // Iceファイルのヘッダチェック
+        if (!IsIceFile(buffer))
+        {
+            throw new ArgumentException("Not ice file.");
+        }
+
+        // メモリーストリームを生成
+        using MemoryStream ms = new(buffer);
+
+        // Iceファイルを読み込む
+        IceFile iceFile = IceFile.LoadIceFile(ms);
+        return iceFile ?? throw new ArgumentException("Could not parse ice file.");
+    }
+
+    /// <summary>
+    ///     Iceファイルを読み込む（同期）
+    /// </summary>
+    /// <param name="inputPath">Iceファイルへのパス</param>
+    /// <returns>Iceファイルのオブジェクト</returns>
+    /// <exception cref="ArgumentException">パースできなかった場合</exception>
+    public static IceFile LoadIceFile(string inputPath)
+    {
+        // Iceファイルをバイトとして読み込む
+        byte[] buffer = File.ReadAllBytes(inputPath);
 
         // Iceファイルのヘッダチェック
         if (!IsIceFile(buffer))

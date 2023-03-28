@@ -3,7 +3,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <Title>NgsPacker</Title>
-    <Version>1.4.0</Version>
+    <Version>1.4.1</Version>
+    <SupportedOSPlatformVersion>10.0.20348.0</SupportedOSPlatformVersion>
+    <TargetFramework>net6.0-windows10.0.22621.0</TargetFramework>
     <ApplicationIcon>ice-cubes.ico</ApplicationIcon>
     <AssemblyName>NgsPacker</AssemblyName>
     <Authors>Masashi Yoshikawa</Authors>
@@ -17,18 +19,16 @@
     <PackageProjectUrl>https://ngs.logue.dev/NgsPacker</PackageProjectUrl>
     <PackageReadmeFile>..\Readme.md</PackageReadmeFile>
     <PackageTags>PSO2;Phantasy Star Online2;Phantasy Star Online New Genesis;PSO2NGS;Packer;Unpacker</PackageTags>
+    <TrimMode>CopyUsed</TrimMode>
+    <PackageReleaseNotes>進捗モーダルを実装。途中でキャンセルできるように。</PackageReleaseNotes>
+    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/logue/NgsPacker.git</RepositoryUrl>
     <RootNamespace>NgsPacker</RootNamespace>
     <StartupObject>NgsPacker.App</StartupObject>
-    <SupportedOSPlatformVersion>10.0.20348.0</SupportedOSPlatformVersion>
-    <TargetFramework>net6.0-windows10.0.22621.0</TargetFramework>
     <AnalysisLevel>6.0-recommended</AnalysisLevel>
     <UseWPF>true</UseWPF>
-    <PackageReleaseNotes>ファイルリスト出力処理をラジオボタン選択式にした。
-これにともない、ファイルリスト関連の処理からdataディレクトリを選択するダイアログを削除</PackageReleaseNotes>
-    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
     <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
   </PropertyGroup>
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">

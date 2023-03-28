@@ -322,4 +322,7 @@ Do not change if you are not sure.</value>
   <data name="ProgressPackMessage" xml:space="preserve">
     <value>Setting files to include in {2}. ({0}/{1})</value>
   </data>
+  <data name="CancelledText" xml:space="preserve">
+    <value>The operation has been canceled.</value>
+  </data>
 </root>

@@ -89,6 +89,15 @@ namespace NgsPacker.Properties {
         }
         
         /// <summary>
+        ///   The operation has been canceled. に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string CancelledText {
+            get {
+                return ResourceManager.GetString("CancelledText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Cancel に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string CancelText {

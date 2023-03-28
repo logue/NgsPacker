@@ -34,7 +34,8 @@ public interface IZamboniService
     /// <param name="outputPath">出力先のパス</param>
     /// <param name="createSubDirectory">サブディレクトリを作成する</param>
     /// <param name="separate">グループ1と2で分ける</param>
-    public void Unpack(string inputPath, string outputPath = null, bool createSubDirectory = true,
+    /// <returns>成否</returns>
+    public bool Unpack(string inputPath, string outputPath = null, bool createSubDirectory = true,
         bool separate = false);
 
     /// <summary>
@@ -43,5 +44,4 @@ public interface IZamboniService
     /// <param name="target">解析するdataディレクトリ</param>
     /// <returns>A <see cref="Task" /> representing the asynchronous operation.</returns>
     public Task<List<string>> FileList(DataDirectoryType target);
-    /// <summary>
 }
