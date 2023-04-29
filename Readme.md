@@ -23,7 +23,7 @@ It requires the .net 6.0 runtime to work. Please download from the following sit
   - [Phantasy Star Fleet](https://discord.com/invite/pso2) - Discord
 - [Checksum File](https://ngs.logue.dev/data/d4455ebc2bef618f29106da7692ebc1a) - Required when activating mods. Replace the file in `pso2_bin/data/win32`. (by Aida Enna of [ArksLayer](https://arks-layer.com/))
 - [PSO2 Modding Database](https://pso2mod.com/)
-  - [PSO2 Mod Manager](https://github.com/PolCPP/PSO2-Mod-Manager) - Official PSO2 Modding Database Client, But not maintained.
+- [PSO2 Mod Manager](https://github.com/PolCPP/PSO2-Mod-Manager)
 - [PSO2NGS @ Nexus Mods](https://www.nexusmods.com/phantasystaronline2newgenesis)
 
 ## Disclaimer

@@ -21,7 +21,7 @@
   - [Phantasy Star Fleet](https://discord.com/invite/pso2) - Discord
 - [チェックサムファイル](https://ngs.logue.dev/data/d4455ebc2bef618f29106da7692ebc1a) - Mod を有効化するときに必要です。`pso2_bin/data/win32`にあるファイルと差し替えてください。（ArksLayer の Aida Enna 氏によるものです）
 - [PSO2 Modding Database](https://pso2mod.com/)
-  - [PSO2 Mod Manager](https://github.com/PolCPP/PSO2-Mod-Manager) - PSO2Mods.com 公式 Mod マネージャーですが長らくメンテナンスされていません。
+- [PSO2 Mod Manager](https://github.com/PolCPP/PSO2-Mod-Manager)
 - [PSO2NGS @ Nexus Mods](https://www.nexusmods.com/phantasystaronline2newgenesis)
 
 ## 免責事項
