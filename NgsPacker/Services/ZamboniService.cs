@@ -7,7 +7,6 @@
 
 using FastSearchLibrary;
 using ImTools;
-using ModernWpf;
 using NgsPacker.Events;
 using NgsPacker.Helpers;
 using NgsPacker.Interfaces;
@@ -160,7 +159,7 @@ public class ZamboniService : IZamboniService, IDisposable
 
         progressEvent.Publish(new ProgressEventModel { IsVisible = false });
 
-        ParallelLoopResult result = Parallel.ForEach(files, parallelOptions, async (file, state) =>
+        files.ForEach(file =>
         {
             // 進捗モーダルの表示を更新
 #pragma warning disable CA1305 // IFormatProvider を指定します
@@ -181,7 +180,7 @@ public class ZamboniService : IZamboniService, IDisposable
 #pragma warning restore CA1305 // IFormatProvider を指定します
 
             // ファイルをバイト配列として読み込む
-            List<byte> bytes = new(await File.ReadAllBytesAsync(file.FullName, cancellationToken));
+            List<byte> bytes = new(File.ReadAllBytes(file.FullName));
 
             // ヘッダを書き込む
             bytes.InsertRange(0, new IceFileHeader(file.FullName, (uint)bytes.Count).GetBytes());
@@ -203,16 +202,8 @@ public class ZamboniService : IZamboniService, IDisposable
                 // グループ2に分類されるファイル
                 group2Binaries.Add(bytes.ToArray());
             }
-
-            if (cancellationToken.IsCancellationRequested)
-            {
-                state.Break();
-            }
         });
-        if (!result.IsCompleted)
-        {
-            return null;
-        }
+
 
         // 進捗モーダルの表示を更新
         progressEvent.Publish(new ProgressEventModel { IsIntermediate = true });
@@ -295,56 +286,57 @@ public class ZamboniService : IZamboniService, IDisposable
 
         Debug.WriteLine("アンパック処理実行");
 
-        ParallelLoopResult result = Parallel.ForEach(groupOneFiles, parallelOptions, (model, state) =>
+        try
         {
-            // ファイル名（ひどい可読性だ）
-            string fileName = destination + (separate
-                                              ? (model.Group == IceGroup.Group1 ? "group1" : "group2") +
-                                                Path.DirectorySeparatorChar
-                                              : string.Empty)
-                                          + model.FileName;
-
-            // 進捗ダイアログを更新
-#pragma warning disable CA1305 // IFormatProvider を指定します
-            progressEvent.Publish(new ProgressEventModel
+            groupOneFiles.ForEach(async model =>
             {
-                Caption = localizeService.GetLocalizedString("ProgressUnpackCaption"),
-                Message =
-                    string.Format(
-                        localizeService.GetLocalizedString("ProgressUnpackMessage"),
-                        groupOneFiles.IndexOf(model), groupOneFiles.Count, inputPath),
-                Detail = fileName,
-                Maximum = (uint)groupOneFiles.Count,
-                Value = (uint)groupOneFiles.IndexOf(model),
-                Animation = ProgressDialog.IPD_Animation.FileCopy,
-                IsIntermediate = false,
-                IsVisible = true
-            });
+                // ファイル名（ひどい可読性だ）
+                string fileName = destination + (separate
+                                                  ? (model.Group == IceGroup.Group1 ? "group1" : "group2") +
+                                                    Path.DirectorySeparatorChar
+                                                  : string.Empty)
+                                              + model.FileName;
+
+                // 進捗ダイアログを更新
+#pragma warning disable CA1305 // IFormatProvider を指定します
+                progressEvent.Publish(new ProgressEventModel
+                {
+                    Caption = localizeService.GetLocalizedString("ProgressUnpackCaption"),
+                    Message =
+                        string.Format(
+                            localizeService.GetLocalizedString("ProgressUnpackMessage"),
+                            groupOneFiles.IndexOf(model), groupOneFiles.Count, inputPath),
+                    Detail = fileName,
+                    Maximum = (uint)groupOneFiles.Count,
+                    Value = (uint)groupOneFiles.IndexOf(model),
+                    Animation = ProgressDialog.IPD_Animation.FileCopy,
+                    IsIntermediate = false,
+                    IsVisible = true
+                });
 #pragma warning restore CA1305 // IFormatProvider を指定します
 
-            try
-            {
-                File.WriteAllBytesAsync(fileName, model.Content, cancellationToken);
-            }
-            catch (Exception)
-            {
-                throw new IOException("ZamboniService: Could not write Unpacked file. ");
-            }
+                // キャンセルされてたら OperationCanceledException を投げるメソッド
+                cancellationToken.ThrowIfCancellationRequested();
 
-            if (cancellationToken.IsCancellationRequested)
-            {
-                state.Break();
-
-                // throw new TaskCanceledException("ZamboniService: Unpack Canceled.");
-            }
-        });
-        if (!result.IsCompleted)
+                try
+                {
+                    await File.WriteAllBytesAsync(fileName, model.Content, cancellationToken);
+                }
+                catch (Exception)
+                {
+                    throw new IOException("ZamboniService: Could not write Unpacked file. ");
+                }
+            });
+        }
+        catch (Exception)
         {
-            progressEvent.Publish(new ProgressEventModel { IsVisible = false });
             return false;
         }
+        finally
+        {
+            progressEvent.Publish(new ProgressEventModel { IsVisible = false });
+        }
 
-        progressEvent.Publish(new ProgressEventModel { IsVisible = false });
         return true;
     }
 
@@ -395,52 +387,27 @@ public class ZamboniService : IZamboniService, IDisposable
                 cancellationToken.ThrowIfCancellationRequested();
 
                 // 解析実行
-                ret.Add(await analyze(entryName));
+                ret.Add(await Analyze(entryName));
             });
-
-            if (!result.IsCompleted)
-            {
-                _ = MessageBox.ShowAsync(
-                    localizeService.GetLocalizedString("ExportFileListText"),
-                    localizeService.GetLocalizedString("NotCompletedText"));
-            }
         }
         catch (OperationCanceledException)
         {
-            // キャンセル通知
-            _ = MessageBox.ShowAsync(
-                localizeService.GetLocalizedString("ExportFileListText"),
-                localizeService.GetLocalizedString("CancelledText"));
+            // 処理なし
         }
-
-        progressEvent.Publish(new ProgressEventModel { IsVisible = false });
+        finally
+        {
+            progressEvent.Publish(new ProgressEventModel { IsVisible = false });
+        }
 
         return ret;
     }
 
-    /// <summary>
-    ///     破棄
-    /// </summary>
-    /// <param name="disposing">破棄中か</param>
-    protected virtual void Dispose(bool disposing)
-    {
-        if (!disposedValue)
-        {
-            if (disposing)
-            {
-                progressEvent.Unsubscribe(null);
-                progressCancelEvent.Unsubscribe(null);
-                cancellationTokenSource.Dispose();
-            }
 
-            // TODO: アンマネージド リソース (アンマネージド オブジェクト) を解放し、ファイナライザーをオーバーライドします
-            // TODO: 大きなフィールドを null に設定します
-            disposedValue = true;
-        }
-    }
-
-    private async Task<string> analyze(string file)
+    /// <inheritdoc />
+    public async Task<string> Analyze(string file)
     {
+        // ここの処理は後日SQLを保存するた実装にする
+
         // ファイルのバッファ
         Task<byte[]> buffer;
 
@@ -545,6 +512,27 @@ public class ZamboniService : IZamboniService, IDisposable
         }
 
         return sb.ToString().Trim();
+    }
+
+    /// <summary>
+    ///     破棄
+    /// </summary>
+    /// <param name="disposing">破棄中か</param>
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!disposedValue)
+        {
+            if (disposing)
+            {
+                progressEvent.Unsubscribe(null);
+                progressCancelEvent.Unsubscribe(null);
+                cancellationTokenSource.Dispose();
+            }
+
+            // TODO: アンマネージド リソース (アンマネージド オブジェクト) を解放し、ファイナライザーをオーバーライドします
+            // TODO: 大きなフィールドを null に設定します
+            disposedValue = true;
+        }
     }
 
     /// <summary>

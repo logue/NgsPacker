@@ -39,6 +39,13 @@ public interface IZamboniService
         bool separate = false);
 
     /// <summary>
+    ///     ファイル内のコンテンツを解析してCSVの行として出力
+    /// </summary>
+    /// <param name="file">ファイル名</param>
+    /// <returns>カンマ区切りの行</returns>
+    public Task<string> Analyze(string file);
+
+    /// <summary>
     ///     指定されたパスのファイル一覧を取得
     /// </summary>
     /// <param name="target">解析するdataディレクトリ</param>

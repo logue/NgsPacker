@@ -113,7 +113,7 @@ public class PackPageViewModel : BindableBase
         else
         {
             _ = MessageBox.Show(
-                localizeService.GetLocalizedString("PackText"), localizeService.GetLocalizedString("CompleteText"));
+                localizeService.GetLocalizedString("CompleteText"), localizeService.GetLocalizedString("PackText"));
         }
     }
 }

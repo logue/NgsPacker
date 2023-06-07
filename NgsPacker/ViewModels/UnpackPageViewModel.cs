@@ -17,6 +17,7 @@ using Reactive.Bindings.Extensions;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Reactive.Disposables;
 using System.Windows.Forms;
@@ -156,8 +157,8 @@ public class UnpackPageViewModel : BindableBase, INotifyPropertyChanged
         else
         {
             _ = MessageBox.Show(
-                localizeService.GetLocalizedString("UnpackText"),
-                localizeService.GetLocalizedString(result ? "CompleteText" : "CancelledText"));
+                localizeService.GetLocalizedString(result ? "CompleteText" : "CancelledText"),
+                localizeService.GetLocalizedString("UnpackText"));
         }
     }
 
@@ -203,15 +204,15 @@ public class UnpackPageViewModel : BindableBase, INotifyPropertyChanged
         else
         {
             _ = MessageBox.ShowAsync(
-                localizeService.GetLocalizedString("ExportFileListText"),
-                localizeService.GetLocalizedString("CompleteText"));
+                localizeService.GetLocalizedString("CompleteText"),
+                localizeService.GetLocalizedString("ExportFileListText"));
         }
     }
 
     /// <summary>
     ///     ファイルリストからアンパックする
     /// </summary>
-    private async void ExecuteUnpackByFileListCommand()
+    private void ExecuteUnpackByFileListCommand()
     {
         // ファイルを開くダイアログ
         using OpenFileDialog openFileDialog = new()
@@ -228,7 +229,7 @@ public class UnpackPageViewModel : BindableBase, INotifyPropertyChanged
             return;
         }
 
-        List<string> fileList = new(await File.ReadAllLinesAsync(openFileDialog.FileName));
+        List<string> fileList = new(File.ReadAllLines(openFileDialog.FileName));
 
         // 出力先ディレクトリ
         string outputPath = Path.GetDirectoryName(openFileDialog.FileName) + Path.DirectorySeparatorChar +
@@ -242,6 +243,7 @@ public class UnpackPageViewModel : BindableBase, INotifyPropertyChanged
         fileList.ForEach(file =>
         {
             string path = IceUtility.GetDataDir() + file;
+            Debug.WriteLine(path, outputPath);
 
             if (File.Exists(path))
             {
@@ -262,8 +264,8 @@ public class UnpackPageViewModel : BindableBase, INotifyPropertyChanged
         else
         {
             _ = MessageBox.ShowAsync(
-                localizeService.GetLocalizedString("UnpackByFileListText"),
-                localizeService.GetLocalizedString("CompleteText"));
+                localizeService.GetLocalizedString("CompleteText"),
+                localizeService.GetLocalizedString("UnpackByFileListText"));
         }
     }
 
@@ -332,8 +334,8 @@ public class UnpackPageViewModel : BindableBase, INotifyPropertyChanged
         else
         {
             _ = MessageBox.Show(
-                localizeService.GetLocalizedString("UnpackByFileListText"),
-                localizeService.GetLocalizedString("CompleteText"));
+                localizeService.GetLocalizedString("CompleteText"),
+                localizeService.GetLocalizedString("UnpackByFileListText"));
         }
     }
 }
