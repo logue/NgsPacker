@@ -321,4 +321,7 @@
   <data name="CancelledText" xml:space="preserve">
     <value>処理は中断されました。</value>
   </data>
+  <data name="NotCompletedText" xml:space="preserve">
+    <value>一部完了していないファイルがあります。</value>
+  </data>
 </root>

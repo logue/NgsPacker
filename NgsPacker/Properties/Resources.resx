@@ -325,4 +325,7 @@ Do not change if you are not sure.</value>
   <data name="CancelledText" xml:space="preserve">
     <value>The operation has been canceled.</value>
   </data>
+  <data name="NotCompletedText" xml:space="preserve">
+    <value>Some files are not completed.</value>
+  </data>
 </root>

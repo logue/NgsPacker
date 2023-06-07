@@ -236,6 +236,15 @@ namespace NgsPacker.Properties {
         }
         
         /// <summary>
+        ///   Some files are not completed. に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string NotCompletedText {
+            get {
+                return ResourceManager.GetString("NotCompletedText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Notify when completed に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string NotifyComplete_Header {

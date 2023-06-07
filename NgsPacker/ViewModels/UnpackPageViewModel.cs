@@ -182,21 +182,14 @@ public class UnpackPageViewModel : BindableBase, INotifyPropertyChanged
             return;
         }
 
-        // 出力処理
+        // ファイルリストを生成
         List<string> list = new(await zamboniService.FileList(Target));
 
-        if (list.Count == 0)
+        if (list.Count != 0)
         {
-            // キャンセル通知
-            _ = MessageBox.ShowAsync(
-                localizeService.GetLocalizedString("ExportFileListText"),
-                localizeService.GetLocalizedString("CancelledText"));
-
-            return;
+            // CSV出力
+            await File.WriteAllTextAsync(saveFileDialog.FileName, string.Join("\r\n", list));
         }
-
-        // CSV出力
-        await File.WriteAllTextAsync(saveFileDialog.FileName, string.Join("\r\n", list));
 
         // 完了通知
         if (Settings.Default.NotifyComplete)
