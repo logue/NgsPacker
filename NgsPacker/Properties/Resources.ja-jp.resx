@@ -222,7 +222,7 @@
     <value>pso2_binディレクトリ（pso2.exeが存在するディレクトリ）を選択してください。</value>
   </data>
   <data name="Pso2ExeNotFoundErrorText" xml:space="preserve">
-    <value>pso2.exeが見つかりません。
+    <value>pso2.exeがインストールされていないか、見つかりませんでした。
 正しいディレクトリを選択してください。</value>
   </data>
   <data name="UnpackOutputPathText" xml:space="preserve">

@@ -226,7 +226,7 @@ The authors are not responsible for any damage caused by that. Use it with commo
     <value>Select the pso2_bin directory (the directory where pso2.exe resides).</value>
   </data>
   <data name="Pso2ExeNotFoundErrorText" xml:space="preserve">
-    <value>pso2.exe cannot be found.
+    <value>pso2.exe was not installed or was not found.
 Please select the correct directory.</value>
   </data>
   <data name="UnpackOutputPathText" xml:space="preserve">

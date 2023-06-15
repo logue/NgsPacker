@@ -119,6 +119,12 @@ public class ZamboniService : IZamboniService, IDisposable
     /// </summary>
     public void Dispose()
     {
+        // クラスを破棄するタイミングでキャンセル実行
+        cancellationTokenSource.Cancel();
+
+        // 破棄
+        cancellationTokenSource.Dispose();
+
         // このコードを変更しないでください。クリーンアップ コードを 'Dispose(bool disposing)' メソッドに記述します
         Dispose(true);
         GC.SuppressFinalize(this);
@@ -204,7 +210,6 @@ public class ZamboniService : IZamboniService, IDisposable
             }
         });
 
-
         // 進捗モーダルの表示を更新
         progressEvent.Publish(new ProgressEventModel { IsIntermediate = true });
 
@@ -288,7 +293,7 @@ public class ZamboniService : IZamboniService, IDisposable
 
         try
         {
-            groupOneFiles.ForEach(async model =>
+            groupOneFiles.ForEach(model =>
             {
                 // ファイル名（ひどい可読性だ）
                 string fileName = destination + (separate
@@ -318,19 +323,16 @@ public class ZamboniService : IZamboniService, IDisposable
                 // キャンセルされてたら OperationCanceledException を投げるメソッド
                 cancellationToken.ThrowIfCancellationRequested();
 
-                try
-                {
-                    await File.WriteAllBytesAsync(fileName, model.Content, cancellationToken);
-                }
-                catch (Exception)
-                {
-                    throw new IOException("ZamboniService: Could not write Unpacked file. ");
-                }
+                File.WriteAllBytesAsync(fileName, model.Content, cancellationToken);
             });
         }
-        catch (Exception)
+        catch (IOException)
         {
-            return false;
+            throw new IOException("ZamboniService: Could not write Unpacked file. ");
+        }
+        catch (OperationCanceledException)
+        {
+            // Trough
         }
         finally
         {
@@ -360,7 +362,7 @@ public class ZamboniService : IZamboniService, IDisposable
 
         try
         {
-            ParallelLoopResult result = Parallel.ForEach(files, parallelOptions, async file =>
+            ParallelLoopResult result = Parallel.ForEach(files, parallelOptions,  file =>
             {
                 // エントリ名
                 string entryName = IceUtility.GetEntryName(file.FullName);
@@ -387,7 +389,7 @@ public class ZamboniService : IZamboniService, IDisposable
                 cancellationToken.ThrowIfCancellationRequested();
 
                 // 解析実行
-                ret.Add(await Analyze(entryName));
+                ret.Add(Analyze(entryName).Result);
             });
         }
         catch (OperationCanceledException)
@@ -401,7 +403,6 @@ public class ZamboniService : IZamboniService, IDisposable
 
         return ret;
     }
-
 
     /// <inheritdoc />
     public async Task<string> Analyze(string file)
@@ -444,7 +445,7 @@ public class ZamboniService : IZamboniService, IDisposable
         sb.Append(file);
         sb.Append(".ICE");
         sb.Append(num);
-        sb.Append(",");
+        sb.Append(',');
 
         // Debug.WriteLine(file);
 

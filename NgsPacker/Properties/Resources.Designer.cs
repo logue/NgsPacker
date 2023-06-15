@@ -398,7 +398,7 @@ namespace NgsPacker.Properties {
         }
         
         /// <summary>
-        ///   pso2.exe cannot be found.
+        ///   pso2.exe was not installed or was not found.
         ///Please select the correct directory. に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Pso2ExeNotFoundErrorText {
