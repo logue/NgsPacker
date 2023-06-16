@@ -212,6 +212,7 @@ public class ProgressDialog : IDisposable
     }
 
 
+    /// <inheritdoc />
     public void Dispose()
     {
         // このコードを変更しないでください。クリーンアップ コードを 'Dispose(bool disposing)' メソッドに記述します
@@ -236,6 +237,10 @@ public class ProgressDialog : IDisposable
     }
 
     // TODO: 'Dispose(bool disposing)' にアンマネージド リソースを解放するコードが含まれる場合にのみ、ファイナライザーをオーバーライドします
+
+    /// <summary>
+    ///     Finalizes an instance of the <see cref="ProgressDialog" /> class.
+    /// </summary>
     ~ProgressDialog()
     {
         // このコードを変更しないでください。クリーンアップ コードを 'Dispose(bool disposing)' メソッドに記述します

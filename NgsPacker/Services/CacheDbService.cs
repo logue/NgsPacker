@@ -48,7 +48,7 @@ public class CacheDbService : ICacheDbService, IDisposable
     /// <inheritdoc />
     public async Task ScanFiles(DataDirectoryType target = DataDirectoryType.Ngs, bool force = false)
     {
-        List<FileInfo> entries = FileSearcher.GetFilesFast(IceUtility.GetDataDir(), "*.*");
+        List<FileInfo> entries = await FileSearcher.GetFilesFastAsync(IceUtility.GetDataDir(), "*.*");
 
         Debug.WriteLine("Entries: ", entries.Count);
 

@@ -362,7 +362,7 @@ public class ZamboniService : IZamboniService, IDisposable
 
         try
         {
-            ParallelLoopResult result = Parallel.ForEach(files, parallelOptions,  file =>
+            ParallelLoopResult result = Parallel.ForEach(files, parallelOptions, file =>
             {
                 // エントリ名
                 string entryName = IceUtility.GetEntryName(file.FullName);
@@ -386,10 +386,10 @@ public class ZamboniService : IZamboniService, IDisposable
 #pragma warning restore CA1305 // IFormatProvider を指定します
 
                 // キャンセルされてたら OperationCanceledException を投げるメソッド
-                cancellationToken.ThrowIfCancellationRequested();
+                // cancellationToken.ThrowIfCancellationRequested();
 
                 // 解析実行
-                ret.Add(Analyze(entryName).Result);
+                ret.Add(Analyze(file.FullName).Result);
             });
         }
         catch (OperationCanceledException)
@@ -407,45 +407,34 @@ public class ZamboniService : IZamboniService, IDisposable
     /// <inheritdoc />
     public async Task<string> Analyze(string file)
     {
-        // ここの処理は後日SQLを保存するた実装にする
+        // TODO: ここの処理は後日SQLを保存するた実装にする
 
-        // ファイルのバッファ
-        Task<byte[]> buffer;
+        // ファイルストリームとして読み込み
+        Debug.WriteLine(file);
+        await using FileStream fs = new(file, FileMode.Open, FileAccess.Read);
+        // メモリーストリームを準備
+        using MemoryStream ms = new();
 
         try
         {
-            // Iceファイルをバイトとして読み込む
-            buffer = File.ReadAllBytesAsync(file, cancellationToken);
+            // 読み込み処理
+            fs.CopyTo(ms);
         }
-        catch (IOException)
+        catch (Exception e)
         {
-            // 他のプロセスが使用中
-            return file + ",ERR,0,[ERROR] Used by another process .";
+            return IceUtility.GetEntryName(file) + ",ERR,0,[ERROR] " + e.Message;
         }
-
-        // Iceファイルのヘッダチェック
-        if (!IceUtility.IsIceFile(await buffer))
+        finally
         {
-            return null;
+            // 読み込み完了したらファイルストリームを履き
+            await fs.DisposeAsync();
         }
-
-        // メモリーストリームを生成
-        using MemoryStream ms = new(await buffer);
-
-        // 使い終わったバッファを解放
-        buffer.Dispose();
 
         // ヘッダを確認
         _ = ms.Seek(8L, SeekOrigin.Begin);
         int num = ms.ReadByte();
         _ = ms.Seek(0L, SeekOrigin.Begin);
 
-        // CSVファイルの行テキストを作成
-        StringBuilder sb = new();
-        sb.Append(file);
-        sb.Append(".ICE");
-        sb.Append(num);
-        sb.Append(',');
 
         // Debug.WriteLine(file);
 
@@ -455,11 +444,10 @@ public class ZamboniService : IZamboniService, IDisposable
         {
             iceFile = IceFile.LoadIceFile(ms);
         }
-        catch
+        catch (Exception e)
         {
             // Iceファイルが読み込めない
-            sb.Append("0,[ERROR] Could not load ice file.");
-            return sb.ToString();
+            return IceUtility.GetEntryName(file) + ",ERR,0,[ERROR] " + e.Message;
         }
         finally
         {
@@ -469,50 +457,38 @@ public class ZamboniService : IZamboniService, IDisposable
 
         if (iceFile == null)
         {
-            // Iceファイルが解析できない
-            sb.Append("0,[ERROR] Could not parse ice file.");
-            return sb.ToString();
+            // Iceファイルが解析できない（現在このエラーは起きてない）
+            return IceUtility.GetEntryName(file) + ",ERR,0,[ERROR] File is null";
         }
+
+        // CSVファイルの行テキストを作成
+        StringBuilder sb = new();
 
         // グループ1のファイルをパース
-        if (iceFile.groupOneFiles != null)
+        iceFile.groupOneFiles?.ForEach(bytes =>
         {
-            try
-            {
-                iceFile.groupOneFiles.ForEach(bytes =>
-                {
-                    sb.Append("1,");
-                    sb.Append(Encoding.ASCII.GetString(bytes, 64, BitConverter.ToInt32(bytes, 16))
-                        .TrimEnd(new char[1]));
-                    sb.Append("\r\n");
-                });
-            }
-            catch
-            {
-                sb.Append("1,[ERROR] Could not parse Group1 files.\r\n");
-            }
-        }
+            sb.Append(IceUtility.GetEntryName(file));
+            sb.Append(",ICE");
+            sb.Append(num);
+            sb.Append(",1,");
+            sb.Append(Encoding.ASCII.GetString(bytes, 64, BitConverter.ToInt32(bytes, 16))
+                .TrimEnd(new char[1]));
+            sb.Append("\r\n");
+        });
 
         // グループ2のファイルをパース
-        if (iceFile.groupTwoFiles != null)
+        iceFile.groupTwoFiles?.ForEach(bytes =>
         {
-            try
-            {
-                iceFile.groupTwoFiles.ForEach(bytes =>
-                {
-                    sb.Append("2,");
-                    sb.Append(Encoding.ASCII.GetString(bytes, 64, BitConverter.ToInt32(bytes, 16))
-                        .TrimEnd(new char[1]));
-                    sb.Append("\r\n");
-                });
-            }
-            catch
-            {
-                sb.Append("2,[ERROR] Could not parse Group1 files.");
-            }
-        }
+            sb.Append(IceUtility.GetEntryName(file));
+            sb.Append(",ICE");
+            sb.Append(num);
+            sb.Append(",2,");
+            sb.Append(Encoding.ASCII.GetString(bytes, 64, BitConverter.ToInt32(bytes, 16))
+                .TrimEnd(new char[1]));
+            sb.Append("\r\n");
+        });
 
-        return sb.ToString().Trim();
+        return sb.ToString().TrimEnd('\r', '\n');
     }
 
     /// <summary>

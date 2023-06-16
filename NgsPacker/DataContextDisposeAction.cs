@@ -17,6 +17,7 @@ namespace NgsPacker;
 /// <see href="https://elf-mission.net/programming/wpf/getting-started-2020/step05/" />
 public class DataContextDisposeAction : TriggerAction<FrameworkElement>
 {
+    /// <inheritdoc />
     protected override void Invoke(object parameter)
     {
         (AssociatedObject?.DataContext as IDisposable)?.Dispose();
