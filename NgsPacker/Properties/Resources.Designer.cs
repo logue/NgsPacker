@@ -61,6 +61,15 @@ namespace NgsPacker.Properties {
         }
         
         /// <summary>
+        ///   Processing has been interrupted. に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string AbortedText {
+            get {
+                return ResourceManager.GetString("AbortedText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   About に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string AboutText {

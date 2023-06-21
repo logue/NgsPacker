@@ -189,23 +189,41 @@ public class UnpackPageViewModel : BindableBase, INotifyPropertyChanged
         if (list.Count != 0)
         {
             // CSV出力
-            await File.WriteAllTextAsync(saveFileDialog.FileName, string.Join("\r\n", list));
-        }
+            await File.WriteAllTextAsync(saveFileDialog.FileName, string.Join(Environment.NewLine, list));
 
-        // 完了通知
-        if (Settings.Default.NotifyComplete)
-        {
-            // トースト通知
-            new ToastContentBuilder()
-                .AddText(localizeService.GetLocalizedString("ExportFileListText"))
-                .AddText(localizeService.GetLocalizedString("CompleteText"))
-                .Show();
+            // 完了通知
+            if (Settings.Default.NotifyComplete)
+            {
+                // トースト通知
+                new ToastContentBuilder()
+                    .AddText(localizeService.GetLocalizedString("ExportFileListText"))
+                    .AddText(localizeService.GetLocalizedString("CompleteText"))
+                    .Show();
+            }
+            else
+            {
+                _ = MessageBox.ShowAsync(
+                    localizeService.GetLocalizedString("CompleteText"),
+                    localizeService.GetLocalizedString("ExportFileListText"));
+            }
         }
         else
         {
-            _ = MessageBox.ShowAsync(
-                localizeService.GetLocalizedString("CompleteText"),
-                localizeService.GetLocalizedString("ExportFileListText"));
+            // 完了通知
+            if (Settings.Default.NotifyComplete)
+            {
+                // トースト通知
+                new ToastContentBuilder()
+                    .AddText(localizeService.GetLocalizedString("ExportFileListText"))
+                    .AddText(localizeService.GetLocalizedString("AbortedText"))
+                    .Show();
+            }
+            else
+            {
+                _ = MessageBox.ShowAsync(
+                    localizeService.GetLocalizedString("AbortedText"),
+                    localizeService.GetLocalizedString("ExportFileListText"));
+            }
         }
     }
 
@@ -321,6 +339,7 @@ public class UnpackPageViewModel : BindableBase, INotifyPropertyChanged
                 zamboniService.Unpack(path, outputPath, false);
             }
         });
+
 
         // 完了通知
         if (Settings.Default.NotifyComplete)

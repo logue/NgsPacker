@@ -324,4 +324,7 @@
   <data name="NotCompletedText" xml:space="preserve">
     <value>一部完了していないファイルがあります。</value>
   </data>
+  <data name="AbortedText" xml:space="preserve">
+    <value>処理を中断しました。</value>
+  </data>
 </root>

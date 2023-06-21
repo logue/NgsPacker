@@ -328,4 +328,7 @@ Do not change if you are not sure.</value>
   <data name="NotCompletedText" xml:space="preserve">
     <value>Some files are not completed.</value>
   </data>
+  <data name="AbortedText" xml:space="preserve">
+    <value>Processing has been interrupted.</value>
+  </data>
 </root>

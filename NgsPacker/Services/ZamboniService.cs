@@ -32,11 +32,6 @@ namespace NgsPacker.Services;
 public class ZamboniService : IZamboniService, IDisposable
 {
     /// <summary>
-    ///     中断トークン
-    /// </summary>
-    private readonly CancellationToken cancellationToken;
-
-    /// <summary>
     ///     中断トークンソース
     /// </summary>
     private readonly CancellationTokenSource cancellationTokenSource;
@@ -62,6 +57,11 @@ public class ZamboniService : IZamboniService, IDisposable
     private readonly ProgressEvent progressEvent;
 
     /// <summary>
+    ///     中断トークン
+    /// </summary>
+    private CancellationToken cancellationToken;
+
+    /// <summary>
     ///     破棄フラグ
     /// </summary>
     private bool disposedValue;
@@ -81,7 +81,6 @@ public class ZamboniService : IZamboniService, IDisposable
 
         // 中断トークンを発行
         cancellationTokenSource = new CancellationTokenSource();
-        cancellationToken = cancellationTokenSource.Token;
 
         // 並列処理設定
         parallelOptions = new ParallelOptions
@@ -162,6 +161,9 @@ public class ZamboniService : IZamboniService, IDisposable
 
         // 入力ディレクトリ内のファイルを走査
         List<FileInfo> files = await fileList;
+
+        // 中断トークン発行
+        cancellationToken = cancellationTokenSource.Token;
 
         progressEvent.Publish(new ProgressEventModel { IsVisible = false });
 
@@ -360,9 +362,12 @@ public class ZamboniService : IZamboniService, IDisposable
             "filename,version,group,content"
         };
 
+        // 中断トークン発行
+        cancellationToken = cancellationTokenSource.Token;
+
         try
         {
-            ParallelLoopResult result = Parallel.ForEach(files, parallelOptions, file =>
+            ParallelLoopResult result = Parallel.ForEach(files, parallelOptions, (file, loopState) =>
             {
                 // エントリ名
                 string entryName = IceUtility.GetEntryName(file.FullName);
@@ -386,34 +391,48 @@ public class ZamboniService : IZamboniService, IDisposable
 #pragma warning restore CA1305 // IFormatProvider を指定します
 
                 // キャンセルされてたら OperationCanceledException を投げるメソッド
-                // cancellationToken.ThrowIfCancellationRequested();
+                cancellationToken.ThrowIfCancellationRequested();
 
                 // 解析実行
                 ret.Add(Analyze(file.FullName).Result);
             });
+            if (result.IsCompleted)
+            {
+                Debug.WriteLine("ループ処理がすべて終了した");
+            }
         }
         catch (OperationCanceledException)
         {
-            // 処理なし
+            return new List<string>();
         }
         finally
         {
             progressEvent.Publish(new ProgressEventModel { IsVisible = false });
+            cancellationToken = CancellationToken.None;
         }
 
         return ret;
     }
 
-    /// <inheritdoc />
-    public async Task<string> Analyze(string file)
+    /// <summary>
+    ///     ICEファイル内のファイルリストを出力
+    /// </summary>
+    /// <param name="file">解析対象ファイル</param>
+    /// <returns>CSVの行</returns>
+    private static async Task<string> Analyze(string file)
     {
-        // TODO: ここの処理は後日SQLを保存するた実装にする
+        // TODO: ここの処理は後日SQLを保存する実装にする
 
         // ファイルストリームとして読み込み
         Debug.WriteLine(file);
         await using FileStream fs = new(file, FileMode.Open, FileAccess.Read);
+
         // メモリーストリームを準備
         using MemoryStream ms = new();
+
+        // CSVファイルの行テキストを作成
+        StringBuilder sb = new();
+        sb.Append(IceUtility.GetEntryName(file));
 
         try
         {
@@ -422,21 +441,28 @@ public class ZamboniService : IZamboniService, IDisposable
         }
         catch (Exception e)
         {
-            return IceUtility.GetEntryName(file) + ",ERR,0,[ERROR] " + e.Message;
+            // このエラーは発生していない
+            sb.Append(",ERR,0,[Error] ");
+            sb.Append(e.Message);
+            return sb.ToString();
         }
         finally
         {
-            // 読み込み完了したらファイルストリームを履き
+            // 読み込み完了したらファイルストリームを破棄
             await fs.DisposeAsync();
+        }
+
+        // ICEファイルのチェック
+        if (!IceUtility.IsIceFile(ms.ToArray()))
+        {
+            sb.Append(",ERR,0,Not a ICE file. Maybe raw game data.");
+            return sb.ToString();
         }
 
         // ヘッダを確認
         _ = ms.Seek(8L, SeekOrigin.Begin);
         int num = ms.ReadByte();
         _ = ms.Seek(0L, SeekOrigin.Begin);
-
-
-        // Debug.WriteLine(file);
 
         // Iceファイルを読み込む
         IceFile iceFile;
@@ -447,7 +473,11 @@ public class ZamboniService : IZamboniService, IDisposable
         catch (Exception e)
         {
             // Iceファイルが読み込めない
-            return IceUtility.GetEntryName(file) + ",ERR,0,[ERROR] " + e.Message;
+            sb.Append(",ICE");
+            sb.Append(num);
+            sb.Append(",0,[ZamboniError] ");
+            sb.Append(e.Message);
+            return sb.ToString();
         }
         finally
         {
@@ -455,40 +485,29 @@ public class ZamboniService : IZamboniService, IDisposable
             await ms.DisposeAsync();
         }
 
-        if (iceFile == null)
-        {
-            // Iceファイルが解析できない（現在このエラーは起きてない）
-            return IceUtility.GetEntryName(file) + ",ERR,0,[ERROR] File is null";
-        }
-
-        // CSVファイルの行テキストを作成
-        StringBuilder sb = new();
-
         // グループ1のファイルをパース
         iceFile.groupOneFiles?.ForEach(bytes =>
         {
-            sb.Append(IceUtility.GetEntryName(file));
             sb.Append(",ICE");
             sb.Append(num);
             sb.Append(",1,");
             sb.Append(Encoding.ASCII.GetString(bytes, 64, BitConverter.ToInt32(bytes, 16))
                 .TrimEnd(new char[1]));
-            sb.Append("\r\n");
+            sb.Append(Environment.NewLine);
         });
 
         // グループ2のファイルをパース
         iceFile.groupTwoFiles?.ForEach(bytes =>
         {
-            sb.Append(IceUtility.GetEntryName(file));
             sb.Append(",ICE");
             sb.Append(num);
             sb.Append(",2,");
             sb.Append(Encoding.ASCII.GetString(bytes, 64, BitConverter.ToInt32(bytes, 16))
                 .TrimEnd(new char[1]));
-            sb.Append("\r\n");
+            sb.Append(Environment.NewLine);
         });
 
-        return sb.ToString().TrimEnd('\r', '\n');
+        return sb.ToString().TrimEnd(Environment.NewLine.ToCharArray());
     }
 
     /// <summary>
