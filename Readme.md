@@ -2,7 +2,7 @@
 
 This program opens and creates ICE format files that can be read by PSO2NGS clients.
 
-It requires the .net 6.0 runtime to work. Please download from the following site.
+It requires the .net 7.0 runtime to work. Please download from the following site.
 <https://dotnet.microsoft.com/download/dotnet>
 
 [日本語](./Readme-ja.md)
