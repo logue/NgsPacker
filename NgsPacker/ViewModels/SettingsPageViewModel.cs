@@ -151,8 +151,18 @@ public class SettingsPageViewModel : BindableBase
         // フォルダ選択ダイアログ
         FolderPicker picker = new()
         {
-            Title = localizeService.GetLocalizedString("SelectPso2BinPathText"), InputPath = Pso2BinPath
+            Title = localizeService.GetLocalizedString("SelectPso2BinPathText"), /* InputPath = Pso2BinPath */
         };
+
+        // Somehow, if the "FolderPicker.InputPath" is assigned with a path to a non-existence directory, the FolderPicker class just stop working.
+        // This result in: clicking on "Browse" button in the UI makes nothing happen, for as long as the input textbox contains a non-existence path.
+
+        // Fix that by assignment only when the path is existed as a directory.
+        var localvar_Pso2BinPath = Pso2BinPath;
+        if (Directory.Exists(localvar_Pso2BinPath))
+        {
+            picker.InputPath = localvar_Pso2BinPath;
+        }
 
         // 出力先ファイルダイアログを表示
         if (picker.ShowDialog() != true)

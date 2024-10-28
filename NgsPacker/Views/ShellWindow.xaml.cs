@@ -52,23 +52,31 @@ public partial class ShellWindow
                 sizeof(uint));
         }
 
-        // ウィンドウの角を丸くする
-        int rounded = (int)DWM_WINDOW_CORNER_PREFERENCE.DWMWCP_ROUND;
+        // These 2 window attributes are added on Windows 11.
+        // Windows 10 or older will not recognize the "DWMWINDOWATTRIBUTE.DWMWA_WINDOW_CORNER_PREFERENCE" and "DWMWINDOWATTRIBUTE.DWMWA_SYSTEMBACKDROP_TYPE"
+        // Which will throw error, and since we don't handle exception/error here, the app will simply crash and exit.
 
-        DwmSetWindowAttribute(
-            hWnd.Handle,
-            DWMWINDOWATTRIBUTE.DWMWA_WINDOW_CORNER_PREFERENCE,
-            ref rounded,
-            sizeof(uint));
+        // Add condition that will apply these 2 attributes only on Win11 and newer
+        if (OperatingSystem.IsWindowsVersionAtLeast(11))
+        {
+            // ウィンドウの角を丸くする
+            int rounded = (int)DWM_WINDOW_CORNER_PREFERENCE.DWMWCP_ROUND;
 
-        // ウィンドウの背景を半透過にする
-        int bg = (int)DWM_SYSTEMBACKDROP_TYPE.DWMSBT_TABBEDWINDOW;
+            DwmSetWindowAttribute(
+                hWnd.Handle,
+                DWMWINDOWATTRIBUTE.DWMWA_WINDOW_CORNER_PREFERENCE,
+                ref rounded,
+                sizeof(uint));
 
-        DwmSetWindowAttribute(
-            hWnd.Handle,
-            DWMWINDOWATTRIBUTE.DWMWA_SYSTEMBACKDROP_TYPE,
-            ref bg,
-            sizeof(uint));
+            // ウィンドウの背景を半透過にする
+            int bg = (int)DWM_SYSTEMBACKDROP_TYPE.DWMSBT_TABBEDWINDOW;
+
+            DwmSetWindowAttribute(
+                hWnd.Handle,
+                DWMWINDOWATTRIBUTE.DWMWA_SYSTEMBACKDROP_TYPE,
+                ref bg,
+                sizeof(uint));
+        }
     }
 
     private void Window_ContentRendered(object sender, EventArgs e)
