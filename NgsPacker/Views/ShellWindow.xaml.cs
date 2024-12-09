@@ -57,7 +57,7 @@ public partial class ShellWindow
         // Which will throw error, and since we don't handle exception/error here, the app will simply crash and exit.
 
         // Add condition that will apply these 2 attributes only on Win11 and newer
-        if (OperatingSystem.IsWindowsVersionAtLeast(11))
+        if (OperatingSystem.IsWindowsVersionAtLeast(10, 0, 22000))
         {
             // ウィンドウの角を丸くする
             int rounded = (int)DWM_WINDOW_CORNER_PREFERENCE.DWMWCP_ROUND;

@@ -5,8 +5,8 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using DryIoc.ImTools;
 using FastSearchLibrary;
-using ImTools;
 using NgsPacker.Events;
 using NgsPacker.Helpers;
 using NgsPacker.Interfaces;
@@ -23,6 +23,7 @@ using System.Threading.Tasks;
 using Zamboni;
 using Zamboni.IceFileFormats;
 using static Zamboni.IceFileFormats.IceHeaderStructures;
+using Path = System.IO.Path;
 
 namespace NgsPacker.Services;
 
@@ -392,9 +393,10 @@ public class ZamboniService : IZamboniService, IDisposable
 
                 // キャンセルされてたら OperationCanceledException を投げるメソッド
                 cancellationToken.ThrowIfCancellationRequested();
+                string result = await Analyze(file.FullName);
 
                 // 解析実行
-                ret.Add(Analyze(file.FullName).Result);
+                ret.Add(result);
             });
             if (result.IsCompleted)
             {
@@ -403,7 +405,13 @@ public class ZamboniService : IZamboniService, IDisposable
         }
         catch (OperationCanceledException)
         {
-            return new List<string>();
+            return ret;
+        }
+        catch (Exception e)
+        {
+            Debug.WriteLine(e);
+
+            // return new List<string>();
         }
         finally
         {
@@ -412,102 +420,6 @@ public class ZamboniService : IZamboniService, IDisposable
         }
 
         return ret;
-    }
-
-    /// <summary>
-    ///     ICEファイル内のファイルリストを出力
-    /// </summary>
-    /// <param name="file">解析対象ファイル</param>
-    /// <returns>CSVの行</returns>
-    private static async Task<string> Analyze(string file)
-    {
-        // TODO: ここの処理は後日SQLを保存する実装にする
-
-        // ファイルストリームとして読み込み
-        Debug.WriteLine(file);
-        await using FileStream fs = new(file, FileMode.Open, FileAccess.Read);
-
-        // メモリーストリームを準備
-        using MemoryStream ms = new();
-
-        // CSVファイルの行テキストを作成
-        StringBuilder sb = new();
-        sb.Append(IceUtility.GetEntryName(file));
-
-        try
-        {
-            // 読み込み処理
-            fs.CopyTo(ms);
-        }
-        catch (Exception e)
-        {
-            // このエラーは発生していない
-            sb.Append(",ERR,0,[Error] ");
-            sb.Append(e.Message);
-            return sb.ToString();
-        }
-        finally
-        {
-            // 読み込み完了したらファイルストリームを破棄
-            await fs.DisposeAsync();
-        }
-
-        // ICEファイルのチェック
-        if (!IceUtility.IsIceFile(ms.ToArray()))
-        {
-            sb.Append(",ERR,0,Not a ICE file. Maybe raw game data.");
-            return sb.ToString();
-        }
-
-        // ヘッダを確認
-        _ = ms.Seek(8L, SeekOrigin.Begin);
-        int num = ms.ReadByte();
-        _ = ms.Seek(0L, SeekOrigin.Begin);
-
-        // Iceファイルを読み込む
-        IceFile iceFile;
-        try
-        {
-            iceFile = IceFile.LoadIceFile(ms);
-        }
-        catch (Exception e)
-        {
-            // Iceファイルが読み込めない
-            sb.Append(",ICE");
-            sb.Append(num);
-            sb.Append(",0,[ZamboniError] ");
-            sb.Append(e.Message);
-            return sb.ToString();
-        }
-        finally
-        {
-            // メモリーストリームを破棄
-            await ms.DisposeAsync();
-        }
-
-        // グループ1のファイルをパース
-        iceFile.groupOneFiles?.ForEach(bytes =>
-        {
-            sb.Append(",ICE");
-            sb.Append(num);
-            sb.Append(",1,");
-            sb.Append(Encoding.ASCII.GetString(bytes, 64, BitConverter.ToInt32(bytes, 16))
-                .TrimEnd(new char[1]));
-            sb.Append(Environment.NewLine);
-        });
-
-        // グループ2のファイルをパース
-        iceFile.groupTwoFiles?.ForEach(bytes =>
-        {
-            sb.Append(",ICE");
-            sb.Append(num);
-            sb.Append(",2,");
-            sb.Append(Encoding.ASCII.GetString(bytes, 64, BitConverter.ToInt32(bytes, 16))
-                .TrimEnd(new char[1]));
-            sb.Append(Environment.NewLine);
-        });
-
-        return sb.ToString().TrimEnd(Environment.NewLine.ToCharArray());
     }
 
     /// <summary>
@@ -529,6 +441,105 @@ public class ZamboniService : IZamboniService, IDisposable
             // TODO: 大きなフィールドを null に設定します
             disposedValue = true;
         }
+    }
+
+    /// <summary>
+    ///     ICEファイル内のファイルリストを出力
+    /// </summary>
+    /// <param name="file">解析対象ファイル</param>
+    /// <returns>CSVの行</returns>
+    private static async Task<string> Analyze(string file)
+    {
+        // TODO: ここの処理は後日SQLを保存する実装にする
+
+        // ファイルストリームとして読み込み
+        // Debug.WriteLine(file);
+        await using FileStream fs = new(file, FileMode.Open, FileAccess.Read);
+
+        // メモリーストリームを準備
+        using MemoryStream ms = new();
+
+        string name = IceUtility.GetEntryName(file);
+
+        byte[] data = ms.ToArray();
+
+        // ICEファイルのチェック
+        if (!IceUtility.IsIceFile(data))
+        {
+            // ICEファイルでない場合、マジックナンバーを記入
+            // https://techblog.sega.jp/entry/2016/12/26/100000
+            CsvModel line = new();
+            line.FileName = name;
+            line.Group = 0;
+            try
+            {
+                line.Magic = Encoding.UTF8.GetString(data, 0, 4);
+                line.Content = "Not an ICE file. Maybe raw game data.";
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                line.Magic = "???";
+                line.Content = "Could not detect magic number.";
+                Debug.WriteLine("Could not detect magic number: " + name);
+            }
+
+            return line.ToString();
+        }
+
+        // ヘッダを確認
+        _ = ms.Seek(8L, SeekOrigin.Begin);
+        int num = ms.ReadByte();
+        _ = ms.Seek(0L, SeekOrigin.Begin);
+
+        // Iceファイルを読み込む
+        IceFile iceFile;
+        try
+        {
+            iceFile = IceFile.LoadIceFile(ms);
+        }
+        catch (Exception e)
+        {
+            // Iceファイルが読み込めない
+            CsvModel line = new();
+            line.FileName = name;
+            line.Magic = "ICE" + num;
+            line.Group = 0;
+            line.Content = "[ZamboniError] ";
+            Debug.WriteLine("ZamboniError: " + e.Message);
+            return line.ToString();
+        }
+        finally
+        {
+            // メモリーストリームを破棄
+            await ms.DisposeAsync();
+        }
+
+        // CSVファイルの行テキストを作成
+        StringBuilder sb = new();
+
+        // グループ1のファイルをパース
+        iceFile.groupOneFiles?.ForEach(bytes =>
+        {
+            CsvModel line = new();
+            line.FileName = name;
+            line.Magic = "ICE" + num;
+            line.Group = 1;
+            line.Content = Encoding.ASCII.GetString(bytes, 64, BitConverter.ToInt32(bytes, 16)).TrimEnd(new char[1]);
+            sb.AppendLine(line.ToString());
+        });
+
+        // グループ2のファイルをパース
+        iceFile.groupTwoFiles?.ForEach(bytes =>
+        {
+            CsvModel line = new();
+            line.FileName = name;
+            line.Magic = "ICE" + num;
+            line.Group = 2;
+            line.Content = Encoding.ASCII.GetString(bytes, 64, BitConverter.ToInt32(bytes, 16)).TrimEnd(new char[1]);
+            sb.AppendLine(line.ToString());
+        });
+
+        return sb.ToString(); // .TrimEnd(Environment.NewLine.ToCharArray());
     }
 
     /// <summary>
